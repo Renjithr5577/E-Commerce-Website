@@ -1,0 +1,78 @@
+<section>
+  <app-home-hero-section
+    *ngIf="!isSearching"
+    [activeHero]="activeHero"
+    [heroSlides]="heroSlides"
+    [activeHeroIndex]="activeHeroIndex"
+    (heroAction)="heroAction.emit($event)"
+    (previousHero)="previousHero.emit()"
+    (nextHero)="nextHero.emit()"
+    (heroSelect)="heroSelect.emit($event)"
+  ></app-home-hero-section>
+
+  <section
+    class="section-shell"
+    id="wishlist"
+    *ngIf="showWishlistSection && wishlistProducts.length && !isSearching"
+  >
+    <div class="section-heading">
+      <div>
+        <span class="section-kicker">Wishlist</span>
+        <h2>Saved with one heart tap</h2>
+        <p>Products you mark with the heart button will stay here near the top of the home page.</p>
+      </div>
+    </div>
+
+    <div class="product-grid">
+      <app-product-card
+        *ngFor="let product of wishlistProducts"
+        [product]="product"
+        [wishlisted]="true"
+        (open)="productOpen.emit($event)"
+        (addToCart)="productAdd.emit($event)"
+        (buyNow)="productBuy.emit($event)"
+        (toggleWishlist)="wishlistToggle.emit($event)"
+      ></app-product-card>
+    </div>
+  </section>
+
+  <app-highlights-strip *ngIf="!isSearching" [highlights]="highlights"></app-highlights-strip>
+
+  <app-catalog-section
+    [categories]="categories"
+    [selectedCategory]="selectedCategory"
+    [searchTerm]="searchTerm"
+    [loading]="loading"
+    [error]="error"
+    [wishlistProductIds]="wishlistProductIds"
+    [products]="showcaseProducts"
+    [canShowMore]="hasMoreCatalogProducts"
+    [canShowLess]="canShowLessCatalogProducts"
+    (refresh)="refreshProducts.emit()"
+    (categorySelect)="categorySelect.emit($event)"
+    (productOpen)="productOpen.emit($event)"
+    (productAdd)="productAdd.emit($event)"
+    (productBuy)="productBuy.emit($event)"
+    (productWishlistToggle)="wishlistToggle.emit($event)"
+    (showMore)="showMoreCatalog.emit()"
+    (showLess)="showLessCatalog.emit()"
+  ></app-catalog-section>
+
+  <app-promo-board-grid
+    *ngIf="!isSearching"
+    [promoBoards]="promoBoards"
+    [products]="allProducts"
+    (shopCategory)="shopCategory.emit($event)"
+  ></app-promo-board-grid>
+
+  <app-best-seller-story-section
+    *ngIf="!isSearching"
+    [bestSellerProducts]="bestSellerProducts"
+    [canShowMore]="hasMoreBestSellerProducts"
+    [canShowLess]="canShowLessBestSellerProducts"
+    (productOpen)="productOpen.emit($event)"
+    (showMore)="showMoreBestSeller.emit()"
+    (showLess)="showLessBestSeller.emit()"
+    (supportRequest)="supportRequest.emit()"
+  ></app-best-seller-story-section>
+</section>

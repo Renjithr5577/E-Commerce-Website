@@ -1,0 +1,258 @@
+<header class="store-header">
+  <div class="utility-bar">
+    <div class="container-fluid header-shell utility-wrap">
+      <button class="brand-area ms-2" type="button" (click)="goHome()">
+        <span class="brand-logo">LC</span>
+        <span>
+          <strong>LuxeCart</strong>
+          <small>marketplace studio</small>
+        </span>
+      </button>
+
+      <div class="search-cluster-wrap" (click)="$event.stopPropagation()">
+        <div class="search-cluster">
+          <button
+            class="search-kind search-kind-btn"
+            type="button"
+            [title]="searchCategoryLabel"
+            (click)="toggleCategoryMenu($event)"
+          >
+            <span class="search-kind-label">{{ searchCategoryLabel }}</span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+          <input
+            type="search"
+            class="search-input"
+            [placeholder]="text.searchPlaceholder"
+            [ngModel]="searchTerm"
+            (ngModelChange)="searchTermChange.emit($event)"
+            (keyup.enter)="submitSearch()"
+          />
+          <button class="search-button" type="button" (click)="submitSearch()">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+
+        <div *ngIf="isCategoryMenuOpen" class="search-category-dropdown">
+          <button
+            type="button"
+            class="search-category-option"
+            [class.active-search-category-option]="selectedCategory === 'All'"
+            (click)="chooseSearchCategory('All')"
+          >
+            {{ text.allCategories }}
+          </button>
+          <button
+            type="button"
+            class="search-category-option"
+            *ngFor="let category of categories.slice(1)"
+            [class.active-search-category-option]="selectedCategory === category"
+            (click)="chooseSearchCategory(category)"
+          >
+            {{ category }}
+          </button>
+        </div>
+      </div>
+
+      <div class="action-cluster">
+        <button
+          class="icon-action"
+          type="button"
+          [class.icon-action-active]="wishlistCount > 0"
+          (click)="openWishlist()"
+          aria-label="Wishlist"
+        >
+          <i [class]="wishlistCount > 0 ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
+          <span *ngIf="wishlistCount" class="icon-count">{{ wishlistCount }}</span>
+        </button>
+
+        <div class="language-preview-wrap" (click)="$event.stopPropagation()">
+          <button class="language-preview-btn" type="button" (click)="toggleLanguageMenu($event)">
+            <i class="bi bi-globe2"></i>
+            <span>{{ selectedLanguage }}</span>
+            <small>{{ currentTimeLabel }}</small>
+          </button>
+
+          <div *ngIf="isLanguageMenuOpen" class="language-dropdown">
+            <div class="language-dropdown-title">{{ text.chooseLanguage }}</div>
+            <button
+              *ngFor="let option of languageOptions"
+              type="button"
+              class="language-dropdown-option"
+              [class.language-dropdown-option-disabled]="!option.available"
+              [class.active-language-dropdown-option]="option.code === selectedLanguage"
+              (click)="selectLanguage(option.code)"
+            >
+              <div class="language-dropdown-topline">
+                <strong>{{ option.code }}</strong>
+                <span *ngIf="option.code === selectedLanguage" class="current-badge">
+                  {{ text.currentLabel }}
+                </span>
+                <span *ngIf="!option.available" class="current-badge current-badge-muted">
+                  {{ text.unavailableLabel }}
+                </span>
+              </div>
+              <span>{{ option.label }}</span>
+            </button>
+            <p *ngIf="languageNotice" class="language-dropdown-note">{{ languageNotice }}</p>
+          </div>
+        </div>
+
+        <div class="account-action" *ngIf="!accountName; else signedInBlock">
+          <span>{{ text.helloSignIn }}</span>
+          <div class="account-links">
+            <button type="button" (click)="openSignIn()">{{ text.signIn }}</button>
+            <button type="button" (click)="openSignUp()">{{ text.signUp }}</button>
+          </div>
+        </div>
+
+        <ng-template #signedInBlock>
+          <div class="account-action signed-in">
+            <span>Hello, {{ accountName }}</span>
+            <div class="account-links">
+              <button type="button" (click)="openView('account')">{{ text.account }}</button>
+              <button type="button" (click)="signOut()">{{ text.signOut }}</button>
+            </div>
+          </div>
+        </ng-template>
+
+        <button class="cart-action me-2" type="button" (click)="cartRequest.emit()">
+          <i class="bi bi-bag"></i>
+          <span>{{ cartCount }} items</span>
+          <strong>{{ cartSubtotal | currency: 'INR' : 'symbol' : '1.0-0' }}</strong>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="container-fluid header-shell nav-wrap">
+      <div class="nav-links ms-2">
+        <button
+          class="nav-link-btn all-categories-btn"
+          type="button"
+          [class.active-link]="isAllCategoriesActive()"
+          (click)="toggleNavCategoryMenu($event)"
+        >
+          <i class="bi bi-list"></i>
+          {{ text.menuLabel }}
+        </button>
+        <button
+          class="nav-link-btn"
+          type="button"
+          [class.active-link]="isHomeActive()"
+          (click)="goHomeTab()"
+        >
+          {{ text.home }}
+        </button>
+        <button
+          class="nav-link-btn"
+          type="button"
+          [class.active-link]="isCheckoutActive()"
+          (click)="checkoutRequest.emit()"
+        >
+          {{ text.checkout }}
+        </button>
+        <button
+          *ngFor="let link of navLinks"
+          type="button"
+          class="nav-link-btn"
+          [class.active-link]="currentView === link.id"
+          (click)="openView(link.id)"
+        >
+          {{ navLabel(link) }}
+        </button>
+      </div>
+
+      <div class="hotline me-2">
+        <i class="bi bi-telephone"></i>
+        {{ text.phoneLabel }} +180 009 007
+      </div>
+    </div>
+  </div>
+
+  <section
+    *ngIf="isNavCategoryMenuOpen"
+    class="nav-category-panel"
+    (click)="$event.stopPropagation()"
+    [attr.aria-label]="text.menuLabel"
+  >
+    <div class="nav-category-panel-header">
+      <button
+        *ngIf="!accountName; else signedInPanelHeader"
+        class="nav-category-panel-header-main nav-category-panel-header-action"
+        type="button"
+        (click)="openPanelAccountAction()"
+      >
+        <div>
+          <span class="nav-category-kicker">{{ text.menuLabel }}</span>
+          <h2>{{ text.helloSignIn }}</h2>
+          <p>{{ text.panelSubtitle }}</p>
+        </div>
+        <i class="bi bi-chevron-right nav-category-panel-header-icon"></i>
+      </button>
+
+      <ng-template #signedInPanelHeader>
+        <div class="nav-category-panel-header-main">
+          <div>
+            <span class="nav-category-kicker">{{ text.menuLabel }}</span>
+            <h2>Hello, {{ accountName }}</h2>
+            <p>{{ text.yourAccount }}</p>
+          </div>
+        </div>
+      </ng-template>
+
+      <button
+        class="nav-category-panel-close"
+        type="button"
+        aria-label="Close menu"
+        (click)="closeNavCategoryMenu()"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="nav-category-panel-grid">
+      <section class="nav-category-column nav-category-column-wide">
+        <h3>{{ text.shopByCategory }}</h3>
+        <div class="nav-category-link-grid">
+          <button type="button" class="nav-category-link" (click)="openCategory('All')">
+            <strong>{{ text.allProducts }}</strong>
+            <span>Browse every department from one catalog view.</span>
+          </button>
+
+          <button
+            type="button"
+            class="nav-category-link"
+            *ngFor="let category of categories.slice(1)"
+            (click)="openCategory(category)"
+          >
+            <strong>{{ category }}</strong>
+            <span>Open this department from the old options menu.</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="nav-category-column nav-category-column-secondary">
+        <div class="nav-category-block">
+          <h3>Account services</h3>
+          <button type="button" class="nav-category-account-card" (click)="openPanelAccountAction()">
+            <span class="nav-category-account-icon">
+              <i class="bi bi-shield-lock"></i>
+            </span>
+            <span class="nav-category-account-copy">
+              <strong>Login &amp; security</strong>
+              <small>
+                {{
+                  accountName
+                    ? 'Edit login, name, and mobile number'
+                    : 'Sign in to manage your login, name, and mobile number'
+                }}
+              </small>
+            </span>
+          </button>
+        </div>
+      </section>
+    </div>
+  </section>
+</header>

@@ -1,0 +1,337 @@
+<section class="support-view account-view">
+  <article class="page-banner account-banner">
+    <div>
+      <span class="section-kicker">Account</span>
+      <h1>Manage your login details and security in one place.</h1>
+        <p>
+          Update your name, mobile number, and password from this signed-in account area whenever you need.
+        </p>
+      </div>
+      <div class="hero-actions">
+        <button class="btn hero-primary" type="button" (click)="continueShopping.emit()">
+          Browse more products
+        </button>
+      </div>
+    </article>
+
+  <div *ngIf="!accountName; else accountEditor" class="section-shell account-locked-shell">
+    <span class="section-kicker">Sign in required</span>
+    <h2>Open your account settings after sign-in</h2>
+    <p>
+      Sign in first to edit your login name, mobile number, and password from this page.
+    </p>
+    <button class="btn hero-primary" type="button" (click)="requestSignIn.emit()">
+      Sign in to open account
+    </button>
+  </div>
+
+  <ng-template #accountEditor>
+    <section class="support-layout account-page-grid">
+      <form class="section-shell" novalidate>
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">Profile details</span>
+            <h2>Edit your account details</h2>
+            <p>Change the display name and mobile number connected to this signed-in profile.</p>
+          </div>
+        </div>
+
+        <div class="checkout-field-grid support-field-grid account-field-grid">
+          <label
+            class="form-field floating-form-field"
+            [class.field-invalid]="!!profileNameErrorMessage()"
+          >
+            <input
+              type="text"
+              name="accountName"
+              [(ngModel)]="profileForm.name"
+              [readonly]="!profileEditMode"
+              placeholder=" "
+            />
+            <span>Full name</span>
+            <small *ngIf="profileNameErrorMessage()" class="field-error">
+              {{ profileNameErrorMessage() }}
+            </small>
+          </label>
+
+          <label
+            class="form-field floating-form-field"
+            [class.field-invalid]="!!profilePhoneErrorMessage()"
+          >
+            <input
+              type="tel"
+              name="accountPhone"
+              inputmode="numeric"
+              maxlength="10"
+              [(ngModel)]="profileForm.phone"
+              [readonly]="!profileEditMode"
+              placeholder=" "
+            />
+            <span>Mobile number</span>
+            <small *ngIf="profilePhoneErrorMessage()" class="field-error">
+              {{ profilePhoneErrorMessage() }}
+            </small>
+          </label>
+
+          <label class="form-field floating-form-field form-field-wide">
+            <input
+              type="email"
+              name="accountEmail"
+              [(ngModel)]="profileForm.email"
+              readonly
+              placeholder=" "
+            />
+            <span>Email</span>
+          </label>
+
+          <label
+            *ngIf="profileEditMode"
+            class="form-field floating-form-field password-toggle-field form-field-wide"
+            [class.field-invalid]="!!profileCurrentPasswordErrorMessage()"
+          >
+            <input
+              [type]="showProfileCurrentPassword ? 'text' : 'password'"
+              name="profileCurrentPassword"
+              [(ngModel)]="profileForm.currentPassword"
+              placeholder=" "
+              required
+              style="padding-right: 3.35rem"
+            />
+            <span>Current password</span>
+            <button
+              type="button"
+              class="password-toggle-btn"
+              style="position: absolute; top: 50%; right: 0.8rem; transform: translateY(-50%); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; background: transparent; color: #64748b; z-index: 2"
+              [attr.aria-label]="showProfileCurrentPassword ? 'Hide password' : 'Show password'"
+              (click)="togglePasswordVisibility('profileCurrent')"
+            >
+              <i [class]="showProfileCurrentPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+            <small *ngIf="profileCurrentPasswordErrorMessage()" class="field-error">
+              {{ profileCurrentPasswordErrorMessage() }}
+            </small>
+          </label>
+        </div>
+
+        <div class="account-inline-note">
+          <i class="bi bi-person-check"></i>
+          <div>
+            <strong>Your email stays locked to this account.</strong>
+            <p *ngIf="!profileEditMode">
+              Click edit account details, then enter the current password before saving your name
+              or 10-digit mobile number.
+            </p>
+            <p *ngIf="profileEditMode">
+              Enter the correct current password to save these profile changes.
+            </p>
+          </div>
+        </div>
+
+        <div class="support-form-actions">
+          <button
+            *ngIf="!profileEditMode"
+            class="btn dark-outline support-submit-btn"
+            type="button"
+            (click)="beginProfileEdit()"
+          >
+            Edit account details
+          </button>
+
+          <button
+            *ngIf="profileEditMode"
+            class="btn hero-primary support-submit-btn"
+            type="button"
+            (click)="saveProfile.emit()"
+          >
+            Save account details
+          </button>
+        </div>
+      </form>
+
+<form class="section-shell" novalidate>
+  <div class="section-heading">
+    <div>
+      <span class="section-kicker">Login &amp; security</span>
+      <h2>Reset or change your password</h2>
+      <p *ngIf="!passwordHintMode">
+        Use this section if you want to replace the current password while you are signed in.
+      </p>
+      <p *ngIf="passwordHintMode">
+        Enter the saved password hint and set a new password for this account.
+      </p>
+    </div>
+  </div>
+
+  <div class="checkout-field-grid support-field-grid account-field-grid">
+    <label
+      *ngIf="!passwordHintMode"
+      class="form-field floating-form-field password-toggle-field"
+      [class.field-invalid]="!!passwordCurrentErrorMessage()"
+    >
+      <input
+        [type]="showAccountCurrentPassword ? 'text' : 'password'"
+        name="currentPassword"
+        [(ngModel)]="passwordForm.currentPassword"
+        placeholder=" "
+        required
+        style="padding-right: 3.35rem"
+      />
+      <span>Current password</span>
+      <button
+        type="button"
+        class="password-toggle-btn"
+        style="position: absolute; top: 50%; right: 0.8rem; transform: translateY(-50%); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; background: transparent; color: #64748b; z-index: 2"
+        [attr.aria-label]="showAccountCurrentPassword ? 'Hide password' : 'Show password'"
+        (click)="togglePasswordVisibility('current')"
+      >
+        <i [class]="showAccountCurrentPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+      </button>
+      <small *ngIf="passwordCurrentErrorMessage()" class="field-error">
+        {{ passwordCurrentErrorMessage() }}
+      </small>
+    </label>
+
+    <label
+      *ngIf="passwordHintMode"
+      class="form-field floating-form-field"
+      [class.field-invalid]="!!passwordHintErrorMessage()"
+    >
+      <input
+        type="text"
+        name="passwordHint"
+        [(ngModel)]="passwordForm.passwordHint"
+        placeholder=" "
+        required
+      />
+      <span>Password hint</span>
+      <small *ngIf="passwordHintErrorMessage()" class="field-error">
+        {{ passwordHintErrorMessage() }}
+      </small>
+    </label>
+
+    <label
+      class="form-field floating-form-field password-toggle-field"
+      [class.field-invalid]="!!newPasswordErrorMessage()"
+    >
+      <input
+        [type]="showAccountNewPassword ? 'text' : 'password'"
+        name="newPassword"
+        [(ngModel)]="passwordForm.newPassword"
+        placeholder=" "
+        required
+        minlength="6"
+        style="padding-right: 3.35rem"
+      />
+      <span>New password</span>
+      <button
+        type="button"
+        class="password-toggle-btn"
+        style="position: absolute; top: 50%; right: 0.8rem; transform: translateY(-50%); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; background: transparent; color: #64748b; z-index: 2"
+        [attr.aria-label]="showAccountNewPassword ? 'Hide password' : 'Show password'"
+        (click)="togglePasswordVisibility('new')"
+      >
+        <i [class]="showAccountNewPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+      </button>
+      <small *ngIf="newPasswordErrorMessage()" class="field-error">
+        {{ newPasswordErrorMessage() }}
+      </small>
+    </label>
+
+    <label
+      class="form-field floating-form-field password-toggle-field form-field-wide"
+      [class.field-invalid]="!!confirmPasswordErrorMessage()"
+    >
+      <input
+        [type]="showAccountConfirmPassword ? 'text' : 'password'"
+        name="confirmPassword"
+        [(ngModel)]="passwordForm.confirmPassword"
+        placeholder=" "
+        required
+        minlength="6"
+        style="padding-right: 3.35rem"
+      />
+      <span>Confirm new password</span>
+      <button
+        type="button"
+        class="password-toggle-btn"
+        style="position: absolute; top: 50%; right: 0.8rem; transform: translateY(-50%); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; background: transparent; color: #64748b; z-index: 2"
+        [attr.aria-label]="showAccountConfirmPassword ? 'Hide password' : 'Show password'"
+        (click)="togglePasswordVisibility('confirm')"
+      >
+        <i [class]="showAccountConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+      </button>
+      <small *ngIf="confirmPasswordErrorMessage()" class="field-error">
+        {{ confirmPasswordErrorMessage() }}
+      </small>
+    </label>
+  </div>
+
+  <div
+    *ngIf="passwordHintMode && showPasswordHintMismatchNotice"
+    class="account-inline-note account-inline-note--warning"
+  >
+          <i class="bi bi-key"></i>
+          <div>
+      <strong>Current password did not match.</strong>
+      <p>Enter the saved password hint below to reset this account password instead.</p>
+    </div>
+  </div>
+
+  <div class="account-inline-note">
+    <i class="bi bi-shield-lock"></i>
+    <div>
+      <strong>Password rules</strong>
+      <p *ngIf="!passwordHintMode">
+        Enter your current password, then use at least 6 characters and make sure the confirmation matches exactly.
+      </p>
+      <p *ngIf="passwordHintMode">
+        Enter the saved password hint, then use at least 6 characters and make sure the confirmation matches exactly.
+      </p>
+    </div>
+  </div>
+
+  <div class="support-form-actions account-password-actions">
+    <button
+      *ngIf="!passwordHintMode"
+      class="btn hero-primary support-submit-btn"
+      type="button"
+      (click)="updatePassword.emit()"
+    >
+      Update password
+    </button>
+
+    <button
+      *ngIf="passwordHintMode"
+      class="btn hero-primary support-submit-btn"
+      type="button"
+      (click)="resetPasswordWithHint.emit()"
+    >
+      Update password
+    </button>
+
+    <button
+      *ngIf="!passwordHintMode"
+      class="btn dark-outline support-submit-btn"
+      type="button"
+      (click)="openPasswordHintReset.emit()"
+    >
+      Reset with password hint
+    </button>
+
+    <button
+      *ngIf="passwordHintMode"
+      class="btn dark-outline support-submit-btn"
+      type="button"
+      (click)="cancelPasswordHintReset.emit()"
+    >
+      Cancel hint reset
+    </button>
+  </div>
+
+  <small *ngIf="passwordActionErrorMessage()" class="field-error">
+    {{ passwordActionErrorMessage() }}
+  </small>
+</form>
+    </section>
+  </ng-template>
+</section>

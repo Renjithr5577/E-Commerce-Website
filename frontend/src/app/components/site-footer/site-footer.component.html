@@ -1,0 +1,37 @@
+<footer class="site-footer">
+  <button *ngIf="showBackToTop" class="floating-back-top" type="button" (click)="backToTop.emit()">
+    <i class="bi bi-arrow-up"></i>
+    Back to top
+  </button>
+
+  <div class="container">
+    <section class="footer-cta">
+      <div class="footer-cta-copy">
+        <span>Keep the browsing going</span>
+        <h2>Reached the bottom? Your shopping shortcuts stay here.</h2>
+        <p>
+          Use the floating Back to top button any time, or keep reading the store details below.
+        </p>
+      </div>
+    </section>
+
+    <div class="footer-grid">
+      <article *ngFor="let column of footerColumns">
+        <h3>{{ column.title }}</h3>
+        <ul>
+          <li *ngFor="let link of column.links">{{ link }}</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="footer-bottom">
+      <span>Copyright | LuxeCart Market | Prepared for your next e-commerce build</span>
+      <div class="social-strip">
+        <i class="bi bi-facebook"></i>
+        <i class="bi bi-instagram"></i>
+        <i class="bi bi-youtube"></i>
+        <i class="bi bi-whatsapp"></i>
+      </div>
+    </div>
+  </div>
+</footer>

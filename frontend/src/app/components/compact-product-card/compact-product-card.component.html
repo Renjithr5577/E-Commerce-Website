@@ -1,0 +1,8 @@
+<article class="compact-card compact-clickable" (click)="select.emit(product)">
+  <img [src]="product.imageUrl" [alt]="product.name" (error)="handleImageError($event)" />
+  <div>
+    <span>{{ product.category }}</span>
+    <h3>{{ product.name }}</h3>
+      <strong>{{ product.price | currency:'INR':'symbol':'1.0-0' }}</strong>
+  </div>
+</article>

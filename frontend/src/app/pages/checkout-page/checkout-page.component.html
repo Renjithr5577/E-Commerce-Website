@@ -1,0 +1,563 @@
+<section class="checkout-view">
+  <article *ngIf="stage === 'cart'; else checkoutDetailsView" class="cart-page-shell">
+    <section class="cart-list-panel">
+      <div class="cart-page-header">
+        <div>
+          <span class="section-kicker">Shopping cart</span>
+          <h1>Shopping Cart</h1>
+        </div>
+        <button class="btn ghost-btn cart-page-home-btn" type="button" (click)="backHome.emit()">
+          Continue shopping
+        </button>
+      </div>
+
+      <div class="cart-price-head" *ngIf="cart.length">Price</div>
+
+      <div class="cart-page-items" *ngIf="cart.length; else checkoutEmpty">
+        <article class="cart-item-row" *ngFor="let item of cart; trackBy: trackById">
+          <img
+            [src]="item.imageUrl"
+            [alt]="item.name"
+            role="button"
+            tabindex="0"
+            (click)="openProduct.emit(item)"
+            (keyup.enter)="openProduct.emit(item)"
+          />
+
+          <div class="cart-item-copy">
+            <div
+              class="cart-item-copy-main"
+              role="button"
+              tabindex="0"
+              (click)="openProduct.emit(item)"
+              (keyup.enter)="openProduct.emit(item)"
+            >
+              <h3>{{ item.name }}</h3>
+              <p>{{ item.description }}</p>
+            </div>
+
+            <span
+              class="cart-item-stock"
+              [class.cart-item-stock-warning]="isCartStockWarning(item)"
+            >
+              {{ getCartStockMessage(item) }}
+            </span>
+
+            <div class="cart-qty-box">
+              <button
+                type="button"
+                [attr.aria-label]="item.quantity === 1 ? 'Remove item' : 'Decrease quantity'"
+                (click)="
+                  item.quantity === 1 ? deleteItem.emit(item.id) : decreaseQuantity.emit(item.id)
+                "
+              >
+                <i [class]="item.quantity === 1 ? 'bi bi-trash3' : 'bi bi-dash-lg'"></i>
+              </button>
+              <span>{{ item.quantity }}</span>
+              <button
+                type="button"
+                aria-label="Increase quantity"
+                (click)="increaseQuantity.emit(item.id)"
+              >
+                <i class="bi bi-plus-lg"></i>
+              </button>
+            </div>
+
+            <div class="cart-item-actions">
+              <button type="button" (click)="deleteItem.emit(item.id)">Delete</button>
+              <button type="button" (click)="saveForLater.emit(item.id)">Save for later</button>
+            </div>
+          </div>
+
+          <strong class="cart-item-price">
+            {{ item.price * item.quantity | currency: 'INR' : 'symbol' : '1.2-2' }}
+          </strong>
+        </article>
+      </div>
+
+      <ng-template #checkoutEmpty>
+        <div class="empty-state">
+          <i class="bi bi-bag-x"></i>
+          <p>Your shopping cart is empty.</p>
+          <span>Add products to see the subtotal and continue to checkout.</span>
+        </div>
+      </ng-template>
+
+      <section class="saved-items-panel" *ngIf="savedItems.length">
+        <div class="saved-items-header">
+          <span class="section-kicker">Saved for later</span>
+          <h2>Saved items</h2>
+        </div>
+
+        <article class="saved-item-row" *ngFor="let item of savedItems; trackBy: trackById">
+          <img
+            [src]="item.imageUrl"
+            [alt]="item.name"
+            role="button"
+            tabindex="0"
+            (click)="openProduct.emit(item)"
+            (keyup.enter)="openProduct.emit(item)"
+          />
+          <div class="saved-item-copy">
+            <h3>{{ item.name }}</h3>
+            <p>{{ item.description }}</p>
+            <strong>{{ item.price | currency: 'INR' : 'symbol' : '1.2-2' }}</strong>
+            <div class="cart-item-actions">
+              <button type="button" (click)="moveToCart.emit(item.id)">Move to cart</button>
+              <button type="button" (click)="deleteSavedItem.emit(item.id)">Delete</button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <div class="cart-bottom-bar">
+        <div class="cart-bottom-copy">
+          <h2>
+            Subtotal ({{ checkoutItemCount }} {{ checkoutItemCount === 1 ? 'item' : 'items' }})
+          </h2>
+          <strong>{{ cartSubtotal | currency: 'INR' : 'symbol' : '1.2-2' }}</strong>
+        </div>
+        <button
+          class="btn add-btn cart-summary-btn"
+          type="button"
+          [disabled]="isCheckoutDisabled"
+          (click)="proceedCheckout.emit()"
+        >
+          Proceed to checkout
+        </button>
+      </div>
+    </section>
+  </article>
+
+  <ng-template #checkoutDetailsView>
+    <article class="page-banner checkout-banner">
+      <div>
+        <span class="section-kicker">Checkout details</span>
+        <h1>Complete the order and delivery details.</h1>
+        <p>
+          Fill the address details below and place the final order after reviewing your selected
+          items.
+        </p>
+      </div>
+      <button class="btn ghost-btn cart-page-home-btn" type="button" (click)="backToCart.emit()">
+        Back to cart
+      </button>
+    </article>
+
+    <form
+      class="checkout-layout"
+      #checkoutDetailsForm="ngForm"
+      novalidate
+      (ngSubmit)="handleSubmit(checkoutDetailsForm)"
+    >
+      <section class="section-shell checkout-form-shell">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">Delivery details</span>
+            <h2>Complete the form to place your order</h2>
+          </div>
+        </div>
+
+        <section *ngIf="savedAddresses.length" class="saved-addresses-shell">
+          <div class="saved-addresses-head">
+            <div>
+              <span class="section-kicker">Saved addresses</span>
+              <h3>Select a delivery address</h3>
+              <p>Use one of your saved delivery addresses or switch to a new one below.</p>
+            </div>
+            <strong>{{ savedAddresses.length }} saved</strong>
+          </div>
+
+          <div class="saved-addresses-list">
+            <article
+              *ngFor="let address of savedAddresses"
+              class="saved-address-card"
+              [class.saved-address-card-active]="selectedAddressId === address.id"
+            >
+              <label class="saved-address-radio-row">
+                <input
+                  type="radio"
+                  name="savedAddress"
+                  [checked]="selectedAddressId === address.id"
+                  (change)="chooseSavedAddress.emit(address.id)"
+                />
+                <div class="saved-address-copy">
+                  <strong>{{ address.customerName }}</strong>
+                  <p>
+                    {{ address.addressLine }}, {{ address.city }}, {{ address.state }},
+                    {{ address.postalCode }}
+                  </p>
+                  <small>Phone number: {{ address.phone }}</small>
+                </div>
+              </label>
+
+              <div style="display: flex; flex-wrap: wrap; gap: 1rem">
+                <button
+                  class="saved-address-edit-btn"
+                  type="button"
+                  (click)="editSavedAddress.emit(address.id)"
+                >
+                  Edit address
+                </button>
+                <button
+                  class="saved-address-edit-btn"
+                  style="color: #dc2626"
+                  type="button"
+                  (click)="deleteSavedAddress.emit(address.id)"
+                >
+                  Delete address
+                </button>
+              </div>
+            </article>
+          </div>
+
+          <div class="saved-address-actions">
+            <button class="btn dark-outline" type="button" (click)="startNewAddress.emit()">
+              Add a new delivery address
+            </button>
+            <button
+              class="btn hero-primary"
+              type="button"
+              [disabled]="!selectedAddressId"
+              (click)="selectedAddressId && confirmSavedAddress.emit(selectedAddressId)"
+            >
+              Deliver to this address
+            </button>
+          </div>
+        </section>
+
+        <div class="checkout-field-grid">
+          <label
+            class="form-field floating-form-field"
+            [class.field-invalid]="checkoutDetailsForm.submitted && customerNameModel.invalid"
+          >
+            <input
+              type="text"
+              name="customerName"
+              required
+              minlength="3"
+              pattern="[A-Za-z][A-Za-z\\s'.-]{2,}"
+              [(ngModel)]="checkoutForm.customerName"
+              #customerNameModel="ngModel"
+              placeholder=" "
+            />
+            <span>Full name</span>
+            <small
+              *ngIf="checkoutDetailsForm.submitted && customerNameModel.invalid"
+              class="field-error"
+            >
+              Full name must be at least 3 letters.
+            </small>
+          </label>
+          <label
+            class="form-field floating-form-field"
+            [class.field-invalid]="checkoutDetailsForm.submitted && emailModel.invalid"
+          >
+            <input
+              type="email"
+              name="email"
+              required
+              email
+              autocomplete="email"
+              [(ngModel)]="checkoutForm.email"
+              #emailModel="ngModel"
+              placeholder=" "
+            />
+            <span>Email</span>
+            <small *ngIf="checkoutDetailsForm.submitted && emailModel.invalid" class="field-error">
+              Enter a valid email address like name@example.com.
+            </small>
+          </label>
+          <label
+            class="form-field floating-form-field"
+            [class.field-invalid]="checkoutDetailsForm.submitted && phoneModel.invalid"
+          >
+            <input
+              type="tel"
+              name="phone"
+              required
+              pattern="[0-9]{10}"
+              inputmode="numeric"
+              maxlength="10"
+              [(ngModel)]="checkoutForm.phone"
+              #phoneModel="ngModel"
+              placeholder=" "
+            />
+            <span>Phone</span>
+            <small *ngIf="checkoutDetailsForm.submitted && phoneModel.invalid" class="field-error">
+              Phone number must be exactly 10 digits.
+            </small>
+          </label>
+          <label
+            class="form-field floating-form-field"
+            [class.field-invalid]="checkoutDetailsForm.submitted && stateModel.invalid"
+          >
+            <input
+              type="text"
+              name="state"
+              required
+              minlength="3"
+              pattern="[A-Za-z][A-Za-z\\s.-]{2,}"
+              [(ngModel)]="checkoutForm.state"
+              #stateModel="ngModel"
+              placeholder=" "
+            />
+            <span>State</span>
+            <small *ngIf="checkoutDetailsForm.submitted && stateModel.invalid" class="field-error">
+              State must be at least 3 letters.
+            </small>
+          </label>
+          <label
+            class="form-field floating-form-field form-field-wide"
+            [class.field-invalid]="checkoutDetailsForm.submitted && addressLineModel.invalid"
+          >
+            <input
+              type="text"
+              name="addressLine"
+              required
+              minlength="10"
+              [(ngModel)]="checkoutForm.addressLine"
+              #addressLineModel="ngModel"
+              placeholder=" "
+            />
+            <span>Address</span>
+            <small
+              *ngIf="checkoutDetailsForm.submitted && addressLineModel.invalid"
+              class="field-error"
+            >
+              Address must be at least 10 characters.
+            </small>
+          </label>
+          <label
+            class="form-field floating-form-field"
+            [class.field-invalid]="checkoutDetailsForm.submitted && cityModel.invalid"
+          >
+            <input
+              type="text"
+              name="city"
+              required
+              minlength="3"
+              pattern="[A-Za-z][A-Za-z\\s.-]{2,}"
+              [(ngModel)]="checkoutForm.city"
+              #cityModel="ngModel"
+              placeholder=" "
+            />
+            <span>City</span>
+            <small *ngIf="checkoutDetailsForm.submitted && cityModel.invalid" class="field-error">
+              City must be at least 3 letters.
+            </small>
+          </label>
+          <label
+            class="form-field floating-form-field"
+            [class.field-invalid]="checkoutDetailsForm.submitted && postalCodeModel.invalid"
+          >
+            <input
+              type="text"
+              name="postalCode"
+              required
+              minlength="6"
+              maxlength="6"
+              pattern="[0-9]{6}"
+              inputmode="numeric"
+              [(ngModel)]="checkoutForm.postalCode"
+              #postalCodeModel="ngModel"
+              placeholder=" "
+            />
+            <span>Postal code</span>
+            <small
+              *ngIf="checkoutDetailsForm.submitted && postalCodeModel.invalid"
+              class="field-error"
+            >
+              Postal code must be exactly 6 digits.
+            </small>
+          </label>
+        </div>
+
+        <div class="payment-shell">
+          <span class="payment-title">Payment method</span>
+          <div class="payment-pills">
+            <button
+              *ngFor="let option of paymentOptions"
+              type="button"
+              class="payment-pill"
+              [class.active-payment]="checkoutForm.paymentMethod === option"
+              (click)="selectPaymentMethod(option)"
+            >
+              {{ option }}
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="requiresCardDetails" class="checkout-field-grid mb-4">
+          <label
+            class="form-field floating-form-field"
+            [class.field-invalid]="checkoutDetailsForm.submitted && cardHolderNameModel.invalid"
+          >
+            <input
+              type="text"
+              name="cardHolderName"
+              required
+              minlength="2"
+              autocomplete="cc-name"
+              [(ngModel)]="checkoutForm.cardHolderName"
+              #cardHolderNameModel="ngModel"
+              placeholder=" "
+            />
+            <span>Card holder name</span>
+            <small
+              *ngIf="checkoutDetailsForm.submitted && cardHolderNameModel.invalid"
+              class="field-error"
+            >
+              Enter the card holder name.
+            </small>
+          </label>
+
+          <label
+            class="form-field floating-form-field"
+            [class.field-invalid]="checkoutDetailsForm.submitted && cardNumberModel.invalid"
+          >
+            <input
+              type="text"
+              name="cardNumber"
+              required
+              pattern="[0-9 ]{16,19}"
+              minlength="16"
+              maxlength="19"
+              inputmode="numeric"
+              autocomplete="cc-number"
+              [(ngModel)]="checkoutForm.cardNumber"
+              #cardNumberModel="ngModel"
+              placeholder=" "
+            />
+            <span>Card number</span>
+            <small
+              *ngIf="checkoutDetailsForm.submitted && cardNumberModel.invalid"
+              class="field-error"
+            >
+              Enter a valid 16-digit card number.
+            </small>
+          </label>
+
+          <label
+            class="form-field floating-form-field"
+            [class.field-invalid]="checkoutDetailsForm.submitted && cardExpiryModel.invalid"
+          >
+            <input
+              type="text"
+              name="cardExpiry"
+              required
+              pattern="(0[1-9]|1[0-2])/[0-9]{2}"
+              maxlength="5"
+              autocomplete="cc-exp"
+              [(ngModel)]="checkoutForm.cardExpiry"
+              #cardExpiryModel="ngModel"
+              placeholder=" "
+            />
+            <span>Expiry</span>
+            <small
+              *ngIf="checkoutDetailsForm.submitted && cardExpiryModel.invalid"
+              class="field-error"
+            >
+              Enter expiry as MM/YY.
+            </small>
+          </label>
+
+          <label
+            class="form-field floating-form-field"
+            [class.field-invalid]="checkoutDetailsForm.submitted && cardCvvModel.invalid"
+          >
+            <input
+              type="password"
+              name="cardCvv"
+              required
+              pattern="[0-9]{3,4}"
+              minlength="3"
+              maxlength="4"
+              inputmode="numeric"
+              autocomplete="cc-csc"
+              [(ngModel)]="checkoutForm.cardCvv"
+              #cardCvvModel="ngModel"
+              placeholder=" "
+            />
+            <span>CVV</span>
+            <small
+              *ngIf="checkoutDetailsForm.submitted && cardCvvModel.invalid"
+              class="field-error"
+            >
+              Enter a valid 3 or 4 digit CVV.
+            </small>
+          </label>
+        </div>
+
+        <label class="form-field floating-form-field floating-form-field-area form-field-wide">
+          <textarea
+            rows="4"
+            name="notes"
+            [(ngModel)]="checkoutForm.notes"
+            placeholder=" "
+          ></textarea>
+          <span>Order notes</span>
+        </label>
+
+        <button
+          class="btn buy-now-btn place-order-btn"
+          type="submit"
+          [disabled]="isCheckoutDisabled"
+        >
+          {{ orderSubmitting ? 'Processing your order...' : 'Buy these items' }}
+        </button>
+      </section>
+
+      <aside class="section-shell checkout-sidebar">
+        <span class="section-kicker">Order summary</span>
+        <h2>{{ checkoutItemCount }} items in your order</h2>
+
+        <div class="checkout-order-list" *ngIf="cart.length; else detailEmpty">
+          <article class="order-line" *ngFor="let item of cart; trackBy: trackById">
+            <img
+              [src]="item.imageUrl"
+              [alt]="item.name"
+              role="button"
+              tabindex="0"
+              (click)="openProduct.emit(item)"
+              (keyup.enter)="openProduct.emit(item)"
+            />
+            <div
+              class="order-line-copy"
+              role="button"
+              tabindex="0"
+              (click)="openProduct.emit(item)"
+              (keyup.enter)="openProduct.emit(item)"
+            >
+              <h3>{{ item.name }}</h3>
+              <p>{{ item.quantity }} x {{ item.price | currency: 'INR' : 'symbol' : '1.2-2' }}</p>
+            </div>
+            <strong>{{ item.price * item.quantity | currency: 'INR' : 'symbol' : '1.2-2' }}</strong>
+          </article>
+        </div>
+
+        <ng-template #detailEmpty>
+          <div class="empty-state">
+            <i class="bi bi-bag-x"></i>
+            <p>Add a product first to continue with checkout.</p>
+          </div>
+        </ng-template>
+
+        <div class="totals-card">
+          <div>
+            <span>Subtotal</span>
+            <strong>{{ cartSubtotal | currency: 'INR' : 'symbol' : '1.2-2' }}</strong>
+          </div>
+          <div>
+            <span>Delivery</span>
+            <strong>{{ deliveryFee | currency: 'INR' : 'symbol' : '1.2-2' }}</strong>
+          </div>
+          <div class="grand-total">
+            <span>Total</span>
+            <strong>{{ cartTotal | currency: 'INR' : 'symbol' : '1.2-2' }}</strong>
+          </div>
+        </div>
+      </aside>
+    </form>
+  </ng-template>
+</section>

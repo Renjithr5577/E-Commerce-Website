@@ -1,0 +1,145 @@
+.hero-banner {
+  /* height: clamp(16.5rem, 21vw, 18.5rem); */
+  min-height: 0;
+  padding: 1.4rem 2rem 2.1rem;
+}
+
+.hero-banner-layout {
+  grid-template-columns: minmax(0, 20rem) 1fr;
+  height: 100%;
+  align-items: center;
+}
+
+.hero-banner-copy {
+  width: min(100%, 20rem);
+  max-width: 20rem;
+  display: grid;
+  gap: 0.34rem;
+  padding: 1rem 1.08rem;
+  border-radius: 1.2rem;
+}
+
+.hero-banner p {
+  max-width: 15.75rem;
+  margin-top: 0.34rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.hero-banner h1 {
+  max-width: 8.2ch;
+  font-size: clamp(2.25rem, 3.45vw, 3.1rem);
+  line-height: 0.92;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.hero-accent {
+  margin-bottom: 0.2rem;
+  font-size: clamp(1.2rem, 1.85vw, 1.65rem);
+  line-height: 1.06;
+  max-width: 15rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.hero-eyebrow {
+  margin-bottom: 0.25rem;
+  padding: 0.34rem 0.64rem;
+  font-size: 0.58rem;
+}
+
+.hero-actions {
+  margin-top: 0.6rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.hero-actions .btn {
+  padding: 0.58rem 0.8rem;
+  font-size: 0.76rem;
+}
+
+.hero-side-arrow {
+  width: 2.7rem;
+  height: 2.7rem;
+  font-size: 1.2rem;
+}
+
+.hero-side-arrow-left {
+  left: 0.55rem;
+}
+
+.hero-side-arrow-right {
+  right: 0.55rem;
+}
+
+.hero-pagination {
+  bottom: 0.65rem;
+}
+
+@media (max-width: 1399.98px) {
+  .hero-banner {
+    height: 19.5rem;
+    padding: 1.2rem 1.5rem 1.8rem;
+  }
+
+  .hero-banner-layout {
+    grid-template-columns: minmax(0, 17rem) 1fr;
+  }
+
+  .hero-banner-copy {
+    width: min(100%, 17rem);
+    max-width: 17rem;
+    padding: 0.85rem 0.92rem;
+  }
+
+  .hero-banner p {
+    max-width: 12.75rem;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .hero-banner {
+    height: 18rem;
+    padding: 1rem 1.15rem 1.65rem;
+  }
+
+  .hero-banner-layout {
+    grid-template-columns: minmax(0, 14rem) 1fr;
+  }
+
+  .hero-banner-copy {
+    width: min(100%, 14rem);
+    max-width: 14rem;
+    padding: 0.78rem 0.85rem;
+  }
+
+  .hero-banner h1 {
+    font-size: clamp(1.7rem, 3vw, 2.45rem);
+  }
+
+  .hero-banner p {
+    max-width: 11rem;
+    font-size: 0.74rem;
+    -webkit-line-clamp: 2;
+  }
+
+  .hero-banner h1 {
+    -webkit-line-clamp: 2;
+  }
+
+  .hero-actions {
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,88 @@
+<section *ngIf="product as item" class="product-detail-view">
+  <article class="page-banner detail-banner">
+    <div>
+      <span class="section-kicker">Product details</span>
+      <h1>{{ item.name }}</h1>
+      <p>
+        This page gives shoppers a focused view of the product, stronger visuals, and a clear path into checkout.
+      </p>
+    </div>
+    <button class="btn hero-primary" type="button" (click)="showCatalog.emit(item.category)">
+      Back to catalog
+    </button>
+  </article>
+
+  <section class="product-detail-layout">
+    <div class="detail-gallery section-shell">
+      <img
+        [src]="item.imageUrl"
+        [alt]="item.name"
+        class="detail-main-image"
+        (error)="handleImageError($event)"
+      />
+      <div class="detail-thumb-row">
+        <img [src]="item.imageUrl" [alt]="item.name" (error)="handleImageError($event)" />
+        <img [src]="item.imageUrl" [alt]="item.name" (error)="handleImageError($event)" />
+        <img [src]="item.imageUrl" [alt]="item.name" (error)="handleImageError($event)" />
+      </div>
+    </div>
+
+    <div class="detail-info section-shell">
+      <span class="section-kicker">{{ item.category }}</span>
+      <h2>{{ item.name }}</h2>
+      <p>{{ item.description }}</p>
+
+      <div class="detail-meta-grid">
+        <div>
+          <span>Price</span>
+      <strong>{{ item.price | currency:'INR':'symbol':'1.0-0' }}</strong>
+        </div>
+        <div>
+          <span>Rating</span>
+          <strong>{{ item.rating }}/5</strong>
+        </div>
+        <div>
+          <span>Stock</span>
+          <strong>{{ item.stock }} available</strong>
+        </div>
+        <div>
+          <span>Badge</span>
+          <strong>{{ item.badge || 'Featured pick' }}</strong>
+        </div>
+      </div>
+
+      <div class="detail-note">
+        <h3>Why this product matters</h3>
+        <p>
+          Better storytelling on the detail page gives customers more confidence, especially before checkout or future reviews.
+        </p>
+      </div>
+
+      <div class="detail-actions">
+        <button class="btn add-btn card-action-btn detail-action-btn" type="button" (click)="addToCart.emit(item)">
+          Add to cart
+        </button>
+        <button class="btn buy-now-btn card-action-btn detail-action-btn" type="button" (click)="buyNow.emit(item)">
+          Buy now
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-shell" *ngIf="relatedProducts.length">
+    <div class="section-heading">
+      <div>
+        <span class="section-kicker">Related products</span>
+        <h2>Customers may also like</h2>
+      </div>
+    </div>
+
+    <div class="related-grid">
+      <app-compact-product-card
+        *ngFor="let relatedProduct of relatedProducts"
+        [product]="relatedProduct"
+        (select)="openProduct.emit($event)"
+      ></app-compact-product-card>
+    </div>
+  </section>
+</section>

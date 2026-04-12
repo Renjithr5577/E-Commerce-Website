@@ -1,0 +1,9 @@
+<section class="mini-feature-row">
+  <article class="mini-feature-card" *ngFor="let item of highlights">
+    <i [class]="item.icon"></i>
+    <div>
+      <h3>{{ item.title }}</h3>
+      <p>{{ item.text }}</p>
+    </div>
+  </article>
+</section>

@@ -1,0 +1,259 @@
+<section class="orders-view">
+  <article class="page-banner support-banner">
+    <div>
+      <span class="section-kicker">Your orders</span>
+      <h1>Open your ordered products and full order details.</h1>
+        <p>
+          This page shows only the orders linked to your signed-in account email. Click any ordered
+          product card to load the full order.
+        </p>
+      </div>
+      <div class="orders-banner-actions">
+        <button class="btn hero-primary" type="button" (click)="continueShopping.emit()">
+          Browse more products
+        </button>
+      </div>
+    </article>
+
+  <section *ngIf="!accountName" class="section-shell orders-locked-shell">
+    <span class="section-kicker">Sign in required</span>
+    <h2>Sign in to open your order history.</h2>
+    <p>Your ordered products and full order details are available only after sign-in.</p>
+    <div class="support-form-actions">
+      <button class="btn hero-primary" type="button" (click)="requestSignIn.emit()">
+        Sign in first
+      </button>
+      <button class="btn dark-outline" type="button" (click)="continueShopping.emit()">
+        Continue shopping
+      </button>
+    </div>
+  </section>
+
+  <section *ngIf="accountName">
+    <div class="section-shell">
+      <div class="section-heading mb-3">
+        <div>
+          <span class="section-kicker">Order history</span>
+          <h2>Only {{ accountName }}'s orders appear here</h2>
+          <p>
+            Every card belongs to your signed-in account. One card now represents one full order,
+            and each card shows its order reference.
+          </p>
+        </div>
+      </div>
+
+      <div *ngIf="ordersLoading" class="feedback-card">
+        <div class="spinner-border text-warning" role="status"></div>
+        <p class="mb-0">Loading your orders...</p>
+      </div>
+
+      <div *ngIf="!ordersLoading && ordersError" class="checkout-error">
+        <i class="bi bi-exclamation-circle"></i>
+        {{ ordersError }}
+      </div>
+
+      <div
+        *ngIf="!ordersLoading && !ordersError && orders.length; else noOrders"
+        class="admin-list"
+      >
+        <article
+          *ngFor="let order of orders"
+          class="admin-list-card support-customer-order-card orders-list-card"
+          [class.orders-list-card-active]="activeOrderId === order.orderId"
+          role="button"
+          tabindex="0"
+          [attr.aria-label]="'Open full order ' + order.orderReference"
+          (click)="openOrderDetail(order.orderId)"
+          (keydown)="handleOrderCardKeydown($event, order.orderId)"
+        >
+          <div class="support-customer-order-top">
+            <img [src]="order.leadImageUrl" [alt]="order.leadProductName" />
+            <div>
+              <strong>{{ getOrderPreviewLabel(order) }}</strong>
+              <p>{{ order.orderReference }}</p>
+              <small style="color: #64748b">{{ order.leadCategory }}</small>
+            </div>
+          </div>
+
+          <div class="admin-list-meta">
+            <span>{{ order.itemCount }} {{ order.itemCount === 1 ? 'item' : 'items' }}</span>
+            <span>{{ order.leadBadge || getOrderStatusLabel(order.status) }}</span>
+            <small>{{ order.createdAt | date: 'medium' }}</small>
+          </div>
+
+          <div class="admin-detail-grid support-order-metrics">
+            <div class="admin-detail-card">
+              <span>Order reference</span>
+              <strong>{{ order.orderReference }}</strong>
+            </div>
+            <div class="admin-detail-card">
+              <span>Status</span>
+              <strong>{{ getOrderStatusLabel(order.status) }}</strong>
+            </div>
+            <div class="admin-detail-card">
+              <span>Items</span>
+              <strong>{{ order.itemCount }}</strong>
+            </div>
+            <div class="admin-detail-card">
+              <span>Total</span>
+              <strong>{{ order.totalAmount | currency: 'INR' : 'symbol' : '1.2-2' }}</strong>
+            </div>
+          </div>
+
+          <span class="orders-card-cta">Click to view full order</span>
+        </article>
+      </div>
+
+      <div
+        *ngIf="!ordersLoading && !ordersError && orders.length"
+        class="empty-state orders-selection-state"
+      >
+        <i class="bi bi-receipt"></i>
+        <p>Click any order card to open the full order detail.</p>
+        <span>The order detail now opens in a popup so the list stays easier to scan.</span>
+      </div>
+    </div>
+  </section>
+
+  <div
+    *ngIf="accountName && isOrderDialogOpen"
+    class="admin-modal-backdrop orders-modal-backdrop"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="customerOrderDetailTitle"
+    (click)="closeSelectedOrderDetail()"
+  >
+    <article
+      class="admin-product-modal support-order-card orders-detail-modal"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="support-order-head orders-modal-head">
+        <div>
+          <span class="section-kicker">
+            {{
+              selectedOrder?.orderReference ||
+                (activeOrderId ? 'Order #' + activeOrderId : 'Full detail')
+            }}
+          </span>
+          <h3 id="customerOrderDetailTitle">
+            {{
+              selectedOrderLoading
+                ? 'Loading full order detail'
+                : selectedOrderError
+                  ? 'Unable to open order detail'
+                  : 'Full order details'
+            }}
+          </h3>
+          <p *ngIf="selectedOrder && !selectedOrderLoading && !selectedOrderError">
+            Placed {{ selectedOrder.createdAt | date: 'medium' }}
+          </p>
+          <p *ngIf="selectedOrderLoading">Please wait while we load the selected order.</p>
+          <p *ngIf="!selectedOrderLoading && selectedOrderError">
+            We could not load this order right now.
+          </p>
+        </div>
+
+        <div class="orders-modal-actions">
+          <strong
+            *ngIf="selectedOrder && !selectedOrderLoading && !selectedOrderError"
+            class="admin-status-pill"
+            [class.admin-status-pill-success]="selectedOrder.status === 'confirmed'"
+          >
+            {{ getOrderStatusLabel(selectedOrder.status) }}
+          </strong>
+
+          <button
+            class="btn dark-outline orders-modal-close"
+            type="button"
+            (click)="closeSelectedOrderDetail()"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="selectedOrderLoading" class="feedback-card">
+        <div class="spinner-border text-warning" role="status"></div>
+        <p class="mb-0">Loading the full order detail...</p>
+      </div>
+
+      <div *ngIf="!selectedOrderLoading && selectedOrderError" class="checkout-error">
+        <i class="bi bi-exclamation-circle"></i>
+        {{ selectedOrderError }}
+      </div>
+
+      <ng-container *ngIf="!selectedOrderLoading && !selectedOrderError && selectedOrder as order">
+        <div class="admin-detail-grid support-order-metrics">
+          <div class="admin-detail-card">
+            <span>Order reference</span>
+            <strong>{{ order.orderReference }}</strong>
+          </div>
+          <div class="admin-detail-card">
+            <span>Items in order</span>
+            <strong>{{ order.itemCount }}</strong>
+          </div>
+          <div class="admin-detail-card">
+            <span>Subtotal</span>
+            <strong>{{ order.subtotal | currency: 'INR' : 'symbol' : '1.2-2' }}</strong>
+          </div>
+          <div class="admin-detail-card">
+            <span>Delivery fee</span>
+            <strong>{{ order.deliveryFee | currency: 'INR' : 'symbol' : '1.2-2' }}</strong>
+          </div>
+          <div class="admin-detail-card">
+            <span>Order total</span>
+            <strong>{{ order.totalAmount | currency: 'INR' : 'symbol' : '1.2-2' }}</strong>
+          </div>
+        </div>
+
+        <div class="admin-detail-grid support-order-metrics">
+          <div class="admin-detail-card">
+            <span>Customer</span>
+            <strong>{{ order.customerName }}</strong>
+          </div>
+          <div class="admin-detail-card">
+            <span>Email</span>
+            <strong>{{ order.email }}</strong>
+          </div>
+          <div class="admin-detail-card">
+            <span>Phone</span>
+            <strong>{{ order.phone }}</strong>
+          </div>
+          <div class="admin-detail-card">
+            <span>Payment</span>
+            <strong>{{ order.paymentMethod }}</strong>
+          </div>
+        </div>
+
+        <div class="support-order-items">
+          <article *ngFor="let item of order.items" class="admin-order-item">
+            <img [src]="item.imageUrl" [alt]="item.productName" />
+            <div>
+              <strong>{{ item.productName }}</strong>
+              <p>{{ item.category }}</p>
+              <small
+                >{{ item.quantity }} x
+                {{ item.unitPrice | currency: 'INR' : 'symbol' : '1.2-2' }}</small
+              >
+            </div>
+            <strong>{{ item.lineTotal | currency: 'INR' : 'symbol' : '1.2-2' }}</strong>
+          </article>
+        </div>
+
+        <div class="admin-detail-note orders-detail-note">
+          <h3>Delivery address</h3>
+          <p>{{ order.addressLine }}, {{ order.city }}, {{ order.state }} {{ order.postalCode }}</p>
+          <p *ngIf="order.notes">Notes: {{ order.notes }}</p>
+        </div>
+      </ng-container>
+    </article>
+  </div>
+
+  <ng-template #noOrders>
+    <div class="empty-state">
+      <i class="bi bi-bag-check"></i>
+      <p>No orders found for this account yet.</p>
+      <span>Place your first order while signed in and it will appear here automatically.</span>
+    </div>
+  </ng-template>
+</section>

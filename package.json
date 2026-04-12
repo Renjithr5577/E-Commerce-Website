@@ -1,0 +1,24 @@
+{
+  "name": "e-commerce-website",
+  "version": "1.0.0",
+  "description": "Angular + Bootstrap + Express + MySQL e-commerce starter",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm --prefix backend run dev\" \"npm --prefix frontend start\"",
+    "dev:frontend": "npm --prefix frontend start",
+    "dev:backend": "npm --prefix backend run dev",
+    "build": "npm --prefix frontend run build"
+  },
+  "keywords": [
+    "angular",
+    "bootstrap",
+    "express",
+    "mysql",
+    "ecommerce"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

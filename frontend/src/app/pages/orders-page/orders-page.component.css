@@ -1,0 +1,89 @@
+.orders-list-card-active {
+  border-color: rgba(249, 115, 22, 0.85);
+  box-shadow: 0 16px 30px rgba(249, 115, 22, 0.16);
+}
+
+.orders-view .support-banner {
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.78), rgba(8, 145, 178, 0.46)),
+    url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80');
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+}
+
+.orders-view .support-banner h1,
+.orders-view .support-banner p {
+  color: #fff;
+}
+
+.orders-view .support-banner p {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.orders-view .support-banner .section-kicker {
+  background: rgba(245, 158, 11, 0.18);
+  color: #f59e0b;
+}
+
+.orders-list-card {
+  cursor: pointer;
+  border-color: rgba(249, 115, 22, 0.58);
+  border-width: 4.0px;
+}
+
+.orders-list-card:hover {
+  border-color: rgba(249, 115, 22, 0.82);
+}
+
+.orders-list-card .admin-detail-card,
+.orders-detail-modal .admin-detail-card,
+.orders-detail-modal .admin-detail-note,
+.orders-detail-modal .admin-order-item {
+  border: 1.5px solid rgba(249, 115, 22, 0.44);
+}
+
+.orders-detail-modal {
+  width: min(100%, 76rem);
+  max-height: calc(100vh - 2rem);
+  padding: 1.35rem 1.55rem 1.25rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  background: #ffffff;
+}
+
+.orders-detail-modal::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.orders-modal-head {
+  margin-bottom: 0.2rem;
+}
+
+.orders-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.orders-detail-modal .support-order-metrics {
+  gap: 0.75rem;
+}
+
+.orders-detail-modal .support-order-items {
+  gap: 0.7rem;
+}
+
+.orders-detail-modal .admin-detail-note {
+  margin-top: 0;
+}
+
+.orders-detail-note p {
+  margin: 0.35rem 0 0;
+}

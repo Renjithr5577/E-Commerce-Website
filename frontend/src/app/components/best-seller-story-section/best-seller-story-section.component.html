@@ -1,0 +1,27 @@
+<section class="section-shell" id="best-sellers">
+  <div class="section-heading">
+    <div>
+      <span class="section-kicker">More items to consider</span>
+      <h2>Related to items you've viewed</h2>
+      <p>Product cards stay in clear columns here so the bottom of the home page feels easier to browse.</p>
+    </div>
+  </div>
+
+  <div class="compact-grid">
+    <app-compact-product-card
+      *ngFor="let product of bestSellerProducts"
+      [product]="product"
+      (select)="productOpen.emit($event)"
+    ></app-compact-product-card>
+  </div>
+
+  <div class="section-action-row" *ngIf="canShowMore || canShowLess">
+    <button
+      class="btn dark-outline show-more-btn"
+      type="button"
+      (click)="canShowMore ? showMore.emit() : showLess.emit()"
+    >
+      {{ canShowMore ? 'Show more items' : 'Show less items' }}
+    </button>
+  </div>
+</section>

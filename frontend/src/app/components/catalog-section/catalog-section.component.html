@@ -1,0 +1,69 @@
+<section class="section-shell" id="catalog">
+  <div class="section-heading">
+    <div>
+      <span class="section-kicker">Shop the catalog</span>
+      <h2>{{ catalogHeading }}</h2>
+      <p>{{ catalogDescription }}</p>
+    </div>
+    <button class="refresh-btn" type="button" (click)="refresh.emit()">
+      <i class="bi bi-arrow-clockwise"></i>
+      Refresh products
+    </button>
+  </div>
+
+  <div class="category-pills" *ngIf="!searchTerm.trim()">
+    <button
+      *ngFor="let category of visibleCategories"
+      type="button"
+      [class.active-pill]="selectedCategory === category"
+      (click)="categorySelect.emit(category)"
+    >
+      {{ category }}
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="feedback-card">
+    <div class="spinner-border text-warning" role="status"></div>
+    <p class="mb-0">Loading products from the API...</p>
+  </div>
+
+  <div *ngIf="!loading && error" class="feedback-card error-card">
+    <i class="bi bi-exclamation-octagon"></i>
+    <div>
+      <strong>Could not load products.</strong>
+      <p class="mb-0">{{ error }}</p>
+    </div>
+  </div>
+
+  <div class="product-grid" *ngIf="!loading && !error && products.length">
+    <app-product-card
+      *ngFor="let product of products"
+      [product]="product"
+      [wishlisted]="isWishlisted(product)"
+      (open)="productOpen.emit($event)"
+      (addToCart)="productAdd.emit($event)"
+      (buyNow)="productBuy.emit($event)"
+      (toggleWishlist)="productWishlistToggle.emit($event)"
+    ></app-product-card>
+  </div>
+
+  <div class="section-action-row" *ngIf="!loading && !error && products.length && (canShowMore || canShowLess)">
+    <button
+      class="btn dark-outline show-more-btn"
+      type="button"
+      (click)="canShowMore ? showMore.emit() : showLess.emit()"
+    >
+      {{ canShowMore ? 'Show more products' : 'Show less products' }}
+    </button>
+  </div>
+
+  <div class="feedback-card" *ngIf="!loading && !error && !products.length">
+    <i class="bi bi-search"></i>
+    <p class="mb-0">
+      No products match
+      <strong *ngIf="searchTerm.trim()">"{{ searchTerm.trim() }}"</strong>
+      <span *ngIf="!searchTerm.trim()">your search</span>
+      right now. Try another keyword or category.
+    </p>
+  </div>
+</section>

@@ -1,0 +1,44 @@
+<section *ngIf="receipt as orderReceipt" class="confirmation-view">
+  <article class="confirmation-shell section-shell">
+    <div class="confirmation-icon">
+      <i class="bi bi-check2-circle"></i>
+    </div>
+    <span class="section-kicker">Order placed</span>
+    <h1>Thanks, {{ orderReceipt.customerName }}. Your order is confirmed.</h1>
+    <p>
+      Order reference {{ orderReceipt.orderReference }} was saved through the backend API. Use this reference when you submit a support request for this order.
+    </p>
+
+    <div class="confirmation-grid">
+      <div>
+        <span>Order reference</span>
+        <strong>{{ orderReceipt.orderReference }}</strong>
+      </div>
+      <div>
+        <span>Items ordered</span>
+        <strong>{{ orderReceipt.itemCount }}</strong>
+      </div>
+      <div>
+        <span>Total paid on delivery</span>
+      <strong>{{ orderReceipt.totalAmount | currency:'INR':'symbol':'1.0-0' }}</strong>
+      </div>
+      <div>
+        <span>Estimated delivery</span>
+        <strong>{{ orderReceipt.estimatedDelivery }}</strong>
+      </div>
+      <div>
+        <span>Contact email</span>
+        <strong>{{ orderReceipt.email }}</strong>
+      </div>
+    </div>
+
+    <div class="hero-actions confirmation-actions">
+      <button class="btn hero-primary" type="button" (click)="continueShopping.emit()">
+        Continue shopping
+      </button>
+      <button class="btn hero-secondary dark-outline" type="button" (click)="contactSupport.emit()">
+        Contact support
+      </button>
+    </div>
+  </article>
+</section>

@@ -1,0 +1,27 @@
+<section class="promo-grid">
+  <article class="promo-card" *ngFor="let board of promoBoards; let boardIndex = index">
+    <div class="promo-copy">
+      <h3>{{ board.title }}</h3>
+      <p>{{ board.description }}</p>
+      <div class="promo-tile-grid">
+        <button
+          class="promo-tile"
+          type="button"
+          *ngFor="let product of getBoardProducts(board, boardIndex)"
+          (click)="shopCategory.emit(product.category)"
+        >
+          <img [src]="product.imageUrl" [alt]="product.name" />
+          <small>{{ product.category }}</small>
+          <span>{{ product.name }}</span>
+        </button>
+      </div>
+      <button
+        class="promo-link promo-link-filled"
+        type="button"
+        (click)="shopCategory.emit(board.category)"
+      >
+        See more
+      </button>
+    </div>
+  </article>
+</section>

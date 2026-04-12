@@ -1,0 +1,290 @@
+<section class="support-view">
+  <article class="page-banner support-banner">
+    <div>
+      <span class="section-kicker">Support center</span>
+      <h1>Share the problem clearly and get faster help.</h1>
+      <p>
+        Track order concerns, payment issues, account problems, or product questions from one polished support area.
+      </p>
+    </div>
+    <button class="btn hero-primary" type="button" (click)="backHome.emit()">
+      Back to home
+    </button>
+  </article>
+
+  <section class="support-card-grid">
+    <article class="support-card" *ngFor="let card of supportCards">
+      <i [class]="card.icon"></i>
+      <h2>{{ card.title }}</h2>
+      <p>{{ card.text }}</p>
+    </article>
+  </section>
+
+  <section class="support-layout">
+    <form class="section-shell support-form-shell" #supportFormRef="ngForm" novalidate (ngSubmit)="handleSubmit(supportFormRef)">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">Support form</span>
+          <h2>{{ accountName ? 'Logged in support request' : 'Sign in to send a support request' }}</h2>
+          <p>
+            {{
+              accountName
+                ? 'Your account details are locked to this signed-in profile so support can follow up faster.'
+                : 'Support tickets can be submitted only after sign-in. Once you sign in, this form will unlock for your account.'
+            }}
+          </p>
+        </div>
+        <button *ngIf="!accountName" class="btn dark-outline" type="button" (click)="requestSignIn.emit()">
+          Sign in first
+        </button>
+      </div>
+
+      <div class="auth-notice">
+        <i class="bi bi-chat-dots"></i>
+        {{
+          accountName
+            ? 'Your submitted tickets and latest support replies appear below for this account.'
+            : 'Sign in first to unlock the support form and track ticket replies for your account.'
+        }}
+      </div>
+
+      <div *ngIf="!accountName" class="support-lock-hint">
+        <i class="bi bi-lock-fill"></i>
+        <div>
+          <strong>Sign in first to unlock these fields.</strong>
+          <p>You cannot type or submit this support form until you sign in with your account.</p>
+        </div>
+      </div>
+
+      <div class="checkout-field-grid support-field-grid" [class.support-field-grid-locked]="!accountName">
+        <label class="form-field floating-form-field" [class.field-invalid]="supportFormRef.submitted && nameModel.invalid">
+          <input
+            type="text"
+            name="customerName"
+            required
+            minlength="2"
+            [(ngModel)]="supportForm.customerName"
+            #nameModel="ngModel"
+            [disabled]="!accountName || submitting"
+            placeholder=" "
+          />
+          <span>Full name</span>
+          <small *ngIf="supportFormRef.submitted && nameModel.invalid" class="field-error">
+            Enter your name.
+          </small>
+        </label>
+
+        <label class="form-field floating-form-field" [class.field-invalid]="supportFormRef.submitted && emailModel.invalid">
+          <input
+            type="email"
+            name="email"
+            required
+            email
+            [(ngModel)]="supportForm.email"
+            #emailModel="ngModel"
+            [disabled]="!accountName || submitting"
+            [readonly]="!!accountName"
+            placeholder=" "
+          />
+          <span>Email</span>
+          <small *ngIf="supportFormRef.submitted && emailModel.invalid" class="field-error">
+            Enter a valid email address.
+          </small>
+        </label>
+
+        <label class="form-field floating-form-field" [class.field-invalid]="supportFormRef.submitted && orderReferenceModel.invalid">
+          <input
+            type="text"
+            name="orderReference"
+            required
+            [(ngModel)]="supportForm.orderReference"
+            #orderReferenceModel="ngModel"
+            [disabled]="!accountName || submitting"
+            placeholder=" "
+          />
+          <span>Order reference</span>
+          <small *ngIf="supportFormRef.submitted && orderReferenceModel.invalid" class="field-error">
+            Enter the order reference from your Orders page.
+          </small>
+        </label>
+
+        <label class="form-field" [class.field-invalid]="supportFormRef.submitted && issueTypeModel.invalid">
+          <span>Issue type</span>
+          <select
+            name="issueType"
+            required
+            [(ngModel)]="supportForm.issueType"
+            #issueTypeModel="ngModel"
+            [disabled]="!accountName || submitting"
+          >
+            <option *ngFor="let option of issueOptions" [ngValue]="option">{{ option }}</option>
+          </select>
+          <small *ngIf="supportFormRef.submitted && issueTypeModel.invalid" class="field-error">
+            Choose the issue type.
+          </small>
+        </label>
+
+        <label class="form-field floating-form-field form-field-wide" [class.field-invalid]="supportFormRef.submitted && subjectModel.invalid">
+          <input
+            type="text"
+            name="subject"
+            required
+            minlength="4"
+            [(ngModel)]="supportForm.subject"
+            #subjectModel="ngModel"
+            [disabled]="!accountName || submitting"
+            placeholder=" "
+          />
+          <span>Subject</span>
+          <small *ngIf="supportFormRef.submitted && subjectModel.invalid" class="field-error">
+            Add a short subject.
+          </small>
+        </label>
+
+        <label class="form-field floating-form-field floating-form-field-area form-field-wide" [class.field-invalid]="supportFormRef.submitted && messageModel.invalid">
+          <textarea
+            rows="5"
+            name="message"
+            required
+            minlength="15"
+            [(ngModel)]="supportForm.message"
+            #messageModel="ngModel"
+            [disabled]="!accountName || submitting"
+            placeholder=" "
+          ></textarea>
+          <span>Problem details</span>
+          <small *ngIf="supportFormRef.submitted && messageModel.invalid" class="field-error">
+            Add at least 15 characters so the support team can understand the issue.
+          </small>
+        </label>
+      </div>
+
+      <div class="support-form-actions">
+        <button
+          *ngIf="accountName; else supportSignInButton"
+          class="btn hero-primary support-submit-btn"
+          type="submit"
+          [disabled]="submitting"
+        >
+          {{ submitting ? 'Sending request...' : 'Send support request' }}
+        </button>
+        <button class="btn dark-outline" type="button" (click)="continueBuilding.emit()">
+          Continue shopping
+        </button>
+      </div>
+    </form>
+
+    <div class="section-shell">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">Your support updates</span>
+          <h2>See ticket status and replies after sign-in</h2>
+          <p>
+            Every ticket you send with this account email appears here with the latest support reply and status.
+          </p>
+        </div>
+        <button *ngIf="!accountName" class="btn dark-outline" type="button" (click)="requestSignIn.emit()">
+          Sign in first
+        </button>
+      </div>
+
+      <div *ngIf="!accountName" class="empty-state">
+        <i class="bi bi-chat-left-text"></i>
+        <p>Sign in to see your support updates.</p>
+        <span>Your ticket history and replies will appear here after you sign in and submit a request.</span>
+      </div>
+
+      <div *ngIf="accountName && ticketsLoading" class="feedback-card">
+        <div class="spinner-border text-warning" role="status"></div>
+        <p class="mb-0">Loading your support updates...</p>
+      </div>
+
+      <div *ngIf="accountName && !ticketsLoading && ticketsError" class="checkout-error">
+        <i class="bi bi-exclamation-circle"></i>
+        {{ ticketsError }}
+      </div>
+
+      <div *ngIf="accountName && !ticketsLoading && !ticketsError && customerTickets.length; else noCustomerTickets" class="admin-list">
+        <article
+          *ngFor="let ticket of customerTickets; let ticketIndex = index"
+          class="admin-list-card"
+          style="gap: 0.85rem; background: linear-gradient(180deg, #fff, #f8fafc);"
+        >
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.85rem; align-items: flex-start;">
+            <div style="display: grid; gap: 0.35rem;">
+              <strong>#{{ ticketIndex + 1 }} - {{ ticket.subject }}</strong>
+              <p>{{ ticket.issueType }}</p>
+            </div>
+            <strong
+              class="admin-status-pill"
+              [class.admin-status-pill-success]="ticket.status === 'resolved'"
+              [style.background]="ticket.status === 'in_progress' ? 'rgba(245, 158, 11, 0.16)' : ticket.status === 'closed' ? 'rgba(148, 163, 184, 0.18)' : null"
+              [style.color]="ticket.status === 'in_progress' ? '#b45309' : ticket.status === 'closed' ? '#475569' : null"
+            >
+              {{ getSupportStatusLabel(ticket.status) }}
+            </strong>
+          </div>
+
+          <small style="color: #64748b;">
+            Sent {{ ticket.createdAt | date:'medium' }}
+            <span *ngIf="ticket.updatedAt !== ticket.createdAt"> - Updated {{ ticket.updatedAt | date:'medium' }}</span>
+          </small>
+
+          <p class="admin-ticket-message">{{ ticket.message }}</p>
+
+          <small *ngIf="ticket.orderReference" class="admin-ticket-reference">
+            Order reference: {{ ticket.orderReference }}
+          </small>
+
+          <div
+            class="admin-detail-note"
+            [style.background]="ticket.adminResponse ? 'linear-gradient(135deg, rgba(255, 247, 237, 0.96), rgba(255, 251, 235, 0.98))' : '#f8fafc'"
+            [style.border]="ticket.adminResponse ? '1px solid rgba(251, 191, 36, 0.2)' : '1px solid rgba(148, 163, 184, 0.16)'"
+          >
+            <h3>{{ ticket.adminResponse ? 'Latest reply from support' : 'Current status' }}</h3>
+            <p>{{ getSupportStatusMessage(ticket) }}</p>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="section-shell">
+      <span class="section-kicker">Frequently asked questions</span>
+      <h2>Helpful answers before you wait for a reply</h2>
+      <p>
+        Use the tips below for common questions, then submit the form if you still need help.
+      </p>
+
+      <div class="faq-list">
+        <article class="faq-card" *ngFor="let item of faqs">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.text }}</p>
+        </article>
+      </div>
+
+      <div class="support-cta-box">
+        <h3>Need direct contact too?</h3>
+        <ul class="contact-list">
+          <li><i class="bi bi-geo-alt"></i> Wheeling, West Virginia, 26003</li>
+          <li><i class="bi bi-telephone"></i> +1 304-559-3023</li>
+          <li><i class="bi bi-envelope"></i> shopnow@store.com</li>
+          <li><i class="bi bi-clock"></i> Support hours: 9:00 AM to 7:00 PM</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <ng-template #noCustomerTickets>
+    <div *ngIf="accountName && !ticketsLoading && !ticketsError" class="empty-state">
+      <i class="bi bi-chat-left-text"></i>
+      <p>No support tickets yet.</p>
+      <span>Submit your first support request above and future replies will appear here.</span>
+    </div>
+  </ng-template>
+
+  <ng-template #supportSignInButton>
+    <button class="btn hero-primary support-submit-btn" type="button" (click)="requestSignIn.emit()">
+      Sign in to unlock form
+    </button>
+  </ng-template>
+</section>

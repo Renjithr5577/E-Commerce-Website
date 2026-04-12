@@ -1,0 +1,172 @@
+<section class="auth-view auth-centered-view auth-signup-view">
+  <div class="auth-simple-brand" aria-label="LuxeCart">
+    <span class="brand-logo">LC</span>
+    <div>
+      <strong>LuxeCart</strong>
+      <small>Marketplace Studio</small>
+    </div>
+  </div>
+
+  <form
+    class="auth-plain-card auth-plain-card-wide auth-signup-card auth-card"
+    #signUpFormRef="ngForm"
+    novalidate
+    (ngSubmit)="handleSubmit(signUpFormRef)"
+  >
+    <h2>Create account</h2>
+    <p class="auth-plain-copy">
+      Add your name, 10-digit mobile number, email, password, and a short password hint. Later you can
+      sign in using either your mobile number or your email.
+    </p>
+
+    <div class="auth-signup-field-grid">
+      <label class="form-field floating-form-field" [class.field-invalid]="signUpFormRef.submitted && nameModel.invalid">
+        <input
+          type="text"
+          name="name"
+          required
+          minlength="3"
+          [(ngModel)]="form.name"
+          #nameModel="ngModel"
+          placeholder=" "
+        />
+        <span>Full name</span>
+        <small *ngIf="signUpFormRef.submitted && nameModel.invalid" class="field-error">
+          Enter your full name.
+        </small>
+      </label>
+
+      <label class="form-field floating-form-field" [class.field-invalid]="signUpFormRef.submitted && phoneModel.invalid">
+        <input
+          type="tel"
+          name="phone"
+          required
+          pattern="[0-9]{10}"
+          inputmode="numeric"
+          maxlength="10"
+          [(ngModel)]="form.phone"
+          #phoneModel="ngModel"
+          placeholder=" "
+        />
+        <span>Mobile number</span>
+        <small *ngIf="signUpFormRef.submitted && phoneModel.invalid" class="field-error">
+          Enter a valid 10-digit mobile number.
+        </small>
+      </label>
+
+      <label class="form-field floating-form-field" [class.field-invalid]="signUpFormRef.submitted && emailModel.invalid">
+        <input
+          type="email"
+          name="email"
+          required
+          email
+          [(ngModel)]="form.email"
+          #emailModel="ngModel"
+          placeholder=" "
+        />
+        <span>Email</span>
+        <small *ngIf="signUpFormRef.submitted && emailModel.invalid" class="field-error">
+          Enter a valid email address.
+        </small>
+      </label>
+
+      <label class="form-field floating-form-field password-toggle-field" [class.field-invalid]="signUpFormRef.submitted && passwordModel.invalid">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          name="password"
+          required
+          minlength="6"
+        [(ngModel)]="form.password"
+        #passwordModel="ngModel"
+        placeholder=" "
+        style="padding-right: 3.35rem"
+      />
+        <span>Create password</span>
+        <button
+        type="button"
+        class="password-toggle-btn"
+        style="position: absolute; top: 50%; right: 0.8rem; transform: translateY(-50%); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; background: transparent; color: #64748b; z-index: 2"
+        [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+        (click)="togglePasswordVisibility()"
+      >
+          <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+        </button>
+        <small *ngIf="signUpFormRef.submitted && passwordModel.invalid" class="field-error">
+          Password must be at least 6 characters long.
+        </small>
+      </label>
+
+      <label
+        class="form-field floating-form-field auth-signup-field-span"
+        [class.field-invalid]="signUpFormRef.submitted && passwordHintModel.invalid"
+      >
+        <input
+          type="text"
+          name="passwordHint"
+          required
+          minlength="3"
+          [(ngModel)]="form.passwordHint"
+          #passwordHintModel="ngModel"
+          placeholder=" "
+        />
+        <span>Password hint</span>
+        <small *ngIf="signUpFormRef.submitted && passwordHintModel.invalid" class="field-error">
+          Enter a password hint with at least 3 characters.
+        </small>
+      </label>
+    </div>
+
+    <div class="auth-signup-bottom-copy">
+      <div class="auth-password-note">
+        Use at least 6 characters for the password, and save a hint you can remember for password recovery on this device.
+      </div>
+
+      <label
+        class="auth-terms-check"
+        [class.auth-terms-check-invalid]="signUpFormRef.submitted && !acceptTermsModel.value"
+      >
+        <input
+          type="checkbox"
+          name="acceptTerms"
+          required
+          [(ngModel)]="form.acceptTerms"
+          #acceptTermsModel="ngModel"
+        />
+        <span>
+          I agree to the LuxeCart
+          <strong>Terms of use</strong>
+          and
+          <strong>Privacy policy</strong>.
+        </span>
+      </label>
+
+      <small *ngIf="signUpFormRef.submitted && !acceptTermsModel.value" class="field-error">
+        Please accept the checkbox before creating your account.
+      </small>
+    </div>
+
+    <div *ngIf="noticeMessage" class="auth-notice">
+      <i class="bi bi-info-circle"></i>
+      {{ noticeMessage }}
+    </div>
+
+    <button class="btn auth-primary-btn" type="submit">Create account</button>
+
+    <p class="auth-helper-text">
+      Your sign-up details stay on this device for the demo, and only the same email or mobile number
+      with the same password can sign in later.
+    </p>
+
+    <div class="auth-divider"></div>
+
+    <p class="auth-switch">
+      Already have an account?
+      <button type="button" (click)="openSignIn.emit()">Sign in</button>
+    </p>
+  </form>
+
+  <button class="btn auth-home-btn" type="button" (click)="backHome.emit()">
+    <i class="bi bi-arrow-left"></i>
+    Back to home
+  </button>
+</section>

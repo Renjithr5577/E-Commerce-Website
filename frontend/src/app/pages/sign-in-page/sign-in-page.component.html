@@ -1,0 +1,264 @@
+<section class="auth-view auth-centered-view auth-signin-view">
+  <div class="auth-simple-brand" aria-label="LuxeCart">
+    <span class="brand-logo">LC</span>
+    <div>
+      <strong>LuxeCart</strong>
+      <small>Marketplace Studio</small>
+    </div>
+  </div>
+
+  <form
+    *ngIf="isSignInStep()"
+    class="auth-plain-card auth-signin-card auth-card"
+    #signInFormRef="ngForm"
+    novalidate
+    (ngSubmit)="handleSubmit(signInFormRef)"
+  >
+    <h2>Sign in or create account</h2>
+    <p class="auth-plain-copy">Enter your mobile number or email, then use your password to continue and open your account orders.</p>
+
+    <label class="form-field floating-form-field" [class.field-invalid]="signInFormRef.submitted && !isIdentifierValid(form.identifier)">
+      <input
+        type="text"
+        name="identifier"
+        required
+        [(ngModel)]="form.identifier"
+        #identifierModel="ngModel"
+        placeholder=" "
+      />
+      <span>Mobile number or email</span>
+      <small *ngIf="signInFormRef.submitted && !isIdentifierValid(form.identifier)" class="field-error">
+        Enter a valid 10-digit mobile number or email address.
+      </small>
+    </label>
+
+    <label class="form-field floating-form-field password-toggle-field mt-3 mb-4" [class.field-invalid]="signInFormRef.submitted && passwordModel.invalid">
+      <input
+        [type]="showSignInPassword ? 'text' : 'password'"
+        name="password"
+        required
+        minlength="6"
+        [(ngModel)]="form.password"
+        #passwordModel="ngModel"
+        placeholder=" "
+        style="padding-right: 3.35rem"
+      />
+      <span>Password</span>
+      <button
+        type="button"
+        class="password-toggle-btn"
+        style="position: absolute; top: 50%; right: 0.8rem; transform: translateY(-50%); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; background: transparent; color: #64748b; z-index: 2"
+        [attr.aria-label]="showSignInPassword ? 'Hide password' : 'Show password'"
+        (click)="togglePasswordVisibility('signIn')"
+      >
+        <i [class]="showSignInPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+      </button>
+      <small *ngIf="signInFormRef.submitted && passwordModel.invalid" class="field-error">
+        Password must be at least 6 characters long.
+      </small>
+    </label>
+
+    <div class="auth-recovery-link-row">
+      <button
+        type="button"
+        class="auth-inline-link"
+        (click)="handleForgotPasswordClick()"
+      >
+        Forgot password?
+      </button>
+    </div>
+
+    <div *ngIf="noticeMessage" class="auth-notice">
+      <i class="bi bi-info-circle"></i>
+      {{ noticeMessage }}
+    </div>
+
+    <button class="btn auth-primary-btn" type="submit">
+      Continue
+    </button>
+
+    <p class="auth-helper-text">
+      By continuing, you agree to the LuxeCart terms of use and privacy notice for this demo
+      storefront. After sign in, open your account area to see your latest order and support replies.
+    </p>
+
+    <div class="auth-divider"></div>
+
+    <p class="auth-switch">
+      New to LuxeCart?
+      <button type="button" (click)="openSignUp.emit()">Create your account</button>
+    </p>
+
+    <div class="auth-divider"></div>
+
+    <p class="auth-switch">
+      Manage store products?
+      <button type="button" (click)="openAdmin.emit()">Admin login</button>
+    </p>
+  </form>
+
+  <form
+    *ngIf="isVerifyStep()"
+    class="auth-plain-card auth-signin-card auth-card auth-recovery-card"
+    #verifyPasswordResetRef="ngForm"
+    novalidate
+    (ngSubmit)="handlePasswordResetVerification(verifyPasswordResetRef)"
+  >
+    <div class="auth-recovery-hero">
+      <div class="auth-recovery-visual" aria-hidden="true">
+        <i class="bi bi-signpost-split"></i>
+      </div>
+      <h2>Forgot your password?</h2>
+      <p class="auth-plain-copy">
+        Enter your email or 10-digit mobile number, then confirm the password hint you saved when the account was created.
+      </p>
+    </div>
+
+    <label
+      class="form-field floating-form-field"
+      [class.field-invalid]="verifyPasswordResetRef.submitted && !isIdentifierValid(passwordResetForm.identifier)"
+    >
+      <input
+        type="text"
+        name="resetIdentifier"
+        required
+        [(ngModel)]="passwordResetForm.identifier"
+        #resetIdentifierModel="ngModel"
+        placeholder=" "
+      />
+      <span>Email or mobile number</span>
+      <small
+        *ngIf="verifyPasswordResetRef.submitted && !isIdentifierValid(passwordResetForm.identifier)"
+        class="field-error"
+      >
+        Enter a valid 10-digit mobile number or email address.
+      </small>
+    </label>
+
+    <label
+      class="form-field floating-form-field mt-3"
+      [class.field-invalid]="verifyPasswordResetRef.submitted && passwordHintModel.invalid"
+    >
+      <input
+        type="text"
+        name="passwordHint"
+        required
+        minlength="3"
+        [(ngModel)]="passwordResetForm.passwordHint"
+        #passwordHintModel="ngModel"
+        placeholder=" "
+      />
+      <span>Password hint</span>
+      <small *ngIf="verifyPasswordResetRef.submitted && passwordHintModel.invalid" class="field-error">
+        Enter the password hint you saved when creating the account.
+      </small>
+    </label>
+
+    <div *ngIf="noticeMessage" class="auth-notice">
+      <i class="bi bi-info-circle"></i>
+      {{ noticeMessage }}
+    </div>
+
+    <button class="btn auth-primary-btn" type="submit">
+      Continue
+    </button>
+
+    <button type="button" class="auth-recovery-back-link" (click)="handleCancelPasswordReset()">
+      <i class="bi bi-chevron-left"></i>
+      Back to login
+    </button>
+  </form>
+
+  <form
+    *ngIf="isResetStep()"
+    class="auth-plain-card auth-signin-card auth-card auth-recovery-card"
+    #resetPasswordRef="ngForm"
+    novalidate
+    (ngSubmit)="handlePasswordReset(resetPasswordRef)"
+  >
+    <div class="auth-recovery-hero">
+      <div class="auth-recovery-visual" aria-hidden="true">
+        <i class="bi bi-mailbox-flag"></i>
+      </div>
+      <h2>Reset password</h2>
+      <p class="auth-plain-copy">
+        Create a new password with at least 6 characters, then return to sign in with the updated password.
+      </p>
+    </div>
+
+    <label
+      class="form-field floating-form-field password-toggle-field"
+      [class.field-invalid]="resetPasswordRef.submitted && newPasswordModel.invalid"
+    >
+      <input
+        [type]="showResetPassword ? 'text' : 'password'"
+        name="resetPassword"
+        required
+        minlength="6"
+        [(ngModel)]="passwordResetForm.newPassword"
+        #newPasswordModel="ngModel"
+        placeholder=" "
+        style="padding-right: 3.35rem"
+      />
+      <span>New password</span>
+      <button
+        type="button"
+        class="password-toggle-btn"
+        style="position: absolute; top: 50%; right: 0.8rem; transform: translateY(-50%); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; background: transparent; color: #64748b; z-index: 2"
+        [attr.aria-label]="showResetPassword ? 'Hide password' : 'Show password'"
+        (click)="togglePasswordVisibility('reset')"
+      >
+        <i [class]="showResetPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+      </button>
+      <small *ngIf="resetPasswordRef.submitted && newPasswordModel.invalid" class="field-error">
+        New password must be at least 6 characters long.
+      </small>
+    </label>
+
+    <label
+      class="form-field floating-form-field password-toggle-field mt-3"
+      [class.field-invalid]="resetPasswordRef.submitted && (confirmPasswordModel.invalid || passwordResetForm.newPassword.trim() !== passwordResetForm.confirmPassword.trim())"
+    >
+      <input
+        [type]="showResetConfirmPassword ? 'text' : 'password'"
+        name="resetPasswordConfirm"
+        required
+        minlength="6"
+        [(ngModel)]="passwordResetForm.confirmPassword"
+        #confirmPasswordModel="ngModel"
+        placeholder=" "
+        style="padding-right: 3.35rem"
+      />
+      <span>Re-enter password</span>
+      <button
+        type="button"
+        class="password-toggle-btn"
+        style="position: absolute; top: 50%; right: 0.8rem; transform: translateY(-50%); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; background: transparent; color: #64748b; z-index: 2"
+        [attr.aria-label]="showResetConfirmPassword ? 'Hide password' : 'Show password'"
+        (click)="togglePasswordVisibility('confirm')"
+      >
+        <i [class]="showResetConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+      </button>
+      <small
+        *ngIf="resetPasswordRef.submitted && (confirmPasswordModel.invalid || passwordResetForm.newPassword.trim() !== passwordResetForm.confirmPassword.trim())"
+        class="field-error"
+      >
+        Confirm password must match the new password.
+      </small>
+    </label>
+
+    <button class="btn auth-primary-btn" type="submit">
+      Save new password
+    </button>
+
+    <button type="button" class="auth-recovery-back-link" (click)="handleCancelPasswordReset()">
+      <i class="bi bi-chevron-left"></i>
+      Back to login
+    </button>
+  </form>
+
+  <button class="btn auth-home-btn" type="button" (click)="backHome.emit()">
+    <i class="bi bi-arrow-left"></i>
+    Back to home
+  </button>
+</section>

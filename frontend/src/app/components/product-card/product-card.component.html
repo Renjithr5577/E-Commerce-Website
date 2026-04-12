@@ -1,0 +1,55 @@
+<article
+  class="product-card product-clickable"
+  tabindex="0"
+  role="button"
+  (click)="openDetails()"
+  (keyup.enter)="openDetails()"
+>
+  <div class="product-media">
+    <img [src]="product.imageUrl" [alt]="product.name" (error)="handleImageError($event)" />
+    <span class="product-badge" *ngIf="product.badge">{{ product.badge }}</span>
+    <button
+      class="wishlist-btn"
+      type="button"
+      [class.wishlist-btn-active]="wishlisted"
+      [attr.aria-label]="wishlisted ? 'Remove from wishlist' : 'Add to wishlist'"
+      (click)="onToggleWishlist($event)"
+    >
+      <i [class]="wishlisted ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
+    </button>
+  </div>
+
+  <div class="product-body">
+    <div class="product-meta">
+      <span class="product-category">{{ product.category }}</span>
+      <span class="stock-chip">{{ product.stock }} left</span>
+    </div>
+
+    <div class="product-copy">
+      <h3>{{ product.name }}</h3>
+      <p>{{ product.description }}</p>
+    </div>
+
+    <div class="product-rating">
+      <span class="product-rating-stars">{{ ratingStars }}</span>
+      <span>{{ product.rating | number:'1.1-1' }}</span>
+    </div>
+
+    <div class="product-price-line">
+          <strong>{{ product.price | currency:'INR':'symbol':'1.0-0' }}</strong>
+          <small>M.R.P. {{ listPrice | currency:'INR':'symbol':'1.0-0' }}</small>
+      <span class="product-discount">({{ savingsPercent }}% off)</span>
+    </div>
+
+    <p class="product-shipping">Free delivery on selected marketplace shipping.</p>
+
+    <div class="product-actions-row">
+      <button class="btn add-btn card-action-btn" type="button" (click)="onAddToCart($event)">
+        Add to cart
+      </button>
+      <button class="btn buy-now-btn card-action-btn" type="button" (click)="onBuyNow($event)">
+        Buy now
+      </button>
+    </div>
+  </div>
+</article>

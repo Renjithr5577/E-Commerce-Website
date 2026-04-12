@@ -1,0 +1,87 @@
+<section class="discover-view">
+  <article class="page-banner discover-banner mt-3">
+    <div>
+      <span class="section-kicker">Collections page</span>
+      <h1>Extra pages make the project feel more complete.</h1>
+      <p>
+        This page adds curated edits, stronger imagery, and more room for promotions, lookbooks, or
+        seasonal campaigns.
+      </p>
+    </div>
+    <button class="btn hero-primary" type="button" (click)="showCatalog.emit('All')">
+      Explore all products
+    </button>
+  </article>
+
+  <section class="collection-grid">
+    <article class="collection-card" *ngFor="let card of collectionCards">
+      <img [src]="card.image" [alt]="card.title" />
+      <div class="collection-copy">
+        <span>{{ card.eyebrow }}</span>
+        <h2>{{ card.title }}</h2>
+        <p>{{ card.description }}</p>
+        <button class="promo-link" type="button" (click)="showCatalog.emit(card.category)">
+          Explore now
+        </button>
+      </div>
+    </article>
+  </section>
+
+  <section class="section-shell">
+    <div class="section-heading">
+      <div>
+        <span class="section-kicker">Deal highlights</span>
+        <h2>Lower-price picks that still feel stylish</h2>
+      </div>
+    </div>
+
+    <div class="deal-grid">
+      <article class="deal-card" *ngFor="let product of dealProducts">
+        <img [src]="product.imageUrl" [alt]="product.name" />
+        <div>
+          <span>{{ product.category }}</span>
+          <h3>{{ product.name }}</h3>
+          <p>{{ product.description }}</p>
+          <div class="deal-footer">
+              <strong>{{ product.price | currency: 'INR' : 'symbol' : '1.0-0' }}</strong>
+            <div class="deal-actions">
+              <button class="btn ghost-btn" type="button" (click)="openProduct.emit(product)">
+                Details
+              </button>
+              <button class="btn add-btn" type="button" (click)="addToCart.emit(product)">
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-shell editorial-grid-shell">
+    <div class="editorial-copy">
+      <span class="section-kicker">Why this page matters</span>
+      <h2>It prepares the storefront for campaigns, sale events, and category storytelling.</h2>
+      <p>
+        You asked for extra pages and attractive pictures. This collections view is built exactly
+        for that: large visuals, better headlines, and section layouts that can later hold seasonal
+        deals, brand stories, or sponsored content.
+      </p>
+    </div>
+
+    <div class="editorial-stats">
+      <div>
+        <strong>{{ featuredCount }}</strong>
+        <span>Featured items</span>
+      </div>
+      <div>
+        <strong>{{ bestSellerCount }}</strong>
+        <span>Best sellers</span>
+      </div>
+      <div>
+        <strong>{{ categoryCount }}</strong>
+        <span>Filterable categories</span>
+      </div>
+    </div>
+  </section>
+</section>
