@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980">
+  <defs>
+    <style>
+      .title { font: 700 22px 'Segoe UI', Arial, sans-serif; fill: #ffffff; }
+      .label { font: 600 18px 'Segoe UI', Arial, sans-serif; fill: #111827; }
+      .small { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #374151; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#374151"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="980" fill="#f7f2e8"/>
+  <text x="800" y="60" text-anchor="middle" class="label" style="font-size:32px;">DFD Level 2 - Checkout and Order Flow</text>
+  <rect x="70" y="410" rx="18" ry="18" width="220" height="110" fill="#243447"/>
+  <text x="180" y="470" text-anchor="middle" class="title">Customer</text>
+  <rect x="360" y="180" rx="18" ry="18" width="250" height="100" fill="#ff9f1c"/>
+  <text x="485" y="235" text-anchor="middle" class="title">Cart Review</text>
+  <rect x="360" y="340" rx="18" ry="18" width="250" height="100" fill="#ff9f1c"/>
+  <text x="485" y="395" text-anchor="middle" class="title">Address Entry</text>
+  <rect x="360" y="500" rx="18" ry="18" width="250" height="100" fill="#ff9f1c"/>
+  <text x="485" y="555" text-anchor="middle" class="title">Payment Validation</text>
+  <rect x="360" y="660" rx="18" ry="18" width="250" height="100" fill="#ff9f1c"/>
+  <text x="485" y="715" text-anchor="middle" class="title">Order Confirmation</text>
+  <rect x="760" y="180" rx="18" ry="18" width="320" height="100" fill="#2a9d8f"/>
+  <text x="920" y="235" text-anchor="middle" class="title">products / stock check</text>
+  <rect x="760" y="340" rx="18" ry="18" width="320" height="100" fill="#2a9d8f"/>
+  <text x="920" y="395" text-anchor="middle" class="title">customer_accounts</text>
+  <rect x="760" y="500" rx="18" ry="18" width="320" height="100" fill="#2a9d8f"/>
+  <text x="920" y="555" text-anchor="middle" class="title">orders / order_items</text>
+  <rect x="760" y="660" rx="18" ry="18" width="320" height="100" fill="#2a9d8f"/>
+  <text x="920" y="715" text-anchor="middle" class="title">card_details / toast result</text>
+  <rect x="1220" y="430" rx="18" ry="18" width="240" height="120" fill="#457b9d"/>
+  <text x="1340" y="485" text-anchor="middle" class="title">Admin View</text>
+  <text x="1340" y="515" text-anchor="middle" class="small" fill="#ffffff">recent orders and performers</text>
+  <line x1="290" y1="465" x2="360" y2="230" stroke="#374151" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="290" y1="470" x2="360" y2="390" stroke="#374151" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="290" y1="475" x2="360" y2="550" stroke="#374151" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="290" y1="480" x2="360" y2="710" stroke="#374151" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="610" y1="230" x2="760" y2="230" stroke="#374151" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="610" y1="390" x2="760" y2="390" stroke="#374151" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="610" y1="550" x2="760" y2="550" stroke="#374151" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="610" y1="710" x2="760" y2="710" stroke="#374151" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="1080" y1="550" x2="1220" y2="490" stroke="#374151" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="230" y="325" class="small">review cart</text>
+  <text x="232" y="380" class="small">enter delivery details</text>
+  <text x="228" y="610" class="small">cash or card validation</text>
+  <text x="226" y="770" class="small">see order success details</text>
+</svg>

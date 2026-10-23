@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ER Diagram</title>
+  <style>
+    body {
+      margin: 0;
+      background: #f8fafc;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+    .wrap {
+      width: 1380px;
+      height: 860px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    svg text {
+      fill: #172033;
+      font-size: 22px;
+      font-family: Arial, sans-serif;
+    }
+    .title {
+      font-weight: 700;
+      font-size: 24px;
+    }
+    .field {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <svg width="1320" height="800" viewBox="0 0 1360 860" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+          <path d="M0,0 L12,6 L0,12 Z" fill="#475569" />
+        </marker>
+      </defs>
+
+      <g>
+        <rect x="40" y="40" width="250" height="170" rx="18" fill="#ffffff" stroke="#2563eb" stroke-width="3"/>
+        <text x="165" y="75" class="title" text-anchor="middle">store_sections</text>
+        <text x="65" y="110" class="field">PK id</text>
+        <text x="65" y="138" class="field">name</text>
+        <text x="65" y="166" class="field">sort_order</text>
+        <text x="65" y="194" class="field">created_at</text>
+      </g>
+
+      <g>
+        <rect x="360" y="30" width="300" height="225" rx="18" fill="#ffffff" stroke="#2563eb" stroke-width="3"/>
+        <text x="510" y="65" class="title" text-anchor="middle">products</text>
+        <text x="385" y="100" class="field">PK id</text>
+        <text x="385" y="128" class="field">name</text>
+        <text x="385" y="156" class="field">category</text>
+        <text x="385" y="184" class="field">description</text>
+        <text x="385" y="212" class="field">image_url</text>
+        <text x="385" y="240" class="field">price, rating, stock</text>
+      </g>
+
+      <g>
+        <rect x="740" y="40" width="310" height="210" rx="18" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+        <text x="895" y="75" class="title" text-anchor="middle">orders</text>
+        <text x="765" y="110" class="field">PK id</text>
+        <text x="765" y="138" class="field">order_reference</text>
+        <text x="765" y="166" class="field">customer_name, email, phone</text>
+        <text x="765" y="194" class="field">address, city, state, postal_code</text>
+        <text x="765" y="222" class="field">payment_method, subtotal, total_amount</text>
+      </g>
+
+      <g>
+        <rect x="1040" y="310" width="250" height="190" rx="18" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+        <text x="1165" y="345" class="title" text-anchor="middle">order_items</text>
+        <text x="1065" y="380" class="field">PK id</text>
+        <text x="1065" y="408" class="field">FK order_id</text>
+        <text x="1065" y="436" class="field">FK product_id</text>
+        <text x="1065" y="464" class="field">product_name</text>
+        <text x="1065" y="492" class="field">quantity, unit_price, line_total</text>
+      </g>
+
+      <g>
+        <rect x="760" y="580" width="300" height="190" rx="18" fill="#ffffff" stroke="#f97316" stroke-width="3"/>
+        <text x="910" y="615" class="title" text-anchor="middle">support_tickets</text>
+        <text x="785" y="650" class="field">PK id</text>
+        <text x="785" y="678" class="field">customer_name, email</text>
+        <text x="785" y="706" class="field">order_reference</text>
+        <text x="785" y="734" class="field">issue_type, subject</text>
+        <text x="785" y="762" class="field">message, status</text>
+      </g>
+
+      <g>
+        <rect x="60" y="580" width="300" height="200" rx="18" fill="#ffffff" stroke="#7c3aed" stroke-width="3"/>
+        <text x="210" y="615" class="title" text-anchor="middle">customer_accounts</text>
+        <text x="85" y="650" class="field">PK id</text>
+        <text x="85" y="678" class="field">name</text>
+        <text x="85" y="706" class="field">email</text>
+        <text x="85" y="734" class="field">phone</text>
+        <text x="85" y="762" class="field">password_hash, password_salt</text>
+      </g>
+
+      <g>
+        <rect x="410" y="610" width="260" height="160" rx="18" fill="#ffffff" stroke="#7c3aed" stroke-width="3"/>
+        <text x="540" y="645" class="title" text-anchor="middle">card_details</text>
+        <text x="435" y="680" class="field">PK id</text>
+        <text x="435" y="708" class="field">account_email</text>
+        <text x="435" y="736" class="field">cardholder_name</text>
+        <text x="435" y="764" class="field">card_last4, expiry, card_brand</text>
+      </g>
+
+      <g>
+        <rect x="1080" y="40" width="240" height="180" rx="18" fill="#ffffff" stroke="#dc2626" stroke-width="3"/>
+        <text x="1200" y="75" class="title" text-anchor="middle">admin_accounts</text>
+        <text x="1105" y="110" class="field">PK id</text>
+        <text x="1105" y="138" class="field">name, email, phone</text>
+        <text x="1105" y="166" class="field">password_hash, password_salt</text>
+        <text x="1105" y="194" class="field">role, created_at</text>
+      </g>
+
+      <line x1="290" y1="125" x2="360" y2="125" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <text x="305" y="112" class="field">1 to many</text>
+
+      <line x1="660" y1="145" x2="740" y2="145" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <text x="670" y="132" class="field">selected in order</text>
+
+      <line x1="945" y1="250" x2="1085" y2="310" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <text x="960" y="292" class="field">1 to many</text>
+
+      <line x1="645" y1="235" x2="1040" y2="395" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <text x="830" y="340" class="field">product_id relation</text>
+
+      <line x1="360" y1="680" x2="410" y2="690" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <text x="340" y="668" class="field">account email</text>
+
+      <line x1="360" y1="720" x2="760" y2="700" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <text x="500" y="698" class="field">customer raises ticket</text>
+
+      <line x1="1160" y1="220" x2="1010" y2="580" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <text x="1080" y="430" class="field">admin manages support</text>
+    </svg>
+  </div>
+</body>
+</html>

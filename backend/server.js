@@ -132,9 +132,17 @@ function normalizePaymentCardSnapshot(paymentCard) {
     return null;
   }
 
+  const cardNumber = String(paymentCard.cardNumber || '')
+    .replace(/\D/g, '')
+    .slice(0, 16);
+  const last4 = (cardNumber || String(paymentCard.last4 || ''))
+    .replace(/\D/g, '')
+    .slice(-4);
+
   return {
     cardHolderName: normalizeCardholderName(paymentCard.cardHolderName),
-    last4: String(paymentCard.last4 || '').replace(/\D/g, '').slice(-4),
+    cardNumber,
+    last4,
     expiry: String(paymentCard.expiry || '')
       .replace(/\s+/g, '')
       .replace(/[^0-9/]/g, '')
@@ -147,7 +155,9 @@ function isValidPaymentCardSnapshot(paymentCard) {
   return (
     Boolean(paymentCard) &&
     isValidCardholderName(paymentCard.cardHolderName) &&
+    /^\d{16}$/.test(paymentCard.cardNumber) &&
     /^\d{4}$/.test(paymentCard.last4) &&
+    paymentCard.cardNumber.slice(-4) === paymentCard.last4 &&
     isValidCardExpiry(paymentCard.expiry)
   );
 }
@@ -243,8 +253,9 @@ const adminRoles = new Set(['main_admin', 'sub_admin']);
 const supportTicketStatuses = new Set(['open', 'in_progress', 'resolved', 'closed']);
 const adminSessions = new Map();
 const adminSessionDurationMs = 12 * 60 * 60 * 1000;
+const legacyMainAdminEmail = normalizeEmail('renjithr5577@gmail.com');
 const mainAdminEmail = normalizeEmail(
-  process.env.MAIN_ADMIN_EMAIL || 'renjithr5577@gmail.com'
+  process.env.MAIN_ADMIN_EMAIL || 'admin@gmail.com'
 );
 const mainAdminPassword = String(process.env.MAIN_ADMIN_PASSWORD || '123456');
 const configuredMainAdminPhone = normalizePhone(
@@ -333,6 +344,33 @@ async function getTableColumnNames(tableName) {
   return new Set(rows.map((row) => row.columnName));
 }
 
+async function getRuntimeSettingValue(settingKey) {
+  const [rows] = await db.query(
+    `
+      SELECT setting_value AS settingValue
+      FROM app_runtime_settings
+      WHERE setting_key = ?
+      LIMIT 1
+    `,
+    [settingKey]
+  );
+
+  return rows[0] ? String(rows[0].settingValue || '') : null;
+}
+
+async function setRuntimeSettingValue(settingKey, settingValue) {
+  await db.query(
+    `
+      INSERT INTO app_runtime_settings (setting_key, setting_value)
+      VALUES (?, ?)
+      ON DUPLICATE KEY UPDATE
+        setting_value = VALUES(setting_value),
+        updated_at = CURRENT_TIMESTAMP
+    `,
+    [settingKey, settingValue]
+  );
+}
+
 async function hasUniqueIndexOnColumn(tableName, columnName) {
   const [rows] = await db.query(
     `
@@ -365,6 +403,13 @@ async function getSupportTicketColumnNames() {
 
 async function ensureRuntimeTables() {
   await db.query('ALTER TABLE products MODIFY COLUMN image_url LONGTEXT NOT NULL');
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS app_runtime_settings (
+      setting_key VARCHAR(120) NOT NULL PRIMARY KEY,
+      setting_value TEXT NULL,
+      updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )
+  `);
   await db.query(`
     CREATE TABLE IF NOT EXISTS store_sections (
       id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -420,14 +465,14 @@ async function ensureRuntimeTables() {
       id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
       account_email VARCHAR(140) NOT NULL,
       cardholder_name VARCHAR(120) NOT NULL,
-      card_last4 VARCHAR(4) NOT NULL,
+      card_number VARCHAR(16) NOT NULL,
       expiry VARCHAR(5) NOT NULL,
       card_brand VARCHAR(40) NOT NULL DEFAULT 'Card',
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       UNIQUE KEY ux_card_details_account_card (
         account_email,
-        card_last4,
+        card_number,
         expiry,
         cardholder_name
       )
@@ -438,6 +483,7 @@ async function ensureRuntimeTables() {
   const adminAccountColumnNames = await getTableColumnNames('admin_accounts');
   const customerAccountColumnNames = await getTableColumnNames('customer_accounts');
   const orderColumnNames = await getTableColumnNames('orders');
+  const cardDetailColumnNames = await getTableColumnNames('card_details');
 
   if (!columnNames.has('admin_response')) {
     await db.query('ALTER TABLE support_tickets ADD COLUMN admin_response TEXT NULL AFTER status');
@@ -480,6 +526,26 @@ async function ensureRuntimeTables() {
       `
     );
   }
+
+  if (!cardDetailColumnNames.has('card_number')) {
+    if (cardDetailColumnNames.has('card_last4')) {
+      await db.query(
+        `
+          ALTER TABLE card_details
+          CHANGE COLUMN card_last4 card_number VARCHAR(16) NOT NULL
+        `
+      );
+    } else {
+      await db.query(
+        `
+          ALTER TABLE card_details
+          ADD COLUMN card_number VARCHAR(16) NOT NULL AFTER cardholder_name
+        `
+      );
+    }
+  }
+
+  await db.query('ALTER TABLE card_details MODIFY COLUMN card_number VARCHAR(16) NOT NULL');
 
   if (!(await hasUniqueIndexOnColumn('customer_accounts', 'phone'))) {
     await db.query('CREATE UNIQUE INDEX ux_customer_accounts_phone ON customer_accounts (phone)');
@@ -734,6 +800,44 @@ async function getCustomerAccountById(customerAccountId) {
   return rows[0] || null;
 }
 
+async function getCustomerSavedPaymentCards(email) {
+  const normalizedEmail = normalizeEmail(email);
+
+  if (!isValidEmail(normalizedEmail)) {
+    return [];
+  }
+
+  const [rows] = await db.query(
+    `
+      SELECT
+        id,
+        account_email AS accountEmail,
+        cardholder_name AS cardHolderName,
+        card_number AS cardNumber,
+        expiry,
+        card_brand AS brand,
+        created_at AS createdAt,
+        updated_at AS updatedAt
+      FROM card_details
+      WHERE LOWER(account_email) = LOWER(?)
+      ORDER BY updated_at DESC, id DESC
+    `,
+    [normalizedEmail]
+  );
+
+  return rows.map((card) => ({
+    id: `db-card-${Number(card.id || 0)}`,
+    accountEmail: normalizeEmail(card.accountEmail),
+    cardHolderName: normalizeCardholderName(card.cardHolderName),
+    cardNumber: String(card.cardNumber || '').replace(/\D/g, '').slice(0, 16),
+    last4: String(card.cardNumber || '').replace(/\D/g, '').slice(-4),
+    expiry: String(card.expiry || '').trim(),
+    brand: normalizeCardBrand(card.brand),
+    createdAt: String(card.createdAt || ''),
+    updatedAt: String(card.updatedAt || '')
+  }));
+}
+
 async function getAdminAccounts() {
   const [rows] = await db.query(`
     SELECT
@@ -919,35 +1023,50 @@ async function getAdminCustomerOrders(email) {
 async function ensureMainAdminAccount() {
   const passwordSalt = createPasswordSalt();
   const passwordHash = hashPassword(mainAdminPassword, passwordSalt);
+  const existingConfiguredMainAdmin = await getAdminAccountByEmail(mainAdminEmail);
+  let targetMainAdmin = existingConfiguredMainAdmin;
 
-  await db.query(
-    `
-      UPDATE admin_accounts
-      SET role = 'sub_admin'
-      WHERE role = 'main_admin'
-        AND LOWER(email) <> LOWER(?)
-    `,
-    [mainAdminEmail]
-  );
+  if (!targetMainAdmin) {
+    const [rows] = await db.query(
+      `
+        SELECT
+          id,
+          name,
+          email,
+          phone,
+          password_hash AS passwordHash,
+          password_salt AS passwordSalt,
+          role,
+          created_by_admin_id AS createdByAdminId,
+          created_at AS createdAt,
+          updated_at AS updatedAt
+        FROM admin_accounts
+        WHERE role = 'main_admin'
+        ORDER BY id ASC
+        LIMIT 1
+      `
+    );
 
-  await db.query(
-    `
-      UPDATE admin_accounts
-      SET phone = NULL
-      WHERE phone = ?
-        AND LOWER(email) <> LOWER(?)
-    `,
-    [mainAdminPhone, mainAdminEmail]
-  );
+    targetMainAdmin = rows[0] || null;
+  }
 
-  const existingMainAdmin = await getAdminAccountByEmail(mainAdminEmail);
+  if (targetMainAdmin) {
+    await db.query(
+      `
+        UPDATE admin_accounts
+        SET phone = NULL
+        WHERE phone = ?
+          AND id <> ?
+      `,
+      [mainAdminPhone, targetMainAdmin.id]
+    );
 
-  if (existingMainAdmin) {
     await db.query(
       `
         UPDATE admin_accounts
         SET
           name = ?,
+          email = ?,
           phone = ?,
           password_hash = ?,
           password_salt = ?,
@@ -955,12 +1074,32 @@ async function ensureMainAdminAccount() {
           created_by_admin_id = NULL
         WHERE id = ?
       `,
-      [mainAdminName, mainAdminPhone, passwordHash, passwordSalt, existingMainAdmin.id]
+      [mainAdminName, mainAdminEmail, mainAdminPhone, passwordHash, passwordSalt, targetMainAdmin.id]
     );
+
+    await db.query(
+      `
+        UPDATE admin_accounts
+        SET role = 'sub_admin'
+        WHERE role = 'main_admin'
+          AND id <> ?
+      `,
+      [targetMainAdmin.id]
+    );
+
     return;
   }
 
   await db.query(
+    `
+      UPDATE admin_accounts
+      SET phone = NULL
+      WHERE phone = ?
+    `,
+    [mainAdminPhone]
+  );
+
+  const [insertResult] = await db.query(
     `
       INSERT INTO admin_accounts (
         name,
@@ -973,6 +1112,16 @@ async function ensureMainAdminAccount() {
       ) VALUES (?, ?, ?, ?, ?, 'main_admin', NULL)
     `,
     [mainAdminName, mainAdminEmail, mainAdminPhone, passwordHash, passwordSalt]
+  );
+
+  await db.query(
+    `
+      UPDATE admin_accounts
+      SET role = 'sub_admin'
+      WHERE role = 'main_admin'
+        AND id <> ?
+    `,
+    [insertResult.insertId]
   );
 }
 
@@ -1164,17 +1313,39 @@ async function ensureSeedProducts() {
 }
 
 async function migrateSavedPaymentMethodsToCardDetails() {
+  const migrationFlagKey = 'saved_payment_methods_to_card_details_complete';
+  const isMigrationComplete = await getRuntimeSettingValue(migrationFlagKey);
+
+  if (isMigrationComplete === 'true') {
+    return;
+  }
+
   const savedPaymentMethodColumnNames = await getTableColumnNames('saved_payment_methods');
 
   if (!savedPaymentMethodColumnNames.size) {
+    await setRuntimeSettingValue(migrationFlagKey, 'true');
     return;
   }
+
+  const [cardDetailCountRows] = await db.query(`
+    SELECT COUNT(*) AS cardDetailCount
+    FROM card_details
+  `);
+
+  if (Number(cardDetailCountRows[0]?.cardDetailCount || 0) > 0) {
+    await setRuntimeSettingValue(migrationFlagKey, 'true');
+    return;
+  }
+
+  const sourceCardNumberColumn = savedPaymentMethodColumnNames.has('card_number')
+    ? 'card_number'
+    : 'card_last4';
 
   await db.query(`
     INSERT INTO card_details (
       account_email,
       cardholder_name,
-      card_last4,
+      card_number,
       expiry,
       card_brand,
       created_at,
@@ -1183,7 +1354,7 @@ async function migrateSavedPaymentMethodsToCardDetails() {
     SELECT
       account_email,
       cardholder_name,
-      card_last4,
+      ${sourceCardNumberColumn},
       expiry,
       card_brand,
       created_at,
@@ -1194,6 +1365,8 @@ async function migrateSavedPaymentMethodsToCardDetails() {
       card_brand = VALUES(card_brand),
       updated_at = VALUES(updated_at)
   `);
+
+  await setRuntimeSettingValue(migrationFlagKey, 'true');
 }
 
 async function migrateSeedProductImages() {
@@ -1299,9 +1472,25 @@ async function getOrderDetail(orderId) {
     [orderId]
   );
 
+  const [cardRows] = await db.query(
+    `
+      SELECT
+        cardholder_name AS cardHolderName,
+        card_number AS cardNumber,
+        expiry,
+        card_brand AS brand
+      FROM card_details
+      WHERE LOWER(account_email) = LOWER(?)
+      ORDER BY updated_at DESC, id DESC
+      LIMIT 1
+    `,
+    [orderRows[0].email]
+  );
+
   return {
     ...orderRows[0],
     orderReference: normalizeOrderReference(orderRows[0].orderReference),
+    paymentCard: cardRows[0] ? normalizePaymentCardSnapshot(cardRows[0]) : null,
     itemCount: Number(orderRows[0].itemCount || 0),
     subtotal: Number(orderRows[0].subtotal || 0),
     deliveryFee: Number(orderRows[0].deliveryFee || 0),
@@ -1523,14 +1712,29 @@ app.post('/api/admin/login', async (request, response, next) => {
   }
 
   try {
-    const adminAccount = await getAdminAccountByIdentifier(normalizedIdentifier);
-
     if (
-      !adminAccount ||
-      hashPassword(password, adminAccount.passwordSalt) !== adminAccount.passwordHash
+      identifier.includes('@') &&
+      normalizedIdentifier === legacyMainAdminEmail &&
+      legacyMainAdminEmail !== mainAdminEmail
     ) {
       response.status(401).json({
-        message: 'Admin credentials are incorrect.'
+        message: `The old admin email is no longer active. Sign in with ${mainAdminEmail}.`
+      });
+      return;
+    }
+
+    const adminAccount = await getAdminAccountByIdentifier(normalizedIdentifier);
+
+    if (!adminAccount) {
+      response.status(404).json({
+        message: 'No admin account was found for this email or mobile number.'
+      });
+      return;
+    }
+
+    if (hashPassword(password, adminAccount.passwordSalt) !== adminAccount.passwordHash) {
+      response.status(401).json({
+        message: 'The password is incorrect for this admin account.'
       });
       return;
     }
@@ -2789,6 +2993,64 @@ app.get('/api/orders', async (request, response, next) => {
   }
 });
 
+app.get('/api/payment-cards', async (request, response, next) => {
+  const normalizedEmail = normalizeEmail(request.query?.email);
+
+  if (!isValidEmail(normalizedEmail)) {
+    response.status(400).json({
+      message: 'Use a valid account email address to load your saved payment cards.'
+    });
+    return;
+  }
+
+  try {
+    response.json(await getCustomerSavedPaymentCards(normalizedEmail));
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.delete('/api/payment-cards/:cardId', async (request, response, next) => {
+  const cardId = Number(request.params.cardId);
+  const normalizedEmail = normalizeEmail(request.query?.email);
+
+  if (!Number.isInteger(cardId) || cardId <= 0) {
+    response.status(400).json({
+      message: 'Saved payment card id is invalid.'
+    });
+    return;
+  }
+
+  if (!isValidEmail(normalizedEmail)) {
+    response.status(400).json({
+      message: 'Use a valid account email address to delete the saved payment card.'
+    });
+    return;
+  }
+
+  try {
+    const [result] = await db.query(
+      `
+        DELETE FROM card_details
+        WHERE id = ?
+          AND LOWER(account_email) = LOWER(?)
+      `,
+      [cardId, normalizedEmail]
+    );
+
+    if (!Number(result.affectedRows || 0)) {
+      response.status(404).json({
+        message: 'The saved payment card was not found for this account.'
+      });
+      return;
+    }
+
+    response.json({ deleted: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.get('/api/orders/latest', async (request, response, next) => {
   const normalizedEmail = normalizeEmail(request.query?.email);
 
@@ -3205,7 +3467,7 @@ app.post('/api/orders', async (request, response, next) => {
   ) {
     response.status(400).json({
       message:
-        'Card payment details are incomplete. Provide a valid cardholder name, expiry, and last 4 digits.'
+        'Card payment details are incomplete. Provide a valid cardholder name, 16-digit card number, and expiry.'
     });
     return;
   }
@@ -3328,29 +3590,55 @@ app.post('/api/orders', async (request, response, next) => {
     );
 
     if (normalizedPaymentMethod === 'Card payment' && isValidPaymentCardSnapshot(normalizedPaymentCard)) {
-      // Store only masked card metadata. Full card numbers and CVV values are never persisted.
-      await connection.query(
+      // Store the full card number for the saved-card demo flow. CVV values are never persisted.
+      const [legacyCardUpgradeResult] = await connection.query(
         `
-          INSERT INTO card_details (
-            account_email,
-            cardholder_name,
-            card_last4,
-            expiry,
-            card_brand
-          ) VALUES (?, ?, ?, ?, ?)
-          ON DUPLICATE KEY UPDATE
-            cardholder_name = VALUES(cardholder_name),
-            card_brand = VALUES(card_brand),
+          UPDATE card_details
+          SET
+            card_number = ?,
+            card_brand = ?,
             updated_at = CURRENT_TIMESTAMP
+          WHERE LOWER(account_email) = LOWER(?)
+            AND cardholder_name = ?
+            AND expiry = ?
+            AND CHAR_LENGTH(card_number) < 16
+            AND RIGHT(card_number, 4) = RIGHT(?, 4)
         `,
         [
+          normalizedPaymentCard.cardNumber,
+          normalizedPaymentCard.brand,
           normalizedEmail,
           normalizedPaymentCard.cardHolderName,
-          normalizedPaymentCard.last4,
           normalizedPaymentCard.expiry,
-          normalizedPaymentCard.brand
+          normalizedPaymentCard.cardNumber
         ]
       );
+
+      if (!Number(legacyCardUpgradeResult.affectedRows || 0)) {
+        await connection.query(
+          `
+            INSERT INTO card_details (
+              account_email,
+              cardholder_name,
+              card_number,
+              expiry,
+              card_brand
+            ) VALUES (?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+              cardholder_name = VALUES(cardholder_name),
+              card_number = VALUES(card_number),
+              card_brand = VALUES(card_brand),
+              updated_at = CURRENT_TIMESTAMP
+          `,
+          [
+            normalizedEmail,
+            normalizedPaymentCard.cardHolderName,
+            normalizedPaymentCard.cardNumber,
+            normalizedPaymentCard.expiry,
+            normalizedPaymentCard.brand
+          ]
+        );
+      }
     }
 
     await connection.query(

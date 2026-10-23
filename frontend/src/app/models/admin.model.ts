@@ -1,3 +1,5 @@
+import { PaymentCardSnapshot } from './order.model';
+
 export type AdminRole = 'main_admin' | 'sub_admin';
 
 export interface AdminUser {
@@ -133,6 +135,7 @@ export interface AdminOrderDetail {
   state: string;
   postalCode: string;
   paymentMethod: string;
+  paymentCard: PaymentCardSnapshot | null;
   notes: string;
   itemCount: number;
   subtotal: number;

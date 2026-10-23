@@ -5,6 +5,7 @@ export interface CheckoutItemPayload {
 
 export interface PaymentCardSnapshot {
   cardHolderName: string;
+  cardNumber: string;
   last4: string;
   expiry: string;
   brand: string;
@@ -55,6 +56,7 @@ export interface CustomerOrderDetail {
   state: string;
   postalCode: string;
   paymentMethod: string;
+  paymentCard: PaymentCardSnapshot | null;
   notes: string;
   itemCount: number;
   subtotal: number;

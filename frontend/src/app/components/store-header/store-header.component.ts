@@ -224,6 +224,32 @@ export class StoreHeaderComponent {
     this.languageNotice = '';
   }
 
+  handleDropdownWheel(event: WheelEvent): void {
+    const dropdown = event.currentTarget as HTMLElement | null;
+
+    if (!dropdown) {
+      return;
+    }
+
+    event.stopPropagation();
+
+    const canScroll = dropdown.scrollHeight > dropdown.clientHeight;
+
+    if (!canScroll) {
+      event.preventDefault();
+      return;
+    }
+
+    const isScrollingDown = event.deltaY > 0;
+    const isScrollingUp = event.deltaY < 0;
+    const atTop = dropdown.scrollTop <= 0;
+    const atBottom = dropdown.scrollTop + dropdown.clientHeight >= dropdown.scrollHeight - 1;
+
+    if ((isScrollingUp && atTop) || (isScrollingDown && atBottom)) {
+      event.preventDefault();
+    }
+  }
+
   chooseSearchCategory(category: string): void {
     this.searchCategoryChange.emit(category);
     this.closeCategoryMenu();

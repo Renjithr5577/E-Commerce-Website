@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LuxeCart Project Report</title>
+  <style>
+    body {
+      font-family: "Times New Roman", serif;
+      line-height: 1.45;
+      margin: 1.1in;
+      color: #111827;
+    }
+
+    h1, h2, h3, h4 {
+      margin: 0.6rem 0 0.35rem;
+    }
+
+    h1, .center {
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24pt;
+      letter-spacing: 0.04em;
+    }
+
+    h2 {
+      font-size: 18pt;
+      text-transform: uppercase;
+    }
+
+    h3 {
+      font-size: 14pt;
+    }
+
+    h4 {
+      font-size: 12pt;
+    }
+
+    p {
+      margin: 0.35rem 0;
+      text-align: justify;
+    }
+
+    .page-break {
+      page-break-after: always;
+    }
+
+    .cover-block {
+      margin-top: 2rem;
+    }
+
+    .spacer-lg {
+      margin-top: 2.5rem;
+    }
+
+    .spacer-md {
+      margin-top: 1.25rem;
+    }
+
+    .signature-grid {
+      width: 100%;
+      margin-top: 2rem;
+      border-collapse: collapse;
+    }
+
+    .signature-grid td {
+      width: 50%;
+      vertical-align: top;
+      padding-top: 2rem;
+    }
+
+    .details-table,
+    .db-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.75rem 0 1rem;
+    }
+
+    .details-table th,
+    .details-table td,
+    .db-table th,
+    .db-table td {
+      border: 1px solid #6b7280;
+      padding: 0.45rem 0.55rem;
+      vertical-align: top;
+    }
+
+    .details-table th,
+    .db-table th {
+      background: #f3f4f6;
+      text-align: left;
+    }
+
+    ul, ol {
+      margin: 0.4rem 0 0.8rem 1.2rem;
+    }
+
+    li {
+      margin: 0.2rem 0;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      padding: 0.8rem;
+      font-size: 10pt;
+      line-height: 1.35;
+    }
+
+    .toc p {
+      margin: 0.2rem 0;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <section class="page-break">
+    <div class="cover-block center">
+      <h1>LUXECART E-COMMERCE WEBSITE</h1>
+
+      <div class="spacer-lg">
+        <p class="center">Project Report Submitted to</p>
+        <p class="center"><strong>MANONMANIAM SUNDARANAR UNIVERSITY</strong></p>
+      </div>
+
+      <div class="spacer-md">
+        <p class="center">
+          In partial fulfillment of the academic project requirements of the
+          <strong>Department of Information Technology</strong>
+        </p>
+      </div>
+
+      <div class="spacer-lg">
+        <p class="center">Submitted by</p>
+        <p class="center"><strong>RENJITH R</strong></p>
+        <p class="center">Reg. No: <strong>20213066110011111</strong></p>
+      </div>
+
+      <div class="spacer-lg">
+        <p class="center">Under the guidance of</p>
+        <p class="center"><strong>[Project Guide Name]</strong></p>
+      </div>
+
+      <div class="spacer-lg">
+        <p class="center"><strong>DEPARTMENT OF INFORMATION TECHNOLOGY</strong></p>
+        <p class="center"><strong>LEKSHMIPURAM COLLEGE OF ARTS AND SCIENCE</strong></p>
+        <p class="center"><strong>NEYYOOR - 629802</strong></p>
+        <p class="center"><strong>APRIL 2026</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-break">
+    <h2 class="center">BONAFIDE CERTIFICATE</h2>
+    <p>
+      This is to certify that the project report entitled <strong>“LUXECART E-COMMERCE WEBSITE”</strong>
+      submitted by <strong>RENJITH R</strong> (Reg. No: <strong>20213066110011111</strong>) is a bonafide
+      record of the work carried out by the candidate under guidance and supervision during the academic
+      year 2025-2026. To the best of our knowledge, this project report has not been submitted elsewhere
+      for the award of any other degree, diploma, or similar qualification.
+    </p>
+
+    <table class="signature-grid">
+      <tr>
+        <td>
+          <strong>Project Guide</strong><br />
+          Name: ______________________<br />
+          Signature: __________________
+        </td>
+        <td>
+          <strong>Head of the Department</strong><br />
+          Name: ______________________<br />
+          Signature: __________________
+        </td>
+      </tr>
+    </table>
+
+    <p class="spacer-lg">Place: Neyyoor</p>
+    <p>Date: __________________</p>
+  </section>
+
+  <section class="page-break">
+    <h2 class="center">DECLARATION</h2>
+    <p>
+      I hereby declare that this project report entitled <strong>“LUXECART E-COMMERCE WEBSITE”</strong>
+      is a bonafide record of the work carried out by me at <strong>Lekshmipuram College of Arts and Science,
+      Neyyoor</strong>, in partial fulfillment of the academic project requirements of the Department of
+      Information Technology. I further declare that this report or any part thereof has not been submitted
+      elsewhere for the award of any other degree or diploma.
+    </p>
+
+    <p class="spacer-lg"><strong>Name of the Candidate:</strong> Renjith R</p>
+    <p><strong>Register Number:</strong> 20213066110011111</p>
+    <p><strong>Signature:</strong> __________________</p>
+    <p><strong>Place:</strong> Neyyoor</p>
+    <p><strong>Date:</strong> __________________</p>
+  </section>
+
+  <section class="page-break">
+    <h2 class="center">ACKNOWLEDGEMENT</h2>
+    <p>
+      I express my sincere gratitude to the Almighty for giving me the strength, patience, and confidence to
+      complete this project successfully. I offer my heartfelt thanks to the management of Lekshmipuram College
+      of Arts and Science, Neyyoor, for providing the academic environment required for this work.
+    </p>
+    <p>
+      I am deeply thankful to the Head of the Department of Information Technology and my project guide for
+      their valuable suggestions, support, and encouragement throughout the development of this project report.
+      Their guidance helped me improve the quality of the system and the final documentation.
+    </p>
+    <p>
+      I also thank the faculty members, classmates, friends, and family members who encouraged me and supported
+      me during the analysis, design, implementation, testing, and completion of this project.
+    </p>
+    <p class="spacer-lg"><strong>RENJITH R</strong></p>
+  </section>
+
+  <section class="page-break">
+    <h2 class="center">ABSTRACT</h2>
+    <p>
+      LuxeCart E-Commerce Website is a full-stack web application developed to provide a modern online shopping
+      experience with both customer-facing and administrator-facing functionality. The system allows customers to
+      browse products by category, search the catalog, view product details, manage carts and wishlists, store
+      delivery addresses, place orders, review order history, and raise support tickets. The application also
+      includes a dedicated admin workspace to manage products, store sections, customer users, support tickets,
+      order details, and key sales insights.
+    </p>
+    <p>
+      The project is implemented using Angular and TypeScript for the frontend, Bootstrap for responsive interface
+      design, Express.js for the backend API, and MySQL for persistent relational data storage. The application
+      follows a layered architecture where the user interface communicates with secure API endpoints, and the backend
+      performs validation, business logic, and database operations. Additional modules handle customer authentication,
+      admin authentication, order recording, masked payment card storage, and support ticket workflows.
+    </p>
+    <p>
+      The project demonstrates how a scalable e-commerce platform can be built using modern web technologies while
+      keeping the interface practical and user friendly. It improves shopping efficiency, simplifies store management,
+      and provides a structured foundation for future enhancements such as online payment gateway integration, delivery
+      tracking, recommendation systems, and production deployment.
+    </p>
+  </section>
+
+  <section class="page-break toc">
+    <h2 class="center">CONTENTS</h2>
+    <p>1. INTRODUCTION</p>
+    <p>1.1 Overview of the System</p>
+    <p>1.2 Specific Objectives</p>
+    <p>2. SYSTEM STUDY AND ANALYSIS</p>
+    <p>2.1 Existing System</p>
+    <p>2.2 Proposed System</p>
+    <p>3. SYSTEM SPECIFICATION</p>
+    <p>3.1 Hardware Requirement</p>
+    <p>3.2 Software Requirement</p>
+    <p>3.3 Software Profile</p>
+    <p>4. SYSTEM DESIGN</p>
+    <p>4.1 Data Flow Diagram</p>
+    <p>4.2 Database Design</p>
+    <p>5. IMPLEMENTATION</p>
+    <p>6. SYSTEM TESTING</p>
+    <p>6.1 Unit Testing</p>
+    <p>6.2 Integration Testing</p>
+    <p>6.3 System Testing</p>
+    <p>6.4 Validation Testing</p>
+    <p>6.5 User Interface Testing</p>
+    <p>7. APPENDIX</p>
+    <p>7.1 Sample Coding</p>
+    <p>7.2 Screen Layout</p>
+    <p>8. CONCLUSION</p>
+    <p>9. FUTURE ENHANCEMENT</p>
+    <p>10. BIBLIOGRAPHY</p>
+  </section>
+
+  <section>
+    <h2>1. INTRODUCTION</h2>
+    <h3>1.1 Overview of the System</h3>
+    <p>
+      LuxeCart is a web-based e-commerce management system created to provide both an attractive shopping platform
+      for customers and an operational control center for administrators. The system supports browsing products across
+      multiple store sections, searching by category, viewing detailed product cards, placing orders, and following
+      order history. On the administration side, the system provides product management, section management, customer
+      account handling, support ticket handling, and sales overview features.
+    </p>
+    <p>
+      The frontend is designed to be responsive and interactive, with customer pages such as home, collections,
+      product detail, checkout, confirmation, orders, account, sign-in, sign-up, and support. The admin module
+      introduces a separate workspace where product details, purchased details, best-performing products, support
+      requests, stock visibility, and user information can be monitored efficiently.
+    </p>
+    <p>
+      The backend validates user input, processes orders, stores support requests, manages admin sessions, and
+      maintains structured data in MySQL tables. This integration provides a complete commerce workflow from catalog
+      display to order storage and post-purchase support.
+    </p>
+
+    <h3>1.2 Specific Objectives</h3>
+    <ul>
+      <li>To develop a full-stack e-commerce website using Angular, Express.js, and MySQL.</li>
+      <li>To provide customer authentication with account, password, and recovery features.</li>
+      <li>To implement product browsing, category filtering, search, wishlist, and cart management.</li>
+      <li>To design a checkout process with delivery address capture and masked card-detail support.</li>
+      <li>To store orders, order items, customer records, and support requests in a relational database.</li>
+      <li>To build an admin dashboard for products, sections, users, orders, revenue, and support management.</li>
+      <li>To create a responsive interface suitable for both desktop and mobile usage.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>2. SYSTEM STUDY AND ANALYSIS</h2>
+    <h3>2.1 Existing System</h3>
+    <p>
+      In many basic online shopping systems, the customer view and administrator workflow are separated poorly or
+      handled manually. Older systems often depend on static product listings, limited search, and weak order tracking.
+      Support management is frequently handled outside the system, and customer account recovery or profile updating is
+      not integrated into the application itself.
+    </p>
+    <p>Common limitations in existing systems include:</p>
+    <ul>
+      <li>Limited filtering and search support across multiple categories.</li>
+      <li>No unified admin panel for products, orders, users, and support operations.</li>
+      <li>Weak checkout validation and incomplete order history tracking.</li>
+      <li>No structured storage for support tickets and customer account data.</li>
+      <li>Poor separation between customer features and admin operations.</li>
+      <li>Lack of responsive, modern interface behavior for real-time usage.</li>
+    </ul>
+
+    <h3>2.2 Proposed System</h3>
+    <p>
+      The proposed LuxeCart E-Commerce Website addresses these issues by introducing an integrated shopping and store
+      administration platform. The customer module supports authentication, cart handling, saved addresses, order
+      confirmation, account management, and support ticket submission. The admin module provides analytics, section
+      editing, product editing, user review, and ticket management in one workspace.
+    </p>
+    <p><strong>Key features of the proposed system include:</strong></p>
+    <ul>
+      <li>Responsive Angular storefront for customers.</li>
+      <li>Search and category-based product discovery.</li>
+      <li>Wishlist, cart, and “buy now” purchase flow.</li>
+      <li>Customer account registration, login, profile update, and password recovery.</li>
+      <li>Checkout form with order validation and masked card detail capture.</li>
+      <li>Order history, latest order details, and recent ordered product views.</li>
+      <li>Support ticket creation and support history tracking.</li>
+      <li>Admin login with role-based access for store control features.</li>
+      <li>Admin dashboard showing revenue, top products, users, and order details.</li>
+      <li>Product, section, support, and customer management with MySQL persistence.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>3. SYSTEM SPECIFICATION</h2>
+    <h3>3.1 Hardware Requirement</h3>
+    <table class="details-table">
+      <tr>
+        <th>Component</th>
+        <th>Specification</th>
+      </tr>
+      <tr>
+        <td>System</td>
+        <td>Acer Aspire 7</td>
+      </tr>
+      <tr>
+        <td>Storage</td>
+        <td>512 GB</td>
+      </tr>
+      <tr>
+        <td>Display</td>
+        <td>15.6-inch Full HD display</td>
+      </tr>
+      <tr>
+        <td>RAM</td>
+        <td>8 GB or above recommended for development</td>
+      </tr>
+      <tr>
+        <td>Input Devices</td>
+        <td>Standard keyboard, touchpad, and mouse</td>
+      </tr>
+    </table>
+
+    <h3>3.2 Software Requirement</h3>
+    <table class="details-table">
+      <tr>
+        <th>Software Item</th>
+        <th>Technology Used</th>
+      </tr>
+      <tr>
+        <td>Operating System</td>
+        <td>Windows 11</td>
+      </tr>
+      <tr>
+        <td>Frontend Framework</td>
+        <td>Angular 21 with TypeScript</td>
+      </tr>
+      <tr>
+        <td>UI Library</td>
+        <td>Bootstrap 5.3.8 and Bootstrap Icons</td>
+      </tr>
+      <tr>
+        <td>Backend Framework</td>
+        <td>Node.js with Express 5.2.1</td>
+      </tr>
+      <tr>
+        <td>Database</td>
+        <td>MySQL</td>
+      </tr>
+      <tr>
+        <td>Version Control</td>
+        <td>Git and GitHub</td>
+      </tr>
+      <tr>
+        <td>IDE / Editor</td>
+        <td>Visual Studio Code</td>
+      </tr>
+      <tr>
+        <td>Testing / Build Tool</td>
+        <td>Angular CLI, npm scripts</td>
+      </tr>
+      <tr>
+        <td>Optional Backend</td>
+        <td>PHP backend module for alternate API routing</td>
+      </tr>
+    </table>
+
+    <h3>3.3 Software Profile</h3>
+    <p>
+      The system is built using a three-layer architecture consisting of frontend presentation, backend application
+      logic, and relational data storage. Angular is used to create reusable components for product cards, checkout,
+      orders, admin pages, and support pages. TypeScript improves maintainability through typed models and structured
+      component logic.
+    </p>
+    <p>
+      Express.js is used on the server side to define REST API endpoints for products, sections, orders, user
+      authentication, admin authentication, support tickets, customer lists, and dashboard analytics. Input validation
+      and error handling are implemented in route-level processing before data is stored or returned to the client.
+    </p>
+    <p>
+      MySQL acts as the persistent relational database. It stores store sections, products, orders, order items,
+      support tickets, admin accounts, customer accounts, and card detail summaries. This structured storage model
+      ensures organized retrieval, reporting, and future scalability.
+    </p>
+    <p>
+      Bootstrap and custom CSS are used to create a responsive visual interface. The application additionally supports
+      Indian currency display, toast-based notifications, and consistent UX behavior across the customer and admin
+      modules.
+    </p>
+  </section>
+
+  <section>
+    <h2>4. SYSTEM DESIGN</h2>
+    <h3>4.1 Data Flow Diagram</h3>
+    <p>
+      The system follows a request-response model. Customers and administrators interact with the Angular frontend.
+      The frontend sends requests to the Express API, and the API communicates with the MySQL database to read or store
+      product, account, order, and support data.
+    </p>
+    <p><strong>Level 0 Data Flow Description:</strong></p>
+    <ol>
+      <li>Customer/Admin enters request through the frontend user interface.</li>
+      <li>Frontend sends validated request to backend API endpoints.</li>
+      <li>Backend processes business logic and communicates with the MySQL database.</li>
+      <li>Database returns data or stores updated records.</li>
+      <li>Backend sends the processed result back to the frontend for display.</li>
+    </ol>
+    <p><strong>Main external entities:</strong> Customer, Admin, Database.</p>
+    <p><strong>Main processes:</strong> Authentication, Product Management, Order Processing, Support Processing, Admin Reporting.</p>
+
+    <h3>4.2 Database Design</h3>
+    <p>
+      The database is designed to maintain structured commerce data with clear relationships between products, orders,
+      users, support requests, and admin activities.
+    </p>
+
+    <table class="db-table">
+      <tr>
+        <th>Table Name</th>
+        <th>Purpose</th>
+        <th>Important Fields</th>
+      </tr>
+      <tr>
+        <td>store_sections</td>
+        <td>Stores product section names and display order.</td>
+        <td>id, name, sort_order, created_at</td>
+      </tr>
+      <tr>
+        <td>products</td>
+        <td>Stores product catalog data.</td>
+        <td>id, name, category, description, image_url, price, rating, stock, featured, badge</td>
+      </tr>
+      <tr>
+        <td>orders</td>
+        <td>Stores placed order summary and customer delivery details.</td>
+        <td>id, order_reference, customer_name, email, phone, payment_method, subtotal, total_amount, status, created_at</td>
+      </tr>
+      <tr>
+        <td>order_items</td>
+        <td>Stores individual ordered products under each order.</td>
+        <td>id, order_id, product_id, product_name, quantity, unit_price, line_total</td>
+      </tr>
+      <tr>
+        <td>support_tickets</td>
+        <td>Stores customer support issues and admin replies.</td>
+        <td>id, customer_name, email, order_reference, issue_type, subject, message, status, admin_response</td>
+      </tr>
+      <tr>
+        <td>admin_accounts</td>
+        <td>Stores admin and sub-admin credentials with role information.</td>
+        <td>id, name, email, phone, password_hash, password_salt, role</td>
+      </tr>
+      <tr>
+        <td>customer_accounts</td>
+        <td>Stores registered customer authentication and profile data.</td>
+        <td>id, name, email, phone, password_hash, password_salt, password_hint, created_at</td>
+      </tr>
+      <tr>
+        <td>card_details</td>
+        <td>Stores safe masked card information for card payment history.</td>
+        <td>id, account_email, cardholder_name, card_last4, expiry, card_brand</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>5. IMPLEMENTATION</h2>
+    <p>
+      Implementation is the stage where the system design is transformed into a working web application. LuxeCart is
+      implemented using modular frontend and backend components so that customer workflows and admin workflows can be
+      maintained independently while sharing the same database and API layer.
+    </p>
+    <h3>5.1 Frontend Module</h3>
+    <p>
+      The frontend is built in Angular with reusable components for home hero sections, product cards, collection grids,
+      order summaries, support cards, account forms, and admin lists. Routing is handled within the application view
+      logic, and responsive design is achieved through Bootstrap and custom CSS.
+    </p>
+    <h3>5.2 Authentication Module</h3>
+    <p>
+      The system supports customer sign-up, customer login, password hint verification, password reset, and admin login.
+      Session information is stored locally for a smoother user experience. Toast notifications are used to inform users
+      about success and error states.
+    </p>
+    <h3>5.3 Commerce Module</h3>
+    <p>
+      Products can be browsed, searched, filtered by section, added to the cart, moved to saved items, or placed through
+      the instant checkout flow. The checkout module validates customer details, address data, delivery fee, and payment
+      method before submitting the order.
+    </p>
+    <h3>5.4 Admin Module</h3>
+    <p>
+      The admin workspace includes overview metrics, recent purchased details, best-performing products, section
+      management, product creation and editing, customer user review, sub-admin control, stock monitoring, and support
+      ticket status management.
+    </p>
+    <h3>5.5 Database and Seed Module</h3>
+    <p>
+      The backend contains schema setup, product seed logic, and migration support for newer tables such as customer
+      accounts and card details. Product images are managed through seeded image pools, and order information is stored
+      in normalized tables for reporting and historical lookup.
+    </p>
+  </section>
+
+  <section>
+    <h2>6. SYSTEM TESTING</h2>
+    <p>
+      Testing ensures that the system performs correctly, validates inputs, handles user interaction safely, and stores
+      data consistently in the database. Both customer and admin flows were verified during development.
+    </p>
+
+    <h3>6.1 Unit Testing</h3>
+    <p>
+      Unit-level validation is applied to form handling, product operations, checkout rules, account input checks, and
+      API response handling in individual modules.
+    </p>
+    <ul>
+      <li>Validation of email, phone number, postal code, and password rules.</li>
+      <li>Cart quantity and stock limit checking.</li>
+      <li>Card number, expiry, and CVV validation for checkout.</li>
+      <li>Section, product, and support field validation in admin workflows.</li>
+    </ul>
+
+    <h3>6.2 Integration Testing</h3>
+    <p>
+      Integration testing verifies that the Angular frontend, Express backend, and MySQL database work together
+      properly without data loss or interface mismatch.
+    </p>
+    <ul>
+      <li>Customer sign-up and login to customer account table flow.</li>
+      <li>Checkout to order and order item table insertion flow.</li>
+      <li>Support form to support ticket table flow.</li>
+      <li>Admin overview metrics matching stored order and support data.</li>
+    </ul>
+
+    <h3>6.3 System Testing</h3>
+    <p>
+      The complete system was tested as an end-to-end application, covering browsing, cart handling, checkout, order
+      confirmation, support submission, admin login, product editing, and dashboard viewing.
+    </p>
+
+    <h3>6.4 Validation Testing</h3>
+    <p>
+      Validation testing was used to confirm that error messages, toast feedback, form constraints, and database updates
+      match the expected output and user requirements. Invalid checkout, wrong login data, duplicate account entries,
+      and incomplete support submissions were verified.
+    </p>
+
+    <h3>6.5 User Interface Testing</h3>
+    <p>
+      UI testing ensured that the customer and admin pages remain responsive and visually readable on common screen
+      sizes. Product cards, order lists, admin panels, buttons, cards, and toast messages were checked for alignment,
+      text clarity, and interaction consistency.
+    </p>
+
+    <h3>6.6 Build Verification</h3>
+    <p>
+      The project frontend build was verified using the Angular build command. This confirms that the major component
+      templates, styles, and TypeScript files compile successfully.
+    </p>
+  </section>
+
+  <section>
+    <h2>7. APPENDIX</h2>
+    <h3>7.1 Sample Coding</h3>
+    <h4>Sample 1: Root development scripts</h4>
+    <pre>{
+  "scripts": {
+    "dev": "concurrently \"npm --prefix backend run dev\" \"npm --prefix frontend start\"",
+    "dev:frontend": "npm --prefix frontend start",
+    "dev:backend": "npm --prefix backend run dev",
+    "build": "npm --prefix frontend run build"
+  }
+}</pre>
+
+    <h4>Sample 2: Product price display in Angular</h4>
+    <pre>&lt;strong&gt;{{ product.price | currency:'INR':'symbol':'1.0-0' }}&lt;/strong&gt;
+&lt;small&gt;M.R.P. {{ listPrice | currency:'INR':'symbol':'1.0-0' }}&lt;/small&gt;</pre>
+
+    <h4>Sample 3: Order table structure</h4>
+    <pre>CREATE TABLE orders (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  order_reference VARCHAR(32) NULL UNIQUE,
+  customer_name VARCHAR(120) NOT NULL,
+  email VARCHAR(140) NOT NULL,
+  phone VARCHAR(40) NOT NULL,
+  address_line VARCHAR(255) NOT NULL,
+  city VARCHAR(80) NOT NULL,
+  state VARCHAR(80) NOT NULL,
+  postal_code VARCHAR(20) NOT NULL,
+  payment_method VARCHAR(60) NOT NULL,
+  subtotal DECIMAL(10, 2) NOT NULL,
+  total_amount DECIMAL(10, 2) NOT NULL
+);</pre>
+
+    <h4>Sample 4: Backend order API concept</h4>
+    <pre>app.post('/api/orders', async (request, response, next) =&gt; {
+  // validate checkout payload
+  // insert order summary into orders table
+  // insert ordered items into order_items table
+  // optionally store masked card details
+  // return order confirmation response
+});</pre>
+
+    <h3>7.2 Screen Layout</h3>
+    <ul>
+      <li>Customer home page with search, hero banners, and catalog sections.</li>
+      <li>Product detail page with price, image, description, and actions.</li>
+      <li>Checkout page with delivery form, payment method, and order summary.</li>
+      <li>Orders page showing order history and item-level order detail.</li>
+      <li>Account page for profile update and password management.</li>
+      <li>Support page for ticket submission and reply tracking.</li>
+      <li>Admin dashboard with revenue, recent orders, best performers, and support metrics.</li>
+      <li>Admin management pages for products, sections, users, and stock view.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>8. CONCLUSION</h2>
+    <p>
+      The LuxeCart E-Commerce Website successfully demonstrates the development of a practical full-stack commerce
+      application using Angular, Express.js, and MySQL. The system provides a complete workflow for customers to browse,
+      order, and track products while also enabling administrators to control store content, users, support activity,
+      and revenue-related records.
+    </p>
+    <p>
+      The project achieves its goal of combining usability, structured data management, and scalable modular design.
+      Through this project, important software engineering concepts such as layered architecture, form validation,
+      database normalization, API integration, and responsive interface design were implemented effectively.
+    </p>
+  </section>
+
+  <section>
+    <h2>9. FUTURE ENHANCEMENT</h2>
+    <ul>
+      <li>Integration with real payment gateways such as Razorpay or Stripe.</li>
+      <li>Order status tracking with shipment and delivery updates.</li>
+      <li>Invoice generation in PDF format.</li>
+      <li>Email and SMS notifications for order and support updates.</li>
+      <li>Product recommendation engine based on category and order history.</li>
+      <li>Review and rating submission by customers.</li>
+      <li>Advanced role permissions for multiple admin levels.</li>
+      <li>Cloud deployment with CI/CD automation.</li>
+      <li>Image optimization and CDN support for faster catalog delivery.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>10. BIBLIOGRAPHY</h2>
+    <ol>
+      <li>Angular Documentation, Angular Team, Official Framework Documentation.</li>
+      <li>Express.js Documentation, OpenJS Foundation.</li>
+      <li>MySQL Documentation, Oracle Corporation.</li>
+      <li>Bootstrap Documentation, Bootstrap Team.</li>
+      <li>TypeScript Documentation, Microsoft.</li>
+      <li>Node.js Documentation, OpenJS Foundation.</li>
+      <li>Git and GitHub Documentation for version control and repository management.</li>
+    </ol>
+  </section>
+</body>
+</html>

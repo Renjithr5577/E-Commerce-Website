@@ -1,7 +1,5 @@
-<section
-  class="auth-view auth-centered-view admin-centered-view"
-  [class.admin-centered-view-authenticated]="isAuthenticated"
->
+<section class="auth-view auth-centered-view admin-centered-view"
+  [class.admin-centered-view-authenticated]="isAuthenticated">
   <div *ngIf="!isAuthenticated" class="auth-simple-brand" aria-label="LuxeCart Admin">
     <span class="brand-logo">LC</span>
     <div>
@@ -10,10 +8,7 @@
     </div>
   </div>
 
-  <section
-    *ngIf="isAuthenticated"
-    class="admin-top-nav-shell"
-    style="
+  <section *ngIf="isAuthenticated" class="admin-top-nav-shell" style="
       width: var(--admin-shell-width);
       position: sticky;
       top: var(--admin-primary-sticky-top);
@@ -32,110 +27,64 @@
         radial-gradient(circle at top right, rgba(251, 191, 36, 0.14), transparent 30%),
         linear-gradient(180deg, #17263d, #29486a);
       box-shadow: 0 20px 42px rgba(15, 23, 42, 0.24);
-    "
-  >
-    <div
-      class="auth-simple-brand admin-top-nav-brand-global"
-      aria-label="LuxeCart Admin"
-      style="flex: 0 0 auto; margin-top: 0; gap: 0.65rem"
-    >
-      <span class="brand-logo" style="width: 2.25rem; height: 2.25rem; border-radius: 0.82rem"
-        >LC</span
-      >
+    ">
+    <div class="auth-simple-brand admin-top-nav-brand-global" aria-label="LuxeCart Admin"
+      style="flex: 0 0 auto; margin-top: 0; gap: 0.65rem">
+      <span class="brand-logo" style="width: 2.25rem; height: 2.25rem; border-radius: 0.82rem">LC</span>
       <div>
         <strong style="color: #fff; font-size: 1.8rem">LuxeCart</strong>
-        <small style="color: #d9c6a5; font-size: 0.82rem; letter-spacing: 0.06em"
-          >Admin Studio</small
-        >
+        <small style="color: #d9c6a5; font-size: 0.82rem; letter-spacing: 0.06em">Admin Studio</small>
       </div>
     </div>
 
-    <div
-      class="admin-top-nav"
-      role="tablist"
-      aria-label="Admin section switcher"
-      style="
+    <div class="admin-top-nav" role="tablist" aria-label="Admin section switcher" style="
         flex: 1 1 48rem;
         min-width: 0;
         justify-content: flex-end;
         flex-wrap: wrap;
         overflow: visible;
         margin-left: auto;
-      "
-    >
-      <button
-        type="button"
-        class="admin-top-nav-btn"
-        [class.admin-top-nav-btn-active]="activeTab === 'overview'"
-        (click)="setActiveTab('overview')"
-      >
+      ">
+      <button type="button" class="admin-top-nav-btn" [class.admin-top-nav-btn-active]="activeTab === 'overview'"
+        (click)="setActiveTab('overview')">
         <i class="bi bi-grid"></i>
         Dashboard
       </button>
-      <button
-        type="button"
-        class="admin-top-nav-btn"
-        [class.admin-top-nav-btn-active]="activeTab === 'products'"
-        (click)="setActiveTab('products')"
-      >
+      <button type="button" class="admin-top-nav-btn" [class.admin-top-nav-btn-active]="activeTab === 'products'"
+        (click)="setActiveTab('products')">
         <i class="bi bi-box-seam"></i>
         Products
       </button>
-      <button
-        type="button"
-        class="admin-top-nav-btn"
-        [class.admin-top-nav-btn-active]="activeTab === 'orders'"
-        (click)="setActiveTab('orders')"
-      >
+      <button type="button" class="admin-top-nav-btn" [class.admin-top-nav-btn-active]="activeTab === 'orders'"
+        (click)="setActiveTab('orders')">
         <i class="bi bi-receipt"></i>
         Orders
       </button>
-      <button
-        type="button"
-        class="admin-top-nav-btn"
-        [class.admin-top-nav-btn-active]="activeTab === 'accounts'"
-        (click)="setActiveTab('accounts')"
-      >
+      <button type="button" class="admin-top-nav-btn" [class.admin-top-nav-btn-active]="activeTab === 'accounts'"
+        (click)="setActiveTab('accounts')">
         <i class="bi bi-person-badge"></i>
         Accounts
       </button>
-      <button
-        type="button"
-        class="admin-top-nav-btn"
-        [class.admin-top-nav-btn-active]="activeTab === 'users'"
-        (click)="setActiveTab('users')"
-      >
+      <button type="button" class="admin-top-nav-btn" [class.admin-top-nav-btn-active]="activeTab === 'users'"
+        (click)="setActiveTab('users')">
         <i class="bi bi-people"></i>
         Users
       </button>
-      <button
-        type="button"
-        class="admin-top-nav-btn"
-        [class.admin-top-nav-btn-active]="activeTab === 'stock'"
-        (click)="setActiveTab('stock')"
-      >
+      <button type="button" class="admin-top-nav-btn" [class.admin-top-nav-btn-active]="activeTab === 'stock'"
+        (click)="setActiveTab('stock')">
         <i class="bi bi-box2-heart"></i>
         Out of stock
       </button>
-      <button
-        type="button"
-        class="admin-top-nav-btn"
-        [class.admin-top-nav-btn-active]="activeTab === 'support'"
-        (click)="setActiveTab('support')"
-      >
+      <button type="button" class="admin-top-nav-btn" [class.admin-top-nav-btn-active]="activeTab === 'support'"
+        (click)="setActiveTab('support')">
         <i class="bi bi-life-preserver"></i>
         Support box
       </button>
     </div>
   </section>
 
-  <form
-    *ngIf="!isAuthenticated"
-    class="auth-plain-card auth-plain-card-wide admin-login-card"
-    #adminLoginFormRef="ngForm"
-    novalidate
-    (ngSubmit)="handleLoginSubmit(adminLoginFormRef)"
-  >
+  <form *ngIf="!isAuthenticated" class="auth-plain-card auth-plain-card-wide admin-login-card"
+    #adminLoginFormRef="ngForm" novalidate (ngSubmit)="handleLoginSubmit(adminLoginFormRef)">
     <h2>Admin login</h2>
     <p class="auth-plain-copy">
       Sign in as admin to manage products, review sold items, track recent orders, and read support
@@ -144,50 +93,28 @@
 
     <div *ngIf="false" class="auth-notice admin-demo-note">
       <i class="bi bi-shield-lock"></i>
-      Main admin: <strong>Renjith R</strong> · <strong>renjithr5577@gmail.com</strong> ·
+      Main admin: <strong>Renjith R</strong> · <strong>admin@gmail.com</strong> ·
       <strong>8072178664</strong> / <strong>123456</strong>
     </div>
 
-    <label
-      class="form-field floating-form-field"
-      [class.field-invalid]="adminLoginFormRef.submitted && adminIdentifierModel.invalid"
-    >
-      <input
-        type="text"
-        name="identifier"
-        required
-        [(ngModel)]="loginForm.identifier"
-        #adminIdentifierModel="ngModel"
-        placeholder=" "
-      />
+    <label class="form-field floating-form-field" [class.field-invalid]="
+        adminLoginFormRef.submitted && !isAdminIdentifierValid(loginForm.identifier)
+      ">
+      <input type="text" name="identifier" required [(ngModel)]="loginForm.identifier" #adminIdentifierModel="ngModel"
+        placeholder=" " />
       <span>Admin email or mobile number</span>
-      <small
-        *ngIf="adminLoginFormRef.submitted && adminIdentifierModel.invalid"
-        class="field-error"
-      >
-        Enter the admin email address or 10-digit mobile number.
+      <small *ngIf="adminLoginFormRef.submitted && !isAdminIdentifierValid(loginForm.identifier)" class="field-error">
+        {{ getAdminIdentifierError(loginForm.identifier) }}
       </small>
     </label>
 
-    <label
-      class="form-field floating-form-field password-toggle-field"
-      [class.field-invalid]="adminLoginFormRef.submitted && passwordModel.invalid"
-    >
-      <input
-        [type]="showAdminLoginPassword ? 'text' : 'password'"
-        name="password"
-        required
-        minlength="6"
-        [(ngModel)]="loginForm.password"
-        #passwordModel="ngModel"
-        placeholder=" "
-        style="padding-right: 3.35rem"
-      />
+    <label class="form-field floating-form-field password-toggle-field" [class.field-invalid]="
+        adminLoginFormRef.submitted && !isAdminPasswordValid(loginForm.password)
+      ">
+      <input [type]="showAdminLoginPassword ? 'text' : 'password'" name="password" required minlength="6"
+        [(ngModel)]="loginForm.password" #passwordModel="ngModel" placeholder=" " style="padding-right: 3.35rem" />
       <span>Password</span>
-      <button
-        type="button"
-        class="password-toggle-btn"
-        style="
+      <button type="button" class="password-toggle-btn" style="
           position: absolute;
           top: 50%;
           right: 0.8rem;
@@ -202,32 +129,29 @@
           background: transparent;
           color: #64748b;
           z-index: 2;
-        "
-        [attr.aria-label]="showAdminLoginPassword ? 'Hide password' : 'Show password'"
-        (click)="togglePasswordVisibility('adminLogin')"
-      >
+        " [attr.aria-label]="showAdminLoginPassword ? 'Hide password' : 'Show password'"
+        (click)="togglePasswordVisibility('adminLogin')">
         <i [class]="showAdminLoginPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
       </button>
-      <small *ngIf="adminLoginFormRef.submitted && passwordModel.invalid" class="field-error">
-        Password must be at least 6 characters long.
+      <small *ngIf="adminLoginFormRef.submitted && !isAdminPasswordValid(loginForm.password)" class="field-error">
+        {{ getAdminPasswordError(loginForm.password) }}
       </small>
     </label>
 
+    <div *ngIf="errorMessage" class="checkout-error" role="alert" aria-live="polite">
+      <i class="bi bi-exclamation-circle-fill"></i>
+      <span>{{ errorMessage }}</span>
+    </div>
+
     <button class="btn auth-primary-btn" type="submit">Continue as admin</button>
 
-    <button
-      class="btn dark-outline auth-secondary-btn"
-      type="button"
-      (click)="openCustomerAccess.emit()"
-    >
+    <button class="btn dark-outline auth-secondary-btn" type="button" (click)="openCustomerAccess.emit()">
       Open customer sign in
     </button>
   </form>
 
   <section *ngIf="isAuthenticated" class="admin-studio-shell">
-    <aside
-      class="section-shell admin-panel-card admin-sidebar-card"
-      style="
+    <aside class="section-shell admin-panel-card admin-sidebar-card" style="
         gap: 0.85rem;
         grid-template-rows: auto auto auto auto 1fr auto;
         max-height: calc(100dvh - var(--admin-secondary-sticky-top) - 0.55rem);
@@ -238,18 +162,13 @@
           0 24px 48px rgba(15, 23, 42, 0.2),
           inset 0 1px 0 rgba(255, 255, 255, 0.06);
         overflow: hidden;
-      "
-    >
-      <span
-        class="section-kicker"
-        style="
+      ">
+      <span class="section-kicker" style="
           align-self: start;
           padding: 0.72rem 1rem;
           border-radius: 999px;
           box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
-        "
-        >Admin access</span
-      >
+        ">Admin access</span>
       <h2 style="margin: 0.1rem 0 0; font-size: 2.2rem; letter-spacing: -0.04em">Control center</h2>
       <p style="margin: 0; max-width: 15rem; line-height: 1.56">
         Manage products, monitor sales, and keep customer support visible from one cleaner admin
@@ -257,8 +176,7 @@
       </p>
 
       <div class="admin-stat-list">
-        <div
-          style="
+        <div style="
             padding: 1.1rem 1rem;
             border-radius: 1.4rem;
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -266,15 +184,13 @@
               linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.06)),
               radial-gradient(circle at top right, rgba(251, 191, 36, 0.08), transparent 42%);
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-          "
-        >
+          ">
           <span>Store sections</span>
           <strong style="margin-top: 0.38rem; font-size: 1.6rem; letter-spacing: -0.04em">{{
             categoryOptions.length
-          }}</strong>
+            }}</strong>
         </div>
-        <div
-          style="
+        <div style="
             padding: 1.1rem 1rem;
             border-radius: 1.4rem;
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -282,44 +198,32 @@
               linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.06)),
               radial-gradient(circle at top right, rgba(59, 130, 246, 0.1), transparent 42%);
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-          "
-        >
+          ">
           <span>Open tickets</span>
           <strong style="margin-top: 0.38rem; font-size: 1.6rem; letter-spacing: -0.04em">{{
             overview?.openTicketCount ?? 0
-          }}</strong>
+            }}</strong>
         </div>
       </div>
 
-      <div
-        *ngIf="currentAdmin"
-        class="admin-detail-note admin-sidebar-detail-note admin-sidebar-profile-card"
-        style="
+      <div *ngIf="currentAdmin" class="admin-detail-note admin-sidebar-detail-note admin-sidebar-profile-card" style="
           margin-top: 0.15rem;
           padding: 1.05rem 1.1rem;
           border-radius: 1.5rem;
           box-shadow: 0 16px 28px rgba(15, 23, 42, 0.14);
-        "
-      >
+        ">
         <strong>{{ currentAdmin.name || currentAdmin.email }}</strong>
         <span *ngIf="currentAdmin.phone">{{ currentAdmin.phone }}</span>
-        <span
-          class="admin-sidebar-role-line"
-          style="
+        <span class="admin-sidebar-role-line" style="
             margin-top: 0.55rem;
             padding-top: 0.65rem;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
-          "
-          >{{ getAdminRoleLabel(currentAdmin.role) }} &middot; {{ currentAdmin.email }}</span
-        >
-        <span style="display: block; color: #cbd5e1"
-          >{{ getAdminRoleLabel(currentAdmin.role) }} · {{ currentAdmin.email }}</span
-        >
+          ">{{ getAdminRoleLabel(currentAdmin.role) }} &middot; {{ currentAdmin.email }}</span>
+        <span style="display: block; color: #cbd5e1">{{ getAdminRoleLabel(currentAdmin.role) }} · {{ currentAdmin.email
+          }}</span>
       </div>
 
-      <div
-        class="admin-sidebar-actions"
-        style="
+      <div class="admin-sidebar-actions" style="
           gap: 0.7rem;
           margin-top: auto;
           padding: 0.5rem;
@@ -331,23 +235,16 @@
           box-shadow:
             0 16px 28px rgba(15, 23, 42, 0.12),
             inset 0 1px 0 rgba(255, 255, 255, 0.06);
-        "
-      >
-        <button
-          class="btn dark-outline admin-signout-btn admin-sidebar-action-btn admin-sidebar-action-refresh"
-          type="button"
-          style="min-height: 3.05rem; padding: 0.84rem 1rem; border-radius: 1.3rem"
-          (click)="refreshInsights.emit()"
-        >
+        ">
+        <button class="btn dark-outline admin-signout-btn admin-sidebar-action-btn admin-sidebar-action-refresh"
+          type="button" style="min-height: 3.05rem; padding: 0.84rem 1rem; border-radius: 1.3rem"
+          (click)="refreshInsights.emit()">
           <i class="bi bi-arrow-clockwise"></i>
           Refresh data
         </button>
-        <button
-          class="btn dark-outline admin-signout-btn admin-sidebar-action-btn admin-sidebar-action-signout"
-          type="button"
-          style="min-height: 3.05rem; padding: 0.84rem 1rem; border-radius: 1.3rem"
-          (click)="signOut.emit()"
-        >
+        <button class="btn dark-outline admin-signout-btn admin-sidebar-action-btn admin-sidebar-action-signout"
+          type="button" style="min-height: 3.05rem; padding: 0.84rem 1rem; border-radius: 1.3rem"
+          (click)="signOut.emit()">
           <i class="bi bi-box-arrow-right"></i>
           Sign out admin
         </button>
@@ -413,18 +310,10 @@
                   </div>
                 </div>
 
-                <div
-                  *ngIf="overview?.topProducts?.length; else noTopProducts"
-                  class="admin-list admin-list-grid"
-                >
-                  <article
-                    class="admin-list-card admin-click-card admin-top-product-card"
-                    *ngFor="let product of overview?.topProducts"
-                    role="button"
-                    tabindex="0"
-                    (click)="openProductDetail(product.productId)"
-                    (keyup.enter)="openProductDetail(product.productId)"
-                  >
+                <div *ngIf="overview?.topProducts?.length; else noTopProducts" class="admin-list admin-list-grid">
+                  <article class="admin-list-card admin-click-card admin-top-product-card"
+                    *ngFor="let product of overview?.topProducts" role="button" tabindex="0"
+                    (click)="openProductDetail(product.productId)" (keyup.enter)="openProductDetail(product.productId)">
                     <div class="admin-top-product-summary">
                       <div class="admin-top-product-copy">
                         <strong>{{ product.productName }}</strong>
@@ -434,24 +323,16 @@
                         <small>{{ product.unitsSold }} units sold</small>
                       </div>
 
-                      <ng-container
-                        *ngIf="
+                      <ng-container *ngIf="
                           getCatalogProduct(product.productId) as catalogProduct;
                           else topProductImagePlaceholder
-                        "
-                      >
-                        <img
-                          class="admin-top-product-image"
-                          [src]="catalogProduct.imageUrl"
-                          [alt]="catalogProduct.name"
-                        />
+                        ">
+                        <img class="admin-top-product-image" [src]="catalogProduct.imageUrl"
+                          [alt]="catalogProduct.name" />
                       </ng-container>
 
                       <ng-template #topProductImagePlaceholder>
-                        <div
-                          class="admin-top-product-image admin-top-product-image-placeholder"
-                          aria-hidden="true"
-                        >
+                        <div class="admin-top-product-image admin-top-product-image-placeholder" aria-hidden="true">
                           <i class="bi bi-image"></i>
                         </div>
                       </ng-template>
@@ -476,17 +357,13 @@
                 </h2>
                 <p>
                   {{
-                    selectedProductDetail
-                      ? 'You opened this product from the dashboard top-sellers section.'
-                      : 'Loading the selected top-selling product from the dashboard.'
+                  selectedProductDetail
+                  ? 'You opened this product from the dashboard top-sellers section.'
+                  : 'Loading the selected top-selling product from the dashboard.'
                   }}
                 </p>
               </div>
-              <button
-                class="btn hero-primary admin-dashboard-back-btn"
-                type="button"
-                (click)="closeDetailView()"
-              >
+              <button class="btn hero-primary admin-dashboard-back-btn" type="button" (click)="closeDetailView()">
                 Back to dashboard
               </button>
             </div>
@@ -526,11 +403,8 @@
                   </div>
 
                   <div class="admin-card-action-row">
-                    <button
-                      class="btn dark-outline admin-inline-detail-btn"
-                      type="button"
-                      (click)="beginProductEdit(product.id)"
-                    >
+                    <button class="btn dark-outline admin-inline-detail-btn" type="button"
+                      (click)="beginProductEdit(product.id)">
                       Edit this product
                     </button>
                   </div>
@@ -541,10 +415,7 @@
         </article>
       </ng-container>
 
-      <article
-        *ngIf="activeTab === 'products'"
-        class="section-shell admin-panel-card admin-products-panel"
-      >
+      <article *ngIf="activeTab === 'products'" class="section-shell admin-panel-card admin-products-panel">
         <div class="section-heading admin-form-heading">
           <div>
             <span class="section-kicker">Catalog manager</span>
@@ -568,11 +439,8 @@
           <div class="admin-catalog-toolbar-actions">
             <label class="admin-catalog-filter" aria-label="Filter products by store section">
               <span class="admin-catalog-filter-label">Store section</span>
-              <select
-                class="admin-catalog-filter-control"
-                [value]="catalogSectionFilter"
-                (change)="setCatalogSectionFilter($any($event.target).value)"
-              >
+              <select class="admin-catalog-filter-control" [value]="catalogSectionFilter"
+                (change)="setCatalogSectionFilter($any($event.target).value)">
                 <option value="all">All sections</option>
                 <option *ngFor="let category of categoryOptions" [value]="category">
                   {{ category }}
@@ -584,14 +452,9 @@
               <span class="admin-catalog-filter-label">Search product</span>
               <div class="admin-catalog-toolbar-input-wrap">
                 <i class="bi bi-search admin-catalog-toolbar-search-icon" aria-hidden="true"></i>
-                <input
-                  type="search"
-                  name="catalogSearchQuery"
-                  class="admin-catalog-toolbar-search"
-                  [ngModel]="catalogSearchQuery"
-                  (ngModelChange)="setCatalogSearchQuery($event)"
-                  placeholder="Search by product, badge, or section"
-                />
+                <input type="search" name="catalogSearchQuery" class="admin-catalog-toolbar-search"
+                  [ngModel]="catalogSearchQuery" (ngModelChange)="setCatalogSearchQuery($event)"
+                  placeholder="Search by product, badge, or section" />
               </div>
             </label>
 
@@ -599,20 +462,14 @@
               {{ visibleCatalogProductCount }}
             </strong>
 
-            <button
-              class="btn dark-outline admin-inline-detail-btn admin-toolbar-btn"
-              type="button"
-              (click)="openNewSectionModal()"
-            >
+            <button class="btn dark-outline admin-inline-detail-btn admin-toolbar-btn" type="button"
+              (click)="openNewSectionModal()">
               <i class="bi bi-pencil-square"></i>
               Add or edit sections
             </button>
 
-            <button
-              class="btn auth-primary-btn admin-submit-btn admin-toolbar-btn"
-              type="button"
-              (click)="openNewProductModal()"
-            >
+            <button class="btn auth-primary-btn admin-submit-btn admin-toolbar-btn" type="button"
+              (click)="openNewProductModal()">
               <i class="bi bi-plus-circle"></i>
               Add new product
             </button>
@@ -620,10 +477,7 @@
         </section>
 
         <section #catalogSectionStart class="admin-catalog-section" style="scroll-margin-top: 7rem">
-          <div
-            *ngIf="visibleCatalogGroups.length; else noVisibleCatalogProducts"
-            class="admin-catalog-groups"
-          >
+          <div *ngIf="visibleCatalogGroups.length; else noVisibleCatalogProducts" class="admin-catalog-groups">
             <section class="admin-catalog-group" *ngFor="let group of visibleCatalogGroups">
               <div class="admin-catalog-group-heading">
                 <div>
@@ -633,19 +487,11 @@
                 <strong>{{ group.products.length }}</strong>
               </div>
 
-              <div
-                *ngIf="group.products.length; else emptyCatalogGroup"
-                class="admin-list admin-list-grid"
-              >
-                <article
-                  class="admin-list-card admin-click-card admin-catalog-product-card"
+              <div *ngIf="group.products.length; else emptyCatalogGroup" class="admin-list admin-list-grid">
+                <article class="admin-list-card admin-click-card admin-catalog-product-card"
                   [class.admin-click-card-active]="editingProductId === product.id"
-                  *ngFor="let product of group.products"
-                  role="button"
-                  tabindex="0"
-                  (click)="beginProductEdit(product.id)"
-                  (keyup.enter)="beginProductEdit(product.id)"
-                >
+                  *ngFor="let product of group.products" role="button" tabindex="0"
+                  (click)="beginProductEdit(product.id)" (keyup.enter)="beginProductEdit(product.id)">
                   <div class="admin-catalog-product-top">
                     <img [src]="product.imageUrl" [alt]="product.name" />
                     <div>
@@ -661,20 +507,13 @@
                   </div>
 
                   <div class="admin-card-action-row">
-                    <button
-                      class="btn dark-outline admin-inline-detail-btn"
-                      type="button"
-                      (click)="beginProductEditFromAction($event, product.id)"
-                    >
+                    <button class="btn dark-outline admin-inline-detail-btn" type="button"
+                      (click)="beginProductEditFromAction($event, product.id)">
                       Edit product
                     </button>
-                    <button
-                      *ngIf="canDeleteCatalog"
-                      class="ms-2 btn dark-outline admin-inline-detail-btn"
-                      type="button"
+                    <button *ngIf="canDeleteCatalog" class="ms-2 btn dark-outline admin-inline-detail-btn" type="button"
                       style="border-color: rgba(220, 38, 38, 0.18); color: #b91c1c"
-                      (click)="requestProductDeleteFromAction($event, product.id)"
-                    >
+                      (click)="requestProductDeleteFromAction($event, product.id)">
                       Delete product
                     </button>
                   </div>
@@ -685,10 +524,8 @@
                 <div class="empty-state" style="margin-top: 0.75rem">
                   <i class="bi bi-grid-3x3-gap"></i>
                   <p>No products in this section yet.</p>
-                  <span
-                    >Add a new product and choose {{ group.category }} to start filling this
-                    section.</span
-                  >
+                  <span>Add a new product and choose {{ group.category }} to start filling this
+                    section.</span>
                 </div>
               </ng-template>
             </section>
@@ -696,124 +533,77 @@
         </section>
       </article>
 
-      <div
-        *ngIf="activeTab === 'products' && isSectionModalOpen"
-        class="admin-modal-backdrop"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="sectionModalTitle"
-        (click)="closeSectionModal()"
-      >
-        <form
-          class="section-shell admin-panel-card admin-form-card admin-product-modal"
-          #sectionFormRef="ngForm"
-          novalidate
-          (click)="$event.stopPropagation()"
-          (submit)="$event.preventDefault()"
-          (ngSubmit)="submitNewSection(sectionFormRef)"
-        >
+      <div *ngIf="activeTab === 'products' && isSectionModalOpen" class="admin-modal-backdrop" role="dialog"
+        aria-modal="true" aria-labelledby="sectionModalTitle" (click)="closeSectionModal()">
+        <form class="section-shell admin-panel-card admin-form-card admin-product-modal" #sectionFormRef="ngForm"
+          novalidate (click)="$event.stopPropagation()" (submit)="$event.preventDefault()"
+          (ngSubmit)="submitNewSection(sectionFormRef)">
           <div class="section-heading admin-form-heading">
             <div>
               <span class="section-kicker">{{
                 isEditingSection ? 'Edit section' : 'Add section'
-              }}</span>
+                }}</span>
               <h2 id="sectionModalTitle">
                 {{ isEditingSection ? 'Rename a store section' : 'Create a new store section' }}
               </h2>
               <p>
                 {{
-                  isEditingSection
-                    ? 'Update the section name here. Every product in this section will use the new name.'
-                    : 'Add the section first, then use it from the product popup even before any product is inside it.'
+                isEditingSection
+                ? 'Update the section name here. Every product in this section will use the new name.'
+                : 'Add the section first, then use it from the product popup even before any product is inside it.'
                 }}
               </p>
             </div>
 
             <div class="admin-modal-actions">
-              <button
-                *ngIf="isEditingSection"
-                class="btn dark-outline admin-inline-detail-btn"
-                type="button"
-                [disabled]="sectionSubmitting"
-                (click)="$event.preventDefault(); cancelSectionEdit()"
-              >
+              <button *ngIf="isEditingSection" class="btn dark-outline admin-inline-detail-btn" type="button"
+                [disabled]="sectionSubmitting" (click)="$event.preventDefault(); cancelSectionEdit()">
                 Cancel edit
               </button>
-              <button
-                class="btn dark-outline admin-inline-detail-btn"
-                type="button"
-                [disabled]="sectionSubmitting"
-                (click)="$event.preventDefault(); closeSectionModal()"
-              >
+              <button class="btn dark-outline admin-inline-detail-btn" type="button" [disabled]="sectionSubmitting"
+                (click)="$event.preventDefault(); closeSectionModal()">
                 Close
               </button>
             </div>
           </div>
 
-          <label
-            class="form-field"
-            [class.field-invalid]="sectionFormRef.submitted && sectionNameModel.invalid"
-          >
+          <label class="form-field" [class.field-invalid]="sectionFormRef.submitted && sectionNameModel.invalid">
             <span>Section name</span>
-            <input
-              type="text"
-              name="sectionName"
-              required
-              minlength="2"
-              maxlength="80"
-              [(ngModel)]="newSectionName"
-              #sectionNameModel="ngModel"
-              placeholder="Gaming, Office Setup, Smart Home"
-            />
+            <input type="text" name="sectionName" required minlength="2" maxlength="80" [(ngModel)]="newSectionName"
+              #sectionNameModel="ngModel" placeholder="Gaming, Office Setup, Smart Home" />
             <small *ngIf="sectionFormRef.submitted && sectionNameModel.invalid" class="field-error">
               Enter a section name with at least 2 characters.
             </small>
           </label>
 
-          <section
-            class="admin-feed-card"
-            style="
+          <section class="admin-feed-card" style="
               padding: 1rem 1.1rem;
               border-radius: 1.15rem;
               border: 1px solid rgba(148, 163, 184, 0.16);
               background: rgba(248, 250, 252, 0.72);
-            "
-          >
+            ">
             <div class="admin-feed-heading" style="margin-bottom: 0.85rem">
               <div>
                 <span class="section-kicker">Existing sections</span>
                 <h3 style="margin: 0">Edit or delete a store section</h3>
               </div>
-              <div
-                style="
+              <div style="
                   display: flex;
                   flex-wrap: wrap;
                   align-items: center;
                   justify-content: flex-end;
                   gap: 0.75rem;
-                "
-              >
-                <div
-                  style="position: relative; display: flex; align-items: center; max-width: 100%"
-                >
-                  <i
-                    class="bi bi-search"
-                    aria-hidden="true"
-                    style="
+                ">
+                <div style="position: relative; display: flex; align-items: center; max-width: 100%">
+                  <i class="bi bi-search" aria-hidden="true" style="
                       position: absolute;
                       left: 0.95rem;
                       color: #94a3b8;
                       font-size: 0.95rem;
                       pointer-events: none;
-                    "
-                  ></i>
-                  <input
-                    type="search"
-                    name="sectionSearchQuery"
-                    [(ngModel)]="sectionSearchQuery"
-                    placeholder="Search section name"
-                    (keydown.enter)="$event.preventDefault()"
-                    style="
+                    "></i>
+                  <input type="search" name="sectionSearchQuery" [(ngModel)]="sectionSearchQuery"
+                    placeholder="Search section name" (keydown.enter)="$event.preventDefault()" style="
                       width: min(100%, 18rem);
                       max-width: 100%;
                       padding: 0.72rem 0.95rem 0.72rem 2.55rem;
@@ -821,30 +611,22 @@
                       border-radius: 1rem;
                       background: rgba(255, 255, 255, 0.96);
                       color: #172033;
-                    "
-                  />
+                    " />
                 </div>
                 <strong>{{
                   hasSectionSearchQuery ? filteredManagedSections.length : managedSections.length
-                }}</strong>
+                  }}</strong>
               </div>
             </div>
 
-            <div
-              *ngIf="filteredManagedSections.length; else noManagedSections"
-              class="admin-list"
-              style="max-height: 16rem; overflow: auto"
-            >
-              <article
-                *ngFor="let section of filteredManagedSections"
-                class="admin-list-card"
-                style="
+            <div *ngIf="filteredManagedSections.length; else noManagedSections" class="admin-list"
+              style="max-height: 16rem; overflow: auto">
+              <article *ngFor="let section of filteredManagedSections" class="admin-list-card" style="
                   display: flex;
                   align-items: center;
                   justify-content: space-between;
                   gap: 1rem;
-                "
-              >
+                ">
                 <div style="display: grid; gap: 0.15rem">
                   <strong>{{ section.name }}</strong>
                   <small style="color: #64748b">
@@ -853,14 +635,9 @@
                 </div>
 
                 <div class="admin-card-action-row" style="margin-left: auto">
-                  <button
-                    class="btn dark-outline admin-inline-detail-btn"
-                    type="button"
-                    [disabled]="sectionSubmitting"
-                    [attr.aria-label]="'Edit section ' + section.name"
-                    [attr.title]="'Edit section ' + section.name"
-                    (click)="$event.preventDefault(); beginSectionEdit(section.id)"
-                    style="
+                  <button class="btn dark-outline admin-inline-detail-btn" type="button" [disabled]="sectionSubmitting"
+                    [attr.aria-label]="'Edit section ' + section.name" [attr.title]="'Edit section ' + section.name"
+                    (click)="$event.preventDefault(); beginSectionEdit(section.id)" style="
                       display: inline-flex;
                       align-items: center;
                       justify-content: center;
@@ -868,18 +645,12 @@
                       min-width: 2.7rem;
                       padding: 0.55rem;
                       border-radius: 999px;
-                    "
-                  >
+                    ">
                     <i class="bi bi-pencil-square" aria-hidden="true"></i>
                   </button>
-                  <button
-                    *ngIf="canDeleteCatalog"
-                    class="btn dark-outline admin-inline-detail-btn"
-                    type="button"
-                    style="border-color: rgba(220, 38, 38, 0.18); color: #b91c1c"
-                    [disabled]="sectionSubmitting"
-                    (click)="$event.preventDefault(); requestSectionDelete(section.id)"
-                  >
+                  <button *ngIf="canDeleteCatalog" class="btn dark-outline admin-inline-detail-btn" type="button"
+                    style="border-color: rgba(220, 38, 38, 0.18); color: #b91c1c" [disabled]="sectionSubmitting"
+                    (click)="$event.preventDefault(); requestSectionDelete(section.id)">
                     Delete
                   </button>
                 </div>
@@ -887,11 +658,7 @@
             </div>
 
             <ng-template #noManagedSections>
-              <div
-                *ngIf="managedSections.length; else noStoredSections"
-                class="empty-state"
-                style="margin-top: 0.5rem"
-              >
+              <div *ngIf="managedSections.length; else noStoredSections" class="empty-state" style="margin-top: 0.5rem">
                 <i class="bi bi-search"></i>
                 <p>No section matches this search.</p>
                 <span>Try another section keyword or clear the search box.</span>
@@ -907,127 +674,78 @@
           </section>
 
           <div class="admin-form-actions">
-            <button
-              class="btn auth-primary-btn admin-submit-btn"
-              type="button"
-              [disabled]="sectionSubmitting"
-              (click)="submitNewSection(sectionFormRef)"
-            >
+            <button class="btn auth-primary-btn admin-submit-btn" type="button" [disabled]="sectionSubmitting"
+              (click)="submitNewSection(sectionFormRef)">
               {{
-                sectionSubmitting
-                  ? isEditingSection
-                    ? 'Saving changes...'
-                    : 'Saving section...'
-                  : isEditingSection
-                    ? 'Save section changes'
-                    : 'Save section'
+              sectionSubmitting
+              ? isEditingSection
+              ? 'Saving changes...'
+              : 'Saving section...'
+              : isEditingSection
+              ? 'Save section changes'
+              : 'Save section'
               }}
             </button>
           </div>
         </form>
       </div>
 
-      <div
-        *ngIf="activeTab === 'products' && isProductModalOpen"
-        class="admin-modal-backdrop"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="productModalTitle"
-        (click)="closeProductModal()"
-      >
-        <form
-          class="section-shell admin-panel-card admin-form-card admin-product-modal"
-          #productFormRef="ngForm"
-          novalidate
-          (click)="$event.stopPropagation()"
-          (ngSubmit)="handleProductSubmit(productFormRef)"
-        >
+      <div *ngIf="activeTab === 'products' && isProductModalOpen" class="admin-modal-backdrop" role="dialog"
+        aria-modal="true" aria-labelledby="productModalTitle" (click)="closeProductModal()">
+        <form class="section-shell admin-panel-card admin-form-card admin-product-modal" #productFormRef="ngForm"
+          novalidate (click)="$event.stopPropagation()" (ngSubmit)="handleProductSubmit(productFormRef)">
           <div class="section-heading admin-form-heading">
             <div>
               <span class="section-kicker">{{
                 isEditingProduct ? 'Alter product' : 'Add product'
-              }}</span>
+                }}</span>
               <h2 id="productModalTitle">
                 {{
-                  isEditingProduct
-                    ? 'Update product names, price, and details'
-                    : 'Upload a new catalog product'
+                isEditingProduct
+                ? 'Update product names, price, and details'
+                : 'Upload a new catalog product'
                 }}
               </h2>
               <p>
                 {{
-                  isEditingProduct
-                    ? 'Edit the selected catalog item here, then save the changed product details into the store.'
-                    : 'Choose a section, upload the image from your gallery, and save the product into the store.'
+                isEditingProduct
+                ? 'Edit the selected catalog item here, then save the changed product details into the store.'
+                : 'Choose a section, upload the image from your gallery, and save the product into the store.'
                 }}
               </p>
             </div>
 
             <div class="admin-modal-actions">
-              <button
-                *ngIf="isEditingProduct"
-                class="btn dark-outline admin-inline-detail-btn"
-                type="button"
-                [disabled]="submitting"
-                (click)="createNewProductFromModal()"
-              >
+              <button *ngIf="isEditingProduct" class="btn dark-outline admin-inline-detail-btn" type="button"
+                [disabled]="submitting" (click)="createNewProductFromModal()">
                 Create new product
               </button>
-              <button
-                *ngIf="canDeleteCatalog && isEditingProduct && editingProductId !== null"
-                class="btn dark-outline admin-inline-detail-btn"
-                type="button"
-                [disabled]="submitting"
+              <button *ngIf="canDeleteCatalog && isEditingProduct && editingProductId !== null"
+                class="btn dark-outline admin-inline-detail-btn" type="button" [disabled]="submitting"
                 style="border-color: rgba(220, 38, 38, 0.18); color: #b91c1c"
-                (click)="requestProductDelete(editingProductId)"
-              >
+                (click)="requestProductDelete(editingProductId)">
                 Delete product
               </button>
-              <button
-                class="btn dark-outline admin-inline-detail-btn"
-                type="button"
-                [disabled]="submitting"
-                (click)="closeProductModal()"
-              >
+              <button class="btn dark-outline admin-inline-detail-btn" type="button" [disabled]="submitting"
+                (click)="closeProductModal()">
                 Close
               </button>
             </div>
           </div>
 
           <div class="checkout-field-grid admin-field-grid">
-            <label
-              class="form-field"
-              [class.field-invalid]="productFormRef.submitted && productNameModel.invalid"
-            >
+            <label class="form-field" [class.field-invalid]="productFormRef.submitted && productNameModel.invalid">
               <span>Product name</span>
-              <input
-                type="text"
-                name="name"
-                required
-                minlength="3"
-                [(ngModel)]="productForm.name"
-                #productNameModel="ngModel"
-                placeholder="Nova Laptop"
-              />
-              <small
-                *ngIf="productFormRef.submitted && productNameModel.invalid"
-                class="field-error"
-              >
+              <input type="text" name="name" required minlength="3" [(ngModel)]="productForm.name"
+                #productNameModel="ngModel" placeholder="Nova Laptop" />
+              <small *ngIf="productFormRef.submitted && productNameModel.invalid" class="field-error">
                 Enter a product name with at least 3 characters.
               </small>
             </label>
 
-            <label
-              class="form-field"
-              [class.field-invalid]="productFormRef.submitted && categoryModel.invalid"
-            >
+            <label class="form-field" [class.field-invalid]="productFormRef.submitted && categoryModel.invalid">
               <span>Store section</span>
-              <select
-                name="category"
-                required
-                [(ngModel)]="productForm.category"
-                #categoryModel="ngModel"
-              >
+              <select name="category" required [(ngModel)]="productForm.category" #categoryModel="ngModel">
                 <option *ngFor="let category of categoryOptions" [ngValue]="category">
                   {{ category }}
                 </option>
@@ -1037,47 +755,29 @@
               </small>
             </label>
 
-            <label
-              class="form-field form-field-wide"
-              [class.field-invalid]="productFormRef.submitted && descriptionModel.invalid"
-            >
+            <label class="form-field form-field-wide"
+              [class.field-invalid]="productFormRef.submitted && descriptionModel.invalid">
               <span>Description</span>
-              <textarea
-                rows="4"
-                name="description"
-                required
-                minlength="15"
-                [(ngModel)]="productForm.description"
+              <textarea rows="4" name="description" required minlength="15" [(ngModel)]="productForm.description"
                 #descriptionModel="ngModel"
-                placeholder="Describe the product, quality, and why customers will like it."
-              ></textarea>
-              <small
-                *ngIf="productFormRef.submitted && descriptionModel.invalid"
-                class="field-error"
-              >
+                placeholder="Describe the product, quality, and why customers will like it."></textarea>
+              <small *ngIf="productFormRef.submitted && descriptionModel.invalid" class="field-error">
                 Add at least 15 characters in the description.
               </small>
             </label>
 
-            <div
-              class="form-field form-field-wide"
-              [class.field-invalid]="productFormRef.submitted && !productForm.imageUrl"
-            >
+            <div class="form-field form-field-wide"
+              [class.field-invalid]="productFormRef.submitted && !productForm.imageUrl">
               <span>Product image</span>
               <label class="admin-upload-dropzone" for="adminProductImage">
-                <input
-                  id="adminProductImage"
-                  type="file"
-                  accept="image/*"
-                  (change)="onImageSelected($event)"
-                />
+                <input id="adminProductImage" type="file" accept="image/*" (change)="onImageSelected($event)" />
                 <div class="admin-upload-copy">
                   <strong>Choose product image</strong>
                   <p>Choose a JPG, PNG, or WEBP image up to {{ maxImageSizeMb }} MB.</p>
                 </div>
                 <span class="admin-upload-badge">{{
                   productForm.imageName || 'Choose product image'
-                }}</span>
+                  }}</span>
               </label>
               <div *ngIf="productForm.imageUrl" class="admin-image-preview">
                 <img [src]="productForm.imageUrl" [alt]="productForm.name || 'Product preview'" />
@@ -1091,81 +791,37 @@
               </small>
             </div>
 
-            <label
-              class="form-field"
-              [class.field-invalid]="productFormRef.submitted && priceModel.invalid"
-            >
+            <label class="form-field" [class.field-invalid]="productFormRef.submitted && priceModel.invalid">
               <span>Price</span>
-              <input
-                type="number"
-                name="price"
-                required
-                min="1"
-                step="0.01"
-                [(ngModel)]="productForm.price"
-                #priceModel="ngModel"
-                placeholder="Enter price"
-              />
+              <input type="number" name="price" required min="1" step="0.01" [(ngModel)]="productForm.price"
+                #priceModel="ngModel" placeholder="Enter price" />
               <small *ngIf="productFormRef.submitted && priceModel.invalid" class="field-error">
                 Enter a valid price greater than 0.
               </small>
             </label>
 
-            <label
-              class="form-field"
-              [class.field-invalid]="productFormRef.submitted && ratingModel.invalid"
-            >
+            <label class="form-field" [class.field-invalid]="productFormRef.submitted && ratingModel.invalid">
               <span>Rating</span>
-              <input
-                type="number"
-                name="rating"
-                required
-                min="1"
-                max="5"
-                step="0.1"
-                [(ngModel)]="productForm.rating"
-                #ratingModel="ngModel"
-                placeholder="Enter rating"
-              />
+              <input type="number" name="rating" required min="1" max="5" step="0.1" [(ngModel)]="productForm.rating"
+                #ratingModel="ngModel" placeholder="Enter rating" />
               <small *ngIf="productFormRef.submitted && ratingModel.invalid" class="field-error">
                 Enter a rating between 1 and 5.
               </small>
             </label>
 
-            <label
-              class="form-field"
-              [class.field-invalid]="productFormRef.submitted && stockModel.invalid"
-            >
+            <label class="form-field" [class.field-invalid]="productFormRef.submitted && stockModel.invalid">
               <span>Stock</span>
-              <input
-                type="number"
-                name="stock"
-                required
-                min="0"
-                step="1"
-                [(ngModel)]="productForm.stock"
-                #stockModel="ngModel"
-                placeholder="Enter stock"
-              />
+              <input type="number" name="stock" required min="0" step="1" [(ngModel)]="productForm.stock"
+                #stockModel="ngModel" placeholder="Enter stock" />
               <small *ngIf="productFormRef.submitted && stockModel.invalid" class="field-error">
                 Enter a stock count of 0 or more.
               </small>
             </label>
 
-            <label
-              class="form-field"
-              [class.field-invalid]="productFormRef.submitted && badgeModel.invalid"
-            >
+            <label class="form-field" [class.field-invalid]="productFormRef.submitted && badgeModel.invalid">
               <span>Badge</span>
-              <input
-                type="text"
-                name="badge"
-                required
-                minlength="2"
-                [(ngModel)]="productForm.badge"
-                #badgeModel="ngModel"
-                placeholder="New Arrival"
-              />
+              <input type="text" name="badge" required minlength="2" [(ngModel)]="productForm.badge"
+                #badgeModel="ngModel" placeholder="New Arrival" />
               <small *ngIf="productFormRef.submitted && badgeModel.invalid" class="field-error">
                 Add a short badge label.
               </small>
@@ -1178,38 +834,26 @@
           </label>
 
           <div class="admin-form-actions">
-            <button
-              class="btn auth-primary-btn admin-submit-btn"
-              type="submit"
-              [disabled]="submitting"
-            >
+            <button class="btn auth-primary-btn admin-submit-btn" type="submit" [disabled]="submitting">
               {{
-                submitting
-                  ? isEditingProduct
-                    ? 'Saving changes...'
-                    : 'Saving product...'
-                  : isEditingProduct
-                    ? 'Save product changes'
-                    : 'Add product'
+              submitting
+              ? isEditingProduct
+              ? 'Saving changes...'
+              : 'Saving product...'
+              : isEditingProduct
+              ? 'Save product changes'
+              : 'Add product'
               }}
             </button>
-            <button
-              *ngIf="isEditingProduct"
-              class="btn dark-outline admin-inline-detail-btn"
-              type="button"
-              [disabled]="submitting"
-              (click)="closeProductModal()"
-            >
+            <button *ngIf="isEditingProduct" class="btn dark-outline admin-inline-detail-btn" type="button"
+              [disabled]="submitting" (click)="closeProductModal()">
               Cancel edit
             </button>
           </div>
         </form>
       </div>
 
-      <article
-        *ngIf="activeTab === 'orders'"
-        class="section-shell admin-panel-card admin-orders-panel"
-      >
+      <article *ngIf="activeTab === 'orders'" class="section-shell admin-panel-card admin-orders-panel">
         <div class="section-heading">
           <div>
             <span class="section-kicker">Orders and sales</span>
@@ -1219,29 +863,18 @@
             </p>
           </div>
           <div class="admin-view-switch">
-            <button
-              type="button"
-              class="admin-view-switch-btn"
-              [class.admin-view-switch-btn-active]="!hasDetailSelection"
-              (click)="closeDetailView()"
-            >
+            <button type="button" class="admin-view-switch-btn"
+              [class.admin-view-switch-btn-active]="!hasDetailSelection" (click)="closeDetailView()">
               Normal view
             </button>
-            <button
-              type="button"
-              class="admin-view-switch-btn"
-              [class.admin-view-switch-btn-active]="hasDetailSelection"
-              [disabled]="!hasDetailSelection"
-            >
+            <button type="button" class="admin-view-switch-btn"
+              [class.admin-view-switch-btn-active]="hasDetailSelection" [disabled]="!hasDetailSelection">
               Full detail
             </button>
           </div>
         </div>
 
-        <div
-          class="admin-activity-layout"
-          [class.admin-activity-layout-collapsed]="!hasDetailSelection"
-        >
+        <div class="admin-activity-layout" [class.admin-activity-layout-collapsed]="!hasDetailSelection">
           <div class="admin-activity-feed">
             <section class="admin-feed-card">
               <div class="admin-feed-heading">
@@ -1252,20 +885,11 @@
                 <strong>{{ overview?.recentOrders?.length ?? 0 }}</strong>
               </div>
 
-              <div
-                *ngIf="overview?.recentOrders?.length; else noOrders"
-                class="admin-list"
-                style="max-height: min(46rem, calc(100vh - 19rem)); overflow-y: auto; padding-right: 0.35rem"
-              >
-                <article
-                  class="admin-list-card admin-click-card admin-order-summary-card"
+              <div *ngIf="overview?.recentOrders?.length; else noOrders" class="admin-list">
+                <article class="admin-list-card admin-click-card admin-order-summary-card"
                   [class.admin-click-card-active]="selectedOrderId === order.orderId"
-                  *ngFor="let order of overview?.recentOrders"
-                  role="button"
-                  tabindex="0"
-                  (click)="openOrderDetail(order.orderId)"
-                  (keyup.enter)="openOrderDetail(order.orderId)"
-                >
+                  *ngFor="let order of overview?.recentOrders" role="button" tabindex="0"
+                  (click)="openOrderDetail(order.orderId)" (keyup.enter)="openOrderDetail(order.orderId)">
                   <div class="admin-order-summary-top">
                     <strong>#{{ order.orderId }}</strong>
                     <span class="admin-status-pill">{{ order.status }}</span>
@@ -1279,11 +903,8 @@
                     <small>{{ order.createdAt | date: 'medium' }}</small>
                   </div>
                   <div class="admin-card-action-row">
-                    <button
-                      class="btn dark-outline admin-inline-detail-btn"
-                      type="button"
-                      (click)="openOrderDetailFromAction($event, order.orderId)"
-                    >
+                    <button class="btn dark-outline admin-inline-detail-btn" type="button"
+                      (click)="openOrderDetailFromAction($event, order.orderId)">
                       Show full detail
                     </button>
                   </div>
@@ -1300,20 +921,11 @@
                 <strong>{{ overview?.topProducts?.length ?? 0 }}</strong>
               </div>
 
-              <div
-                *ngIf="overview?.topProducts?.length; else noTopProducts"
-                class="admin-list"
-                style="max-height: min(46rem, calc(100vh - 19rem)); overflow-y: auto; padding-right: 0.35rem"
-              >
-                <article
-                  class="admin-list-card admin-click-card admin-top-product-card"
+              <div *ngIf="overview?.topProducts?.length; else noTopProducts" class="admin-list">
+                <article class="admin-list-card admin-click-card admin-top-product-card"
                   [class.admin-click-card-active]="selectedProductId === product.productId"
-                  *ngFor="let product of overview?.topProducts"
-                  role="button"
-                  tabindex="0"
-                  (click)="openProductDetail(product.productId)"
-                  (keyup.enter)="openProductDetail(product.productId)"
-                >
+                  *ngFor="let product of overview?.topProducts" role="button" tabindex="0"
+                  (click)="openProductDetail(product.productId)" (keyup.enter)="openProductDetail(product.productId)">
                   <div class="admin-top-product-summary">
                     <div class="admin-top-product-copy">
                       <strong>{{ product.productName }}</strong>
@@ -1323,24 +935,16 @@
                       <small>{{ product.unitsSold }} units sold</small>
                     </div>
 
-                    <ng-container
-                      *ngIf="
+                    <ng-container *ngIf="
                         getCatalogProduct(product.productId) as catalogProduct;
                         else orderTopProductImagePlaceholder
-                      "
-                    >
-                      <img
-                        class="admin-top-product-image"
-                        [src]="catalogProduct.imageUrl"
-                        [alt]="catalogProduct.name"
-                      />
+                      ">
+                      <img class="admin-top-product-image" [src]="catalogProduct.imageUrl"
+                        [alt]="catalogProduct.name" />
                     </ng-container>
 
                     <ng-template #orderTopProductImagePlaceholder>
-                      <div
-                        class="admin-top-product-image admin-top-product-image-placeholder"
-                        aria-hidden="true"
-                      >
+                      <div class="admin-top-product-image admin-top-product-image-placeholder" aria-hidden="true">
                         <i class="bi bi-image"></i>
                       </div>
                     </ng-template>
@@ -1351,11 +955,8 @@
                     <strong>{{ product.revenue | currency: 'INR' : 'symbol' : '1.2-2' }}</strong>
                   </div>
                   <div class="admin-card-action-row">
-                    <button
-                      class="btn dark-outline admin-inline-detail-btn"
-                      type="button"
-                      (click)="openProductDetailFromAction($event, product.productId)"
-                    >
+                    <button class="btn dark-outline admin-inline-detail-btn" type="button"
+                      (click)="openProductDetailFromAction($event, product.productId)">
                       Show full detail
                     </button>
                   </div>
@@ -1374,18 +975,14 @@
                   </h2>
                   <p>
                     {{
-                      selectedOrderDetail || selectedProductDetail
-                        ? 'Review the full order or product record in this full-width admin card.'
-                        : 'Click any order or sold product from the list to open complete details here.'
+                    selectedOrderDetail || selectedProductDetail
+                    ? 'Review the full order or product record in this full-width admin card.'
+                    : 'Click any order or sold product from the list to open complete details here.'
                     }}
                   </p>
                 </div>
-                <button
-                  *ngIf="selectedOrderDetail || selectedProductDetail"
-                  class="btn dark-outline"
-                  type="button"
-                  (click)="closeDetailView()"
-                >
+                <button *ngIf="selectedOrderDetail || selectedProductDetail" class="btn dark-outline" type="button"
+                  (click)="closeDetailView()">
                   {{ getDetailBackLabel() }}
                 </button>
               </div>
@@ -1429,16 +1026,28 @@
                     <small>{{ order.createdAt | date: 'medium' }}</small>
                   </div>
 
+                  <div class="admin-detail-note" *ngIf="order.paymentCard as paymentCard">
+                    <h3>Saved payment card</h3>
+                    <p>
+                      {{ paymentCard.brand || 'Card' }} ending {{ paymentCard.last4 }}<br />
+                      {{ paymentCard.cardHolderName || 'Card holder name not available' }}<br />
+                      Expiry: {{ paymentCard.expiry || 'Not available' }}
+                    </p>
+                  </div>
+
+                  <div class="admin-detail-note" *ngIf="order.paymentMethod === 'Card payment' && !order.paymentCard">
+                    <h3>Saved payment card</h3>
+                    <p>No saved card snapshot is available for this customer yet.</p>
+                  </div>
+
                   <div class="admin-order-items" *ngIf="order.items.length">
                     <article class="admin-order-item" *ngFor="let item of order.items">
                       <img [src]="item.imageUrl" [alt]="item.productName" />
                       <div>
                         <strong>{{ item.productName }}</strong>
                         <p>{{ item.category }}</p>
-                        <small
-                          >{{ item.quantity }} x
-                          {{ item.unitPrice | currency: 'INR' : 'symbol' : '1.2-2' }}</small
-                        >
+                        <small>{{ item.quantity }} x
+                          {{ item.unitPrice | currency: 'INR' : 'symbol' : '1.2-2' }}</small>
                       </div>
                       <strong>{{ item.lineTotal | currency: 'INR' : 'symbol' : '1.2-2' }}</strong>
                     </article>
@@ -1457,13 +1066,13 @@
                       <span>Delivery</span>
                       <strong>{{
                         order.deliveryFee | currency: 'INR' : 'symbol' : '1.2-2'
-                      }}</strong>
+                        }}</strong>
                     </div>
                     <div class="admin-detail-card">
                       <span>Total</span>
                       <strong>{{
                         order.totalAmount | currency: 'INR' : 'symbol' : '1.2-2'
-                      }}</strong>
+                        }}</strong>
                     </div>
                   </div>
 
@@ -1502,21 +1111,15 @@
                     </div>
 
                     <div class="admin-card-action-row">
-                      <button
-                        class="btn dark-outline admin-inline-detail-btn"
-                        type="button"
-                        (click)="beginProductEdit(product.id)"
-                      >
+                      <button class="btn dark-outline admin-inline-detail-btn" type="button"
+                        (click)="beginProductEdit(product.id)">
                         Edit this product
                       </button>
                     </div>
                   </div>
                 </div>
 
-                <div
-                  *ngIf="!selectedOrderDetail && !selectedProductDetail"
-                  class="admin-detail-placeholder"
-                >
+                <div *ngIf="!selectedOrderDetail && !selectedProductDetail" class="admin-detail-placeholder">
                   <div class="admin-detail-placeholder-icon">
                     <i class="bi bi-receipt-cutoff"></i>
                   </div>
@@ -1538,7 +1141,7 @@
                       <span>Revenue</span>
                       <strong>{{
                         overview?.revenue ?? 0 | currency: 'INR' : 'symbol' : '1.2-2'
-                      }}</strong>
+                        }}</strong>
                     </div>
                     <div class="admin-detail-card">
                       <span>Top products</span>
@@ -1552,10 +1155,7 @@
         </div>
       </article>
 
-      <article
-        *ngIf="activeTab === 'stock'"
-        class="section-shell admin-panel-card admin-orders-panel"
-      >
+      <article *ngIf="activeTab === 'stock'" class="section-shell admin-panel-card admin-orders-panel">
         <div class="section-heading">
           <div>
             <span class="section-kicker">Inventory watch</span>
@@ -1565,29 +1165,18 @@
             </p>
           </div>
           <div class="admin-view-switch">
-            <button
-              type="button"
-              class="admin-view-switch-btn"
-              [class.admin-view-switch-btn-active]="!hasDetailSelection"
-              (click)="closeDetailView()"
-            >
+            <button type="button" class="admin-view-switch-btn"
+              [class.admin-view-switch-btn-active]="!hasDetailSelection" (click)="closeDetailView()">
               Normal view
             </button>
-            <button
-              type="button"
-              class="admin-view-switch-btn"
-              [class.admin-view-switch-btn-active]="hasDetailSelection"
-              [disabled]="!hasDetailSelection"
-            >
+            <button type="button" class="admin-view-switch-btn"
+              [class.admin-view-switch-btn-active]="hasDetailSelection" [disabled]="!hasDetailSelection">
               Full detail
             </button>
           </div>
         </div>
 
-        <div
-          class="admin-activity-layout"
-          [class.admin-activity-layout-collapsed]="!hasDetailSelection"
-        >
+        <div class="admin-activity-layout" [class.admin-activity-layout-collapsed]="!hasDetailSelection">
           <div class="admin-activity-feed">
             <section class="admin-feed-card">
               <div class="admin-feed-heading">
@@ -1598,19 +1187,11 @@
                 <strong>{{ overview?.outOfStockProducts?.length ?? 0 }}</strong>
               </div>
 
-              <div
-                *ngIf="overview?.outOfStockProducts?.length; else noOutOfStock"
-                class="admin-list"
-              >
-                <article
-                  class="admin-list-card admin-click-card admin-stock-summary-card"
+              <div *ngIf="overview?.outOfStockProducts?.length; else noOutOfStock" class="admin-list">
+                <article class="admin-list-card admin-click-card admin-stock-summary-card"
                   [class.admin-click-card-active]="selectedProductId === product.id"
-                  *ngFor="let product of overview?.outOfStockProducts"
-                  role="button"
-                  tabindex="0"
-                  (click)="openProductDetail(product.id)"
-                  (keyup.enter)="openProductDetail(product.id)"
-                >
+                  *ngFor="let product of overview?.outOfStockProducts" role="button" tabindex="0"
+                  (click)="openProductDetail(product.id)" (keyup.enter)="openProductDetail(product.id)">
                   <div class="admin-stock-summary-top">
                     <span class="admin-status-pill admin-status-pill-danger">Out of stock</span>
                     <strong>{{ product.badge || product.category }}</strong>
@@ -1625,11 +1206,8 @@
                     <small>{{ product.rating }}/5 rating</small>
                   </div>
                   <div class="admin-card-action-row">
-                    <button
-                      class="btn dark-outline admin-inline-detail-btn"
-                      type="button"
-                      (click)="openProductDetailFromAction($event, product.id)"
-                    >
+                    <button class="btn dark-outline admin-inline-detail-btn" type="button"
+                      (click)="openProductDetailFromAction($event, product.id)">
                       Show full detail
                     </button>
                   </div>
@@ -1646,18 +1224,14 @@
                   <h2>{{ selectedProductDetail ? 'Selected stock record' : 'Restock preview' }}</h2>
                   <p>
                     {{
-                      selectedProductDetail
-                        ? 'This product is currently selected from the out-of-stock list in a full-width card.'
-                        : 'Click any out-of-stock product to review the full details here.'
+                    selectedProductDetail
+                    ? 'This product is currently selected from the out-of-stock list in a full-width card.'
+                    : 'Click any out-of-stock product to review the full details here.'
                     }}
                   </p>
                 </div>
-                <button
-                  *ngIf="selectedProductDetail"
-                  class="btn dark-outline"
-                  type="button"
-                  (click)="closeDetailView()"
-                >
+                <button *ngIf="selectedProductDetail" class="btn dark-outline" type="button"
+                  (click)="closeDetailView()">
                   Back to stock list
                 </button>
               </div>
@@ -1705,11 +1279,8 @@
                     </div>
 
                     <div class="admin-card-action-row">
-                      <button
-                        class="btn dark-outline admin-inline-detail-btn"
-                        type="button"
-                        (click)="beginProductEdit(product.id)"
-                      >
+                      <button class="btn dark-outline admin-inline-detail-btn" type="button"
+                        (click)="beginProductEdit(product.id)">
                         Edit this product
                       </button>
                     </div>
@@ -1750,10 +1321,7 @@
         </div>
       </article>
 
-      <article
-        *ngIf="activeTab === 'accounts'"
-        class="section-shell admin-panel-card admin-orders-panel"
-      >
+      <article *ngIf="activeTab === 'accounts'" class="section-shell admin-panel-card admin-orders-panel">
         <div class="section-heading">
           <div>
             <span class="section-kicker">Admin accounts</span>
@@ -1765,18 +1333,14 @@
           </div>
         </div>
 
-        <div
-          class="admin-metric-grid"
-          style="grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr))"
-        >
+        <div class="admin-metric-grid" style="grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr))">
           <article class="admin-metric-card">
             <span>Signed-in role</span>
             <strong>{{ currentAdmin ? getAdminRoleLabel(currentAdmin.role) : 'Admin' }}</strong>
             <small>
               {{ currentAdmin?.email || 'Sign in required'
               }}<ng-container *ngIf="currentAdmin?.phone">
-                · {{ currentAdmin?.phone }}</ng-container
-              >
+                · {{ currentAdmin?.phone }}</ng-container>
             </small>
           </article>
           <article class="admin-metric-card">
@@ -1796,18 +1360,14 @@
           </article>
         </div>
 
-        <div
-          *ngIf="isMainAdmin; else subAdminPermissionNotice"
-          class="admin-detail-note"
-          style="
+        <div *ngIf="isMainAdmin; else subAdminPermissionNotice" class="admin-detail-note" style="
             margin-top: 1rem;
             background: linear-gradient(
               180deg,
               rgba(255, 255, 255, 0.98),
               rgba(248, 250, 252, 0.96)
             );
-          "
-        >
+          ">
           <div class="section-heading" style="margin-bottom: 0.75rem">
             <div>
               <span class="section-kicker">Create sub-admin</span>
@@ -1817,11 +1377,8 @@
                 mobile number.
               </p>
             </div>
-            <button
-              class="btn auth-primary-btn admin-submit-btn admin-no-wrap-btn"
-              type="button"
-              (click)="openSubAdminModal()"
-            >
+            <button class="btn auth-primary-btn admin-submit-btn admin-no-wrap-btn" type="button"
+              (click)="openSubAdminModal()">
               Add new sub-admin
             </button>
           </div>
@@ -1838,9 +1395,7 @@
 
         <ng-template #subAdminPermissionNotice>
           <div class="admin-detail-note" style="margin-top: 1rem">
-            <strong style="display: block; margin-bottom: 0.35rem"
-              >Main admin approval required</strong
-            >
+            <strong style="display: block; margin-bottom: 0.35rem">Main admin approval required</strong>
             <p style="margin: 0">
               You are signed in as a sub-admin. You can still add and edit products and sections,
               but only the main admin can delete store users, admin accounts, products, or sections.
@@ -1862,21 +1417,17 @@
             <p class="mb-0">Loading admin accounts...</p>
           </div>
 
-          <div
-            *ngIf="!adminAccountsLoading && visibleAdminAccounts.length; else noAdminAccounts"
-            class="admin-list admin-list-grid"
-          >
+          <div *ngIf="!adminAccountsLoading && visibleAdminAccounts.length; else noAdminAccounts"
+            class="admin-list admin-list-grid">
             <article class="admin-list-card" *ngFor="let account of visibleAdminAccounts">
               <div style="display: grid; gap: 0.35rem">
-                <div
-                  style="
+                <div style="
                     display: flex;
                     flex-wrap: wrap;
                     justify-content: space-between;
                     gap: 0.75rem;
                     align-items: center;
-                  "
-                >
+                  ">
                   <strong>{{ account.name || account.email }}</strong>
                   <span class="section-kicker">{{ getAdminRoleLabel(account.role) }}</span>
                 </div>
@@ -1885,26 +1436,17 @@
               </div>
 
               <div class="admin-list-meta">
-                <span *ngIf="account.createdByEmail; else mainAdminLabel"
-                  >Created by {{ account.createdByEmail }}</span
-                >
+                <span *ngIf="account.createdByEmail; else mainAdminLabel">Created by {{ account.createdByEmail }}</span>
                 <ng-template #mainAdminLabel>
                   <span>System main admin</span>
                 </ng-template>
                 <small>{{ account.createdAt | date: 'medium' }}</small>
               </div>
 
-              <div
-                *ngIf="isMainAdmin && account.role === 'sub_admin'"
-                class="admin-card-action-row"
-              >
-                <button
-                  class="btn dark-outline admin-inline-detail-btn"
-                  type="button"
-                  [disabled]="subAdminSubmitting"
+              <div *ngIf="isMainAdmin && account.role === 'sub_admin'" class="admin-card-action-row">
+                <button class="btn dark-outline admin-inline-detail-btn" type="button" [disabled]="subAdminSubmitting"
                   style="border-color: rgba(220, 38, 38, 0.18); color: #b91c1c"
-                  (click)="requestAdminAccountDelete(account.id)"
-                >
+                  (click)="requestAdminAccountDelete(account.id)">
                   {{ subAdminSubmitting ? 'Deleting...' : 'Delete sub-admin' }}
                 </button>
               </div>
@@ -1913,11 +1455,8 @@
         </section>
       </article>
 
-      <article
-        *ngIf="activeTab === 'users'"
-        class="section-shell admin-panel-card admin-orders-panel"
-        style="padding: 1.25rem 1.45rem 1.45rem"
-      >
+      <article *ngIf="activeTab === 'users'" class="section-shell admin-panel-card admin-orders-panel"
+        style="padding: 1.25rem 1.45rem 1.45rem">
         <div class="section-heading">
           <div>
             <span class="section-kicker">Store users</span>
@@ -1952,9 +1491,7 @@
           </article>
         </div>
 
-        <section
-          class="admin-feed-card"
-          style="
+        <section class="admin-feed-card" style="
             margin-top: 0.8rem;
             padding: 1.25rem 1.25rem 1.35rem;
             border-radius: 1.85rem;
@@ -1968,8 +1505,7 @@
               0 24px 44px rgba(15, 23, 42, 0.08),
               inset 0 1px 0 rgba(255, 255, 255, 0.74);
             overflow: hidden;
-          "
-        >
+          ">
           <div class="admin-feed-heading" style="align-items: center">
             <div style="display: grid; gap: 0.35rem">
               <span class="section-kicker">Users list</span>
@@ -1981,8 +1517,7 @@
             </div>
 
             <div style="display: grid; gap: 0.25rem; justify-items: end">
-              <strong
-                style="
+              <strong style="
                   display: inline-flex;
                   align-items: center;
                   justify-content: center;
@@ -1993,15 +1528,12 @@
                   background: #172033;
                   color: #fff;
                   box-shadow: 0 14px 30px rgba(15, 23, 42, 0.18);
-                "
-                >{{ filteredCustomerUsers.length }}</strong
-              >
+                ">{{ filteredCustomerUsers.length }}</strong>
               <span style="font-size: 0.8rem; color: #64748b">visible users</span>
             </div>
           </div>
 
-          <div
-            style="
+          <div style="
               display: grid;
               gap: 0.9rem;
               padding: 1rem 1rem 1.05rem;
@@ -2015,10 +1547,8 @@
               box-shadow:
                 0 18px 34px rgba(15, 23, 42, 0.08),
                 inset 0 1px 0 rgba(255, 255, 255, 0.82);
-            "
-          >
-            <label
-              style="
+            ">
+            <label style="
                 display: flex;
                 align-items: center;
                 gap: 0.75rem;
@@ -2029,56 +1559,39 @@
                 box-shadow:
                   0 10px 22px rgba(15, 23, 42, 0.05),
                   inset 0 1px 0 rgba(255, 255, 255, 0.82);
-              "
-            >
+              ">
               <i class="bi bi-search" style="color: #172033; font-size: 1.05rem"></i>
-              <input
-                type="text"
-                [ngModel]="customerUserSearchQuery"
+              <input type="text" [ngModel]="customerUserSearchQuery"
                 (ngModelChange)="setCustomerUserSearchQuery($event)"
-                placeholder="Search customer account, email, phone, or order reference"
-                style="
+                placeholder="Search customer account, email, phone, or order reference" style="
                   flex: 1;
                   min-width: 0;
                   border: 0;
                   outline: 0;
                   background: transparent;
                   color: #172033;
-                "
-              />
-              <button
-                *ngIf="hasCustomerUserSearchQuery"
-                class="btn dark-outline"
-                type="button"
-                style="padding: 0.45rem 0.85rem; white-space: nowrap"
-                (click)="clearCustomerUserSearchQuery()"
-              >
+                " />
+              <button *ngIf="hasCustomerUserSearchQuery" class="btn dark-outline" type="button"
+                style="padding: 0.45rem 0.85rem; white-space: nowrap" (click)="clearCustomerUserSearchQuery()">
                 Clear
               </button>
             </label>
 
             <div style="display: flex; flex-wrap: wrap; gap: 0.6rem">
-              <button
-                *ngFor="let filter of customerUserFilters"
-                type="button"
-                (click)="setCustomerUserFilter(filter.value)"
-                [style.background]="
+              <button *ngFor="let filter of customerUserFilters" type="button"
+                (click)="setCustomerUserFilter(filter.value)" [style.background]="
                   activeCustomerUserFilter === filter.value
                     ? 'linear-gradient(135deg, rgba(23, 32, 51, 0.96), rgba(51, 65, 85, 0.92))'
                     : 'rgba(255, 255, 255, 0.96)'
-                "
-                [style.color]="activeCustomerUserFilter === filter.value ? '#fff' : '#172033'"
-                [style.border]="
+                " [style.color]="activeCustomerUserFilter === filter.value ? '#fff' : '#172033'" [style.border]="
                   activeCustomerUserFilter === filter.value
                     ? '1px solid rgba(23, 32, 51, 0.94)'
                     : '1px solid rgba(148, 163, 184, 0.18)'
-                "
-                [style.boxShadow]="
+                " [style.boxShadow]="
                   activeCustomerUserFilter === filter.value
                     ? '0 16px 26px rgba(15, 23, 42, 0.2)'
                     : 'none'
-                "
-                style="
+                " style="
                   display: inline-flex;
                   align-items: center;
                   gap: 0.6rem;
@@ -2086,17 +1599,13 @@
                   border-radius: 999px;
                   font-weight: 700;
                   white-space: nowrap;
-                "
-              >
+                ">
                 <span>{{ filter.label }}</span>
-                <strong
-                  [style.background]="
+                <strong [style.background]="
                     activeCustomerUserFilter === filter.value
                       ? 'rgba(255, 255, 255, 0.18)'
                       : 'rgba(245, 158, 11, 0.12)'
-                  "
-                  [style.color]="activeCustomerUserFilter === filter.value ? '#fff' : '#b45309'"
-                  style="
+                  " [style.color]="activeCustomerUserFilter === filter.value ? '#fff' : '#b45309'" style="
                     min-width: 1.8rem;
                     height: 1.8rem;
                     display: inline-flex;
@@ -2105,33 +1614,25 @@
                     padding: 0 0.5rem;
                     border-radius: 999px;
                     font-size: 0.78rem;
-                  "
-                  >{{ getCustomerUserFilterCount(filter.value) }}</strong
-                >
+                  ">{{ getCustomerUserFilterCount(filter.value) }}</strong>
               </button>
             </div>
 
-            <div
-              style="
+            <div style="
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: space-between;
                 gap: 0.65rem 1rem;
                 color: #64748b;
                 font-size: 0.92rem;
-              "
-            >
-              <span
-                >Showing {{ customerUserPaginationStart }}-{{ customerUserPaginationEnd }} of
-                {{ filteredCustomerUsers.length }} users</span
-              >
-              <span *ngIf="filteredCustomerUsers.length !== customerUserCount"
-                >Directory total: {{ customerUserCount }}</span
-              >
-              <span style="font-weight: 700; color: #0f766e"
-                >Newly created customer accounts appear here on refresh and whenever you reopen this
-                tab.</span
-              >
+              ">
+              <span>Showing {{ customerUserPaginationStart }}-{{ customerUserPaginationEnd }} of
+                {{ filteredCustomerUsers.length }} users</span>
+              <span *ngIf="filteredCustomerUsers.length !== customerUserCount">Directory total: {{ customerUserCount
+                }}</span>
+              <span style="font-weight: 700; color: #0f766e">Newly created customer accounts appear here on refresh and
+                whenever you reopen this
+                tab.</span>
             </div>
           </div>
 
@@ -2140,19 +1641,11 @@
             <p class="mb-0">Loading store users...</p>
           </div>
 
-          <div
-            *ngIf="!adminUsersLoading && filteredCustomerUsers.length; else noCustomerUsers"
-            class="admin-list"
-            style="gap: 0.9rem; margin-top: 1rem"
-          >
-            <article
-              *ngFor="let user of paginatedCustomerUsers; let index = index"
-              class="admin-list-card admin-click-card"
-              role="button"
-              tabindex="0"
-              (click)="openCustomerUserModal(user)"
-              (keyup.enter)="openCustomerUserModal(user)"
-              style="
+          <div *ngIf="!adminUsersLoading && filteredCustomerUsers.length; else noCustomerUsers" class="admin-list"
+            style="gap: 0.9rem; margin-top: 1rem">
+            <article *ngFor="let user of paginatedCustomerUsers; let index = index"
+              class="admin-list-card admin-click-card" role="button" tabindex="0" (click)="openCustomerUserModal(user)"
+              (keyup.enter)="openCustomerUserModal(user)" style="
                 padding: 1rem 1.1rem;
                 gap: 0.95rem;
                 border-radius: 1.55rem;
@@ -2168,19 +1661,15 @@
                 box-shadow:
                   0 20px 38px rgba(15, 23, 42, 0.08),
                   inset 0 1px 0 rgba(255, 255, 255, 0.72);
-              "
-            >
-              <div
-                style="
+              ">
+              <div style="
                   display: flex;
                   flex-wrap: wrap;
                   justify-content: space-between;
                   gap: 0.9rem 1rem;
-                "
-              >
+                ">
                 <div style="display: flex; gap: 0.9rem; flex: 1 1 24rem; min-width: 0">
-                  <div
-                    style="
+                  <div style="
                       width: 3rem;
                       height: 3rem;
                       border-radius: 1rem;
@@ -2193,15 +1682,13 @@
                       color: #172033;
                       background: linear-gradient(135deg, #f59e0b, #fde68a 58%, #fff7ed);
                       box-shadow: 0 14px 26px rgba(245, 158, 11, 0.3);
-                    "
-                  >
+                    ">
                     {{ customerUserPaginationStart + index }}
                   </div>
 
                   <div style="display: grid; gap: 0.38rem; min-width: 0; flex: 1">
                     <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center">
-                      <strong
-                        style="
+                      <strong style="
                           color: #172033;
                           font-size: 1.04rem;
                           line-height: 1.35;
@@ -2209,13 +1696,8 @@
                           overflow: hidden;
                           text-overflow: ellipsis;
                           white-space: nowrap;
-                        "
-                        [attr.title]="user.name || user.email"
-                        >{{ user.name || user.email }}</strong
-                      >
-                      <span
-                        class="section-kicker"
-                        style="
+                        " [attr.title]="user.name || user.email">{{ user.name || user.email }}</strong>
+                      <span class="section-kicker" style="
                           margin: 0;
                           padding: 0.36rem 0.72rem;
                           background: linear-gradient(
@@ -2224,12 +1706,8 @@
                             rgba(249, 115, 22, 0.1)
                           );
                           color: #b45309;
-                        "
-                        >{{ getAdminCustomerSourceLabel(user) }}</span
-                      >
-                      <span
-                        *ngIf="user.hasAccount"
-                        style="
+                        ">{{ getAdminCustomerSourceLabel(user) }}</span>
+                      <span *ngIf="user.hasAccount" style="
                           display: inline-flex;
                           align-items: center;
                           padding: 0.34rem 0.72rem;
@@ -2242,17 +1720,14 @@
                           color: #0f766e;
                           font-size: 0.76rem;
                           font-weight: 700;
-                        "
-                      >
+                        ">
                         {{
-                          user.orderCount === 0 && user.ticketCount === 0
-                            ? 'New account'
-                            : 'Account saved'
+                        user.orderCount === 0 && user.ticketCount === 0
+                        ? 'New account'
+                        : 'Account saved'
                         }}
                       </span>
-                      <span
-                        *ngIf="user.openTicketCount > 0"
-                        style="
+                      <span *ngIf="user.openTicketCount > 0" style="
                           display: inline-flex;
                           align-items: center;
                           padding: 0.34rem 0.72rem;
@@ -2261,23 +1736,19 @@
                           color: #b91c1c;
                           font-size: 0.76rem;
                           font-weight: 700;
-                        "
-                      >
+                        ">
                         {{ user.openTicketCount }} open
                       </span>
                     </div>
 
-                    <div
-                      style="
+                    <div style="
                         display: flex;
                         flex-wrap: wrap;
                         gap: 0.5rem 1rem;
                         color: #475569;
                         align-items: center;
-                      "
-                    >
-                      <span
-                        style="
+                      ">
+                      <span style="
                           display: inline-flex;
                           align-items: center;
                           gap: 0.45rem;
@@ -2286,15 +1757,12 @@
                           overflow: hidden;
                           text-overflow: ellipsis;
                           white-space: nowrap;
-                        "
-                        [attr.title]="user.email"
-                      >
+                        " [attr.title]="user.email">
                         <i class="bi bi-envelope" style="color: #94a3b8"></i>
                         {{ user.email }}
                       </span>
 
-                      <span
-                        style="
+                      <span style="
                           display: inline-flex;
                           align-items: center;
                           gap: 0.45rem;
@@ -2303,9 +1771,7 @@
                           overflow: hidden;
                           text-overflow: ellipsis;
                           white-space: nowrap;
-                        "
-                        [attr.title]="user.phone || 'Phone not shared'"
-                      >
+                        " [attr.title]="user.phone || 'Phone not shared'">
                         <i class="bi bi-telephone" style="color: #94a3b8"></i>
                         {{ user.phone || 'Phone not shared' }}
                       </span>
@@ -2313,17 +1779,14 @@
                   </div>
                 </div>
 
-                <div
-                  style="
+                <div style="
                     display: flex;
                     flex-wrap: wrap;
                     gap: 0.55rem;
                     justify-content: flex-end;
                     flex: 1 1 18rem;
-                  "
-                >
-                  <span
-                    style="
+                  ">
+                  <span style="
                       display: inline-flex;
                       align-items: center;
                       padding: 0.5rem 0.8rem;
@@ -2335,12 +1798,10 @@
                       );
                       color: #172033;
                       font-weight: 700;
-                    "
-                  >
+                    ">
                     {{ user.orderCount }} orders
                   </span>
-                  <span
-                    style="
+                  <span style="
                       display: inline-flex;
                       align-items: center;
                       padding: 0.5rem 0.8rem;
@@ -2352,12 +1813,10 @@
                       );
                       color: #1d4ed8;
                       font-weight: 700;
-                    "
-                  >
+                    ">
                     {{ user.ticketCount }} support
                   </span>
-                  <span
-                    style="
+                  <span style="
                       display: inline-flex;
                       align-items: center;
                       padding: 0.5rem 0.8rem;
@@ -2369,15 +1828,13 @@
                       );
                       color: #047857;
                       font-weight: 700;
-                    "
-                  >
+                    ">
                     {{ user.totalSpent | currency: 'INR' : 'symbol' : '1.0-0' }}
                   </span>
                 </div>
               </div>
 
-              <div
-                style="
+              <div style="
                   display: flex;
                   flex-wrap: wrap;
                   justify-content: space-between;
@@ -2385,37 +1842,29 @@
                   gap: 0.75rem 1rem;
                   padding-top: 0.9rem;
                   border-top: 1px solid rgba(226, 232, 240, 0.92);
-                "
-              >
-                <div
-                  style="
+                ">
+                <div style="
                     display: flex;
                     flex-wrap: wrap;
                     gap: 0.6rem 0.85rem;
                     align-items: center;
                     color: #64748b;
-                  "
-                >
-                  <span
-                    style="
+                  ">
+                  <span style="
                       display: inline-flex;
                       align-items: center;
                       gap: 0.45rem;
                       padding: 0.45rem 0.75rem;
                       border-radius: 999px;
                       background: rgba(148, 163, 184, 0.08);
-                    "
-                  >
+                    ">
                     <i class="bi bi-clock-history"></i>
-                    <ng-container
-                      *ngIf="getAdminCustomerLastActivity(user) as lastActivity; else noActivity"
-                    >
+                    <ng-container *ngIf="getAdminCustomerLastActivity(user) as lastActivity; else noActivity">
                       {{ lastActivity | date: 'mediumDate' }}
                     </ng-container>
                   </span>
 
-                  <span
-                    style="
+                  <span style="
                       display: inline-flex;
                       align-items: center;
                       gap: 0.45rem;
@@ -2423,36 +1872,28 @@
                       border-radius: 999px;
                       background: rgba(37, 99, 235, 0.08);
                       color: #1e40af;
-                    "
-                  >
+                    ">
                     <i class="bi bi-person-plus"></i>
-                    <ng-container
-                      *ngIf="getAdminCustomerJoinedAt(user) as joinedAt; else noJoinedDate"
-                    >
+                    <ng-container *ngIf="getAdminCustomerJoinedAt(user) as joinedAt; else noJoinedDate">
                       {{ joinedAt | date: 'mediumDate' }}
                     </ng-container>
                   </span>
 
-                  <span
-                    style="
+                  <span style="
                       display: inline-flex;
                       align-items: center;
                       gap: 0.45rem;
                       padding: 0.45rem 0.75rem;
                       border-radius: 999px;
                       background: rgba(148, 163, 184, 0.08);
-                    "
-                  >
+                    ">
                     <i class="bi bi-person-badge"></i>
                     {{ user.openTicketCount }} open tickets
                   </span>
                 </div>
 
                 <div style="display: flex; flex-wrap: wrap; gap: 0.65rem; align-items: center">
-                  <button
-                    class="btn dark-outline admin-inline-detail-btn"
-                    type="button"
-                    style="
+                  <button class="btn dark-outline admin-inline-detail-btn" type="button" style="
                       border-color: rgba(37, 99, 235, 0.18);
                       color: #1d4ed8;
                       white-space: nowrap;
@@ -2461,25 +1902,18 @@
                         rgba(255, 255, 255, 0.98),
                         rgba(239, 246, 255, 0.94)
                       );
-                    "
-                    (click)="openCustomerUserModalFromAction($event, user)"
-                  >
+                    " (click)="openCustomerUserModalFromAction($event, user)">
                     View account
                   </button>
 
-                  <button
-                    *ngIf="isMainAdmin; else mainAdminOnlyUserAction"
-                    class="btn dark-outline admin-inline-detail-btn"
-                    type="button"
-                    [disabled]="isDeletingCustomerUser(user.email)"
-                    style="
+                  <button *ngIf="isMainAdmin; else mainAdminOnlyUserAction"
+                    class="btn dark-outline admin-inline-detail-btn" type="button"
+                    [disabled]="isDeletingCustomerUser(user.email)" style="
                       border-color: rgba(220, 38, 38, 0.18);
                       color: #b91c1c;
                       white-space: nowrap;
                       background: rgba(255, 255, 255, 0.96);
-                    "
-                    (click)="requestCustomerUserDelete(user); $event.stopPropagation()"
-                  >
+                    " (click)="requestCustomerUserDelete(user); $event.stopPropagation()">
                     {{ isDeletingCustomerUser(user.email) ? 'Deleting...' : 'Delete user' }}
                   </button>
                   <ng-template #mainAdminOnlyUserAction>
@@ -2492,64 +1926,44 @@
             </article>
           </div>
 
-          <div
-            *ngIf="!adminUsersLoading && filteredCustomerUsers.length > customerUsersPageSize"
-            style="
+          <div *ngIf="!adminUsersLoading && filteredCustomerUsers.length > customerUsersPageSize" style="
               display: flex;
               flex-wrap: wrap;
               align-items: center;
               justify-content: space-between;
               gap: 0.85rem 1rem;
               margin-top: 1rem;
-            "
-          >
+            ">
             <span style="color: #64748b; font-size: 0.92rem">
               Page {{ activeCustomerUsersPageIndex + 1 }} of {{ customerUserPageCount }}
             </span>
 
             <div style="display: flex; flex-wrap: wrap; gap: 0.45rem">
-              <button
-                class="btn dark-outline"
-                type="button"
-                [disabled]="activeCustomerUsersPageIndex === 0"
-                style="padding: 0.55rem 0.9rem"
-                (click)="goToPreviousCustomerUsersPage()"
-              >
+              <button class="btn dark-outline" type="button" [disabled]="activeCustomerUsersPageIndex === 0"
+                style="padding: 0.55rem 0.9rem" (click)="goToPreviousCustomerUsersPage()">
                 Previous
               </button>
 
-              <button
-                *ngFor="let pageNumber of customerUserPageNumbers"
-                type="button"
-                (click)="goToCustomerUsersPage(pageNumber)"
-                [style.background]="
+              <button *ngFor="let pageNumber of customerUserPageNumbers" type="button"
+                (click)="goToCustomerUsersPage(pageNumber)" [style.background]="
                   activeCustomerUsersPageIndex === pageNumber
                     ? 'linear-gradient(135deg, #f59e0b, #fb7185)'
                     : 'rgba(255, 255, 255, 0.98)'
-                "
-                [style.color]="activeCustomerUsersPageIndex === pageNumber ? '#fff' : '#172033'"
-                [style.border]="
+                " [style.color]="activeCustomerUsersPageIndex === pageNumber ? '#fff' : '#172033'" [style.border]="
                   activeCustomerUsersPageIndex === pageNumber
                     ? '1px solid transparent'
                     : '1px solid rgba(148, 163, 184, 0.18)'
-                "
-                [style.boxShadow]="
+                " [style.boxShadow]="
                   activeCustomerUsersPageIndex === pageNumber
                     ? '0 16px 24px rgba(245, 158, 11, 0.24)'
                     : 'none'
-                "
-                style="min-width: 2.55rem; height: 2.55rem; border-radius: 999px; font-weight: 800"
-              >
+                " style="min-width: 2.55rem; height: 2.55rem; border-radius: 999px; font-weight: 800">
                 {{ pageNumber + 1 }}
               </button>
 
-              <button
-                class="btn dark-outline"
-                type="button"
-                [disabled]="activeCustomerUsersPageIndex >= customerUserPageCount - 1"
-                style="padding: 0.55rem 0.9rem"
-                (click)="goToNextCustomerUsersPage()"
-              >
+              <button class="btn dark-outline" type="button"
+                [disabled]="activeCustomerUsersPageIndex >= customerUserPageCount - 1" style="padding: 0.55rem 0.9rem"
+                (click)="goToNextCustomerUsersPage()">
                 Next
               </button>
             </div>
@@ -2557,16 +1971,12 @@
 
           <ng-template #noCustomerUsers>
             <div class="empty-state" style="margin-top: 1rem">
-              <i
-                class="bi"
-                [class.bi-search]="customerUserCount > 0"
-                [class.bi-people]="customerUserCount === 0"
-              ></i>
+              <i class="bi" [class.bi-search]="customerUserCount > 0" [class.bi-people]="customerUserCount === 0"></i>
               <p class="mb-0">
                 {{
-                  customerUserCount > 0
-                    ? 'No users match the current search or filter.'
-                    : 'Customer users will appear here after someone places an order or sends a support request.'
+                customerUserCount > 0
+                ? 'No users match the current search or filter.'
+                : 'Customer users will appear here after someone places an order or sends a support request.'
                 }}
               </p>
               <span *ngIf="customerUserCount > 0">
@@ -2600,21 +2010,15 @@
         <ng-container *ngIf="supportTickets.length; else noTickets">
           <div style="display: grid; gap: 1rem; margin-top: 1rem">
             <div class="admin-view-switch" role="tablist" aria-label="Support ticket filters">
-              <button
-                *ngFor="let filter of supportStatusFilters"
-                type="button"
-                class="admin-view-switch-btn"
+              <button *ngFor="let filter of supportStatusFilters" type="button" class="admin-view-switch-btn"
                 [class.admin-view-switch-btn-active]="activeSupportFilter === filter.value"
-                (click)="setSupportFilter(filter.value)"
-              >
+                (click)="setSupportFilter(filter.value)">
                 {{ filter.label }}
                 <span>{{ getSupportFilterCount(filter.value) }}</span>
               </button>
             </div>
 
-            <div
-              class="admin-detail-note"
-              style="
+            <div class="admin-detail-note" style="
                 display: grid;
                 gap: 0.45rem;
                 border: 1px solid rgba(251, 191, 36, 0.18);
@@ -2623,11 +2027,8 @@
                   rgba(255, 247, 237, 0.96),
                   rgba(255, 255, 255, 0.98)
                 );
-              "
-            >
-              <strong style="font-size: 1rem; color: #172033"
-                >Click a ticket to review the full conversation.</strong
-              >
+              ">
+              <strong style="font-size: 1rem; color: #172033">Click a ticket to review the full conversation.</strong>
               <p style="margin: 0; color: #64748b">
                 Open = waiting for review, In progress = team is working on it, Resolved = customer
                 reply sent and issue handled, Closed = ticket finished.
@@ -2636,24 +2037,17 @@
           </div>
 
           <div class="admin-list admin-ticket-list">
-            <article
-              class="admin-list-card admin-ticket-card admin-click-card"
-              *ngFor="let ticket of filteredSupportTickets"
-              role="button"
-              tabindex="0"
-              (click)="openSupportTicketModal(ticket.id)"
-              (keyup.enter)="openSupportTicketModal(ticket.id)"
-              style="gap: 0.8rem; padding: 1.1rem 1.15rem"
-            >
-              <div
-                style="
+            <article class="admin-list-card admin-ticket-card admin-click-card"
+              *ngFor="let ticket of filteredSupportTickets" role="button" tabindex="0"
+              (click)="openSupportTicketModal(ticket.id)" (keyup.enter)="openSupportTicketModal(ticket.id)"
+              style="gap: 0.8rem; padding: 1.1rem 1.15rem">
+              <div style="
                   display: flex;
                   flex-wrap: wrap;
                   justify-content: space-between;
                   gap: 0.9rem;
                   align-items: flex-start;
-                "
-              >
+                ">
                 <div style="display: grid; gap: 0.35rem">
                   <strong>#{{ ticket.id }} - {{ ticket.subject }}</strong>
                   <p>{{ ticket.customerName }} - {{ ticket.email }}</p>
@@ -2661,46 +2055,36 @@
               </div>
               <div class="admin-list-meta">
                 <span>{{ ticket.issueType }}</span>
-                <strong
-                  class="admin-status-pill"
-                  [class.admin-status-pill-success]="ticket.status === 'resolved'"
+                <strong class="admin-status-pill" [class.admin-status-pill-success]="ticket.status === 'resolved'"
                   [style.background]="
                     ticket.status === 'in_progress'
                       ? 'rgba(245, 158, 11, 0.16)'
                       : ticket.status === 'closed'
                         ? 'rgba(148, 163, 184, 0.18)'
                         : null
-                  "
-                  [style.color]="
+                  " [style.color]="
                     ticket.status === 'in_progress'
                       ? '#b45309'
                       : ticket.status === 'closed'
                         ? '#475569'
                         : null
-                  "
-                >
+                  ">
                   {{ getSupportStatusLabel(ticket.status) }}
                 </strong>
                 <small>{{ ticket.createdAt | date: 'medium' }}</small>
               </div>
               <p class="admin-ticket-message">{{ ticket.message }}</p>
-              <div
-                *ngIf="ticket.orderReference"
-                style="
+              <div *ngIf="ticket.orderReference" style="
                   display: flex;
                   flex-wrap: wrap;
                   align-items: center;
                   justify-content: space-between;
                   gap: 0.75rem;
-                "
-              >
+                ">
                 <small class="admin-ticket-reference" style="margin: 0">
                   Order reference: {{ ticket.orderReference }}
                 </small>
-                <button
-                  type="button"
-                  class="section-kicker"
-                  style="
+                <button type="button" class="section-kicker" style="
                     border: 0;
                     cursor: pointer;
                     padding: 0.65rem 1rem;
@@ -2710,17 +2094,12 @@
                       rgba(249, 115, 22, 0.14)
                     );
                     color: #9a3412;
-                  "
-                  (click)="openSupportOrderDetail($event, ticket.orderReference)"
-                >
+                  " (click)="openSupportOrderDetail($event, ticket.orderReference)">
                   Open order details
                 </button>
               </div>
-              <small
-                *ngIf="ticket.adminResponse"
-                class="admin-ticket-reference"
-                style="color: #475569; font-weight: 600"
-              >
+              <small *ngIf="ticket.adminResponse" class="admin-ticket-reference"
+                style="color: #475569; font-weight: 600">
                 Last admin reply: {{ ticket.updatedAt | date: 'medium' }}
               </small>
             </article>
@@ -2737,11 +2116,7 @@
   </section>
 
   <ng-container *ngIf="isSubAdminModalOpen">
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="subAdminModalTitle"
-      style="
+    <div role="dialog" aria-modal="true" aria-labelledby="subAdminModalTitle" style="
         position: fixed;
         inset: 0;
         z-index: 120;
@@ -2751,12 +2126,8 @@
         padding: 1.25rem;
         background: rgba(15, 23, 42, 0.56);
         backdrop-filter: blur(8px);
-      "
-      (click)="closeSubAdminModal()"
-    >
-      <article
-        class="section-shell admin-panel-card"
-        style="
+      " (click)="closeSubAdminModal()">
+      <article class="section-shell admin-panel-card" style="
           width: min(100%, 38rem);
           max-height: calc(100vh - 2.5rem);
           margin: 0;
@@ -2765,19 +2136,15 @@
           border-radius: 1.75rem;
           box-shadow: 0 28px 60px rgba(15, 23, 42, 0.28);
           background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96));
-        "
-        (click)="$event.stopPropagation()"
-      >
-        <div
-          style="
+        " (click)="$event.stopPropagation()">
+        <div style="
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             gap: 1rem;
             align-items: flex-start;
             margin-bottom: 1rem;
-          "
-        >
+          ">
           <div style="display: grid; gap: 0.55rem">
             <span class="section-kicker">Create sub-admin</span>
             <div>
@@ -2793,91 +2160,42 @@
           </button>
         </div>
 
-        <form
-          #subAdminFormRef="ngForm"
-          novalidate
-          (ngSubmit)="submitNewSubAdmin(subAdminFormRef)"
-          style="display: grid; gap: 0.9rem"
-        >
-          <label
-            class="form-field"
-            [class.field-invalid]="subAdminFormRef.submitted && subAdminName.invalid"
-          >
+        <form #subAdminFormRef="ngForm" novalidate (ngSubmit)="submitNewSubAdmin(subAdminFormRef)"
+          style="display: grid; gap: 0.9rem">
+          <label class="form-field" [class.field-invalid]="subAdminFormRef.submitted && subAdminName.invalid">
             <span>Sub-admin name</span>
-            <input
-              type="text"
-              name="subAdminName"
-              required
-              minlength="2"
-              [(ngModel)]="newSubAdmin.name"
-              #subAdminName="ngModel"
-              placeholder="Enter the team member name"
-            />
+            <input type="text" name="subAdminName" required minlength="2" [(ngModel)]="newSubAdmin.name"
+              #subAdminName="ngModel" placeholder="Enter the team member name" />
             <small *ngIf="subAdminFormRef.submitted && subAdminName.invalid" class="field-error">
               Enter a sub-admin name with at least 2 characters.
             </small>
           </label>
 
-          <label
-            class="form-field"
-            [class.field-invalid]="subAdminFormRef.submitted && subAdminEmail.invalid"
-          >
+          <label class="form-field" [class.field-invalid]="subAdminFormRef.submitted && subAdminEmail.invalid">
             <span>Sub-admin email</span>
-            <input
-              type="email"
-              name="subAdminEmail"
-              required
-              email
-              [(ngModel)]="newSubAdmin.email"
-              #subAdminEmail="ngModel"
-              placeholder="staff@example.com"
-            />
+            <input type="email" name="subAdminEmail" required email [(ngModel)]="newSubAdmin.email"
+              #subAdminEmail="ngModel" placeholder="staff@example.com" />
             <small *ngIf="subAdminFormRef.submitted && subAdminEmail.invalid" class="field-error">
               Enter a valid sub-admin email address.
             </small>
           </label>
 
-          <label
-            class="form-field"
-            [class.field-invalid]="subAdminFormRef.submitted && subAdminPhone.invalid"
-          >
+          <label class="form-field" [class.field-invalid]="subAdminFormRef.submitted && subAdminPhone.invalid">
             <span>Sub-admin mobile number</span>
-            <input
-              type="tel"
-              name="subAdminPhone"
-              required
-              pattern="^[0-9]{10}$"
-              maxlength="10"
-              inputmode="numeric"
-              [(ngModel)]="newSubAdmin.phone"
-              #subAdminPhone="ngModel"
-              placeholder="10-digit mobile number"
-            />
+            <input type="tel" name="subAdminPhone" required pattern="^[0-9]{10}$" maxlength="10" inputmode="numeric"
+              [(ngModel)]="newSubAdmin.phone" #subAdminPhone="ngModel" placeholder="10-digit mobile number" />
             <small *ngIf="subAdminFormRef.submitted && subAdminPhone.invalid" class="field-error">
               Enter a valid 10-digit mobile number.
             </small>
           </label>
 
-          <label
-            class="form-field"
-            [class.field-invalid]="subAdminFormRef.submitted && subAdminPassword.invalid"
-          >
+          <label class="form-field" [class.field-invalid]="subAdminFormRef.submitted && subAdminPassword.invalid">
             <span>Sub-admin password</span>
             <div class="password-input-shell" style="position: relative">
-              <input
-                [type]="showSubAdminPassword ? 'text' : 'password'"
-                name="subAdminPassword"
-                required
-                minlength="6"
-                [(ngModel)]="newSubAdmin.password"
-                #subAdminPassword="ngModel"
-                placeholder="Minimum 6 characters"
-                style="padding-right: 3.35rem"
-              />
-              <button
-                type="button"
-                class="password-toggle-btn"
-                style="
+              <input [type]="showSubAdminPassword ? 'text' : 'password'" name="subAdminPassword" required minlength="6"
+                [(ngModel)]="newSubAdmin.password" #subAdminPassword="ngModel" placeholder="Minimum 6 characters"
+                style="padding-right: 3.35rem" />
+              <button type="button" class="password-toggle-btn" style="
                   position: absolute;
                   top: 50%;
                   right: 0.8rem;
@@ -2892,35 +2210,22 @@
                   background: transparent;
                   color: #64748b;
                   z-index: 2;
-                "
-                [attr.aria-label]="showSubAdminPassword ? 'Hide password' : 'Show password'"
-                (click)="togglePasswordVisibility('subAdmin')"
-              >
+                " [attr.aria-label]="showSubAdminPassword ? 'Hide password' : 'Show password'"
+                (click)="togglePasswordVisibility('subAdmin')">
                 <i [class]="showSubAdminPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
               </button>
             </div>
-            <small
-              *ngIf="subAdminFormRef.submitted && subAdminPassword.invalid"
-              class="field-error"
-            >
+            <small *ngIf="subAdminFormRef.submitted && subAdminPassword.invalid" class="field-error">
               Password must be at least 6 characters long.
             </small>
           </label>
 
           <div class="admin-card-action-row">
-            <button
-              class="btn dark-outline admin-inline-detail-btn"
-              type="button"
-              [disabled]="subAdminSubmitting"
-              (click)="closeSubAdminModal()"
-            >
+            <button class="btn dark-outline admin-inline-detail-btn me-3" type="button" [disabled]="subAdminSubmitting"
+              (click)="closeSubAdminModal()">
               Cancel
             </button>
-            <button
-              class="btn auth-primary-btn admin-submit-btn"
-              type="submit"
-              [disabled]="subAdminSubmitting"
-            >
+            <button class="btn auth-primary-btn admin-submit-btn" type="submit" [disabled]="subAdminSubmitting">
               {{ subAdminSubmitting ? 'Creating sub-admin...' : 'Create sub-admin' }}
             </button>
           </div>
@@ -2930,11 +2235,7 @@
   </ng-container>
 
   <ng-container *ngIf="selectedCustomerUser as user">
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="customerUserModalTitle"
-      style="
+    <div role="dialog" aria-modal="true" aria-labelledby="customerUserModalTitle" style="
         position: fixed;
         inset: 0;
         z-index: 120;
@@ -2944,12 +2245,8 @@
         padding: 1.25rem;
         background: rgba(15, 23, 42, 0.56);
         backdrop-filter: blur(8px);
-      "
-      (click)="closeCustomerUserModal()"
-    >
-      <article
-        class="section-shell admin-panel-card"
-        style="
+      " (click)="closeCustomerUserModal()">
+      <article class="section-shell admin-panel-card" style="
           width: min(100%, 72rem);
           max-height: calc(100vh - 2.5rem);
           margin: 0;
@@ -2958,19 +2255,15 @@
           border-radius: 1.75rem;
           box-shadow: 0 28px 60px rgba(15, 23, 42, 0.28);
           background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96));
-        "
-        (click)="$event.stopPropagation()"
-      >
-        <div
-          style="
+        " (click)="$event.stopPropagation()">
+        <div style="
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             gap: 1rem;
             align-items: flex-start;
             margin-bottom: 1rem;
-          "
-        >
+          ">
           <div style="display: grid; gap: 0.55rem">
             <span class="section-kicker">Customer account</span>
             <div>
@@ -2991,26 +2284,22 @@
         <div class="admin-list-meta" style="margin-bottom: 1rem">
           <span style="background: rgba(245, 158, 11, 0.12); color: #b45309">{{
             getAdminCustomerSourceLabel(user)
-          }}</span>
-          <span style="background: rgba(37, 99, 235, 0.1); color: #1d4ed8"
-            >{{ user.orderCount }} {{ user.orderCount === 1 ? 'order' : 'orders' }}</span
-          >
-          <span style="background: rgba(14, 165, 233, 0.1); color: #0f766e"
-            >{{ user.ticketCount }} {{ user.ticketCount === 1 ? 'ticket' : 'tickets' }}</span
-          >
+            }}</span>
+          <span style="background: rgba(37, 99, 235, 0.1); color: #1d4ed8">{{ user.orderCount }} {{ user.orderCount ===
+            1 ? 'order' : 'orders' }}</span>
+          <span style="background: rgba(14, 165, 233, 0.1); color: #0f766e">{{ user.ticketCount }} {{ user.ticketCount
+            === 1 ? 'ticket' : 'tickets' }}</span>
           <strong style="background: rgba(16, 185, 129, 0.12); color: #047857">
             {{ user.totalSpent | currency: 'INR' : 'symbol' : '1.2-2' }}
           </strong>
         </div>
 
-        <div
-          class="admin-detail-grid"
-          style="grid-template-columns: minmax(0, 0.9fr) minmax(22rem, 1.1fr)"
-        >
-          <div style="display: grid; gap: 1rem">
+        <div class="aum-grid" style="display: grid; gap: 1rem; align-items: start">
+          <div style="display: grid; gap: 1rem; align-content: start">
             <div class="admin-detail-note" style="border: 1px solid rgba(148, 163, 184, 0.16)">
               <h3 style="margin-bottom: 0.85rem">Account snapshot</h3>
-              <div class="admin-detail-grid">
+              <div class="admin-detail-grid"
+                style="grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start">
                 <div class="admin-detail-card">
                   <span>Account type</span>
                   <strong>{{ user.hasAccount ? 'Registered account' : 'Activity only' }}</strong>
@@ -3021,9 +2310,7 @@
                 </div>
                 <div class="admin-detail-card">
                   <span>Joined</span>
-                  <strong
-                    *ngIf="getAdminCustomerJoinedAt(user) as joinedAt; else joinedUnavailable"
-                  >
+                  <strong *ngIf="getAdminCustomerJoinedAt(user) as joinedAt; else joinedUnavailable">
                     {{ joinedAt | date: 'mediumDate' }}
                   </strong>
                   <ng-template #joinedUnavailable>
@@ -3032,12 +2319,10 @@
                 </div>
                 <div class="admin-detail-card">
                   <span>Last activity</span>
-                  <strong
-                    *ngIf="
+                  <strong *ngIf="
                       getAdminCustomerLastActivity(user) as lastActivity;
                       else activityUnavailable
-                    "
-                  >
+                    " style="line-height: 1.5; overflow-wrap: anywhere">
                     {{ lastActivity | date: 'medium' }}
                   </strong>
                   <ng-template #activityUnavailable>
@@ -3047,17 +2332,14 @@
               </div>
             </div>
 
-            <div
-              class="admin-detail-note"
-              style="
+            <div class="admin-detail-note" style="
                 border: 1px solid rgba(59, 130, 246, 0.16);
                 background: linear-gradient(
                   135deg,
                   rgba(239, 246, 255, 0.98),
                   rgba(248, 250, 252, 0.98)
                 );
-              "
-            >
+              ">
               <h3 style="margin-bottom: 0.75rem">Contact and support</h3>
               <div style="display: grid; gap: 0.65rem; color: #334155">
                 <div style="display: flex; flex-wrap: wrap; gap: 0.55rem; align-items: center">
@@ -3079,20 +2361,16 @@
             </div>
 
             <div class="admin-detail-note" style="border: 1px solid rgba(148, 163, 184, 0.16)">
-              <div
-                style="
+              <div style="
                   display: flex;
                   flex-wrap: wrap;
                   align-items: center;
                   justify-content: space-between;
                   gap: 0.75rem;
                   margin-bottom: 0.85rem;
-                "
-              >
+                ">
                 <h3 style="margin: 0">Selected order detail</h3>
-                <strong
-                  *ngIf="selectedCustomerUserOrderId"
-                  style="
+                <strong *ngIf="selectedCustomerUserOrderId" style="
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
@@ -3102,15 +2380,12 @@
                     background: #172033;
                     color: #fff;
                     font-size: 0.82rem;
-                  "
-                >
+                  ">
                   #{{ selectedCustomerUserOrderId }}
                 </strong>
               </div>
 
-              <ng-container
-                *ngIf="selectedCustomerUserOrderDetail as order; else customerOrderDetailFallback"
-              >
+              <ng-container *ngIf="selectedCustomerUserOrderDetail as order; else customerOrderDetailFallback">
                 <div class="admin-detail-grid" style="margin-bottom: 0.85rem">
                   <div class="admin-detail-card">
                     <span>Order reference</span>
@@ -3130,10 +2405,7 @@
                   </div>
                 </div>
 
-                <div
-                  class="admin-detail-note"
-                  style="margin-top: 0; background: rgba(255, 255, 255, 0.96)"
-                >
+                <div class="admin-detail-note" style="margin-top: 0; background: rgba(255, 255, 255, 0.96)">
                   <h3>Shipping address</h3>
                   <p>
                     {{ order.customerName }} - {{ order.phone || 'Phone not shared' }}<br />
@@ -3143,20 +2415,30 @@
                   <small>{{ order.createdAt | date: 'medium' }}</small>
                 </div>
 
-                <div
-                  *ngIf="order.notes"
-                  class="admin-detail-note"
-                  style="margin-top: 0; background: rgba(255, 255, 255, 0.96)"
-                >
+                <div *ngIf="order.paymentCard as paymentCard" class="admin-detail-note"
+                  style="margin-top: 0; background: rgba(255, 255, 255, 0.96)">
+                  <h3>Saved payment card</h3>
+                  <p>
+                    {{ paymentCard.brand || 'Card' }} ending {{ paymentCard.last4 }}<br />
+                    {{ paymentCard.cardHolderName || 'Card holder name not available' }}<br />
+                    Expiry: {{ paymentCard.expiry || 'Not available' }}
+                  </p>
+                </div>
+
+                <div *ngIf="order.paymentMethod === 'Card payment' && !order.paymentCard" class="admin-detail-note"
+                  style="margin-top: 0; background: rgba(255, 255, 255, 0.96)">
+                  <h3>Saved payment card</h3>
+                  <p>No saved card snapshot is available for this customer yet.</p>
+                </div>
+
+                <div *ngIf="order.notes" class="admin-detail-note"
+                  style="margin-top: 0; background: rgba(255, 255, 255, 0.96)">
                   <h3>Customer note</h3>
                   <p>{{ order.notes }}</p>
                 </div>
 
                 <div style="display: grid; gap: 0.75rem; margin-top: 0.85rem">
-                  <article
-                    *ngFor="let item of order.items"
-                    class="admin-list-card"
-                    style="
+                  <article *ngFor="let item of order.items" class="admin-list-card" style="
                       display: grid;
                       grid-template-columns: 4.25rem minmax(0, 1fr) auto;
                       gap: 0.85rem;
@@ -3164,13 +2446,9 @@
                       padding: 0.85rem;
                       border-radius: 1rem;
                       background: rgba(248, 250, 252, 0.96);
-                    "
-                  >
-                    <img
-                      [src]="item.imageUrl"
-                      [alt]="item.productName"
-                      style="width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 0.9rem"
-                    />
+                    ">
+                    <img [src]="item.imageUrl" [alt]="item.productName"
+                      style="width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 0.9rem" />
                     <div style="display: grid; gap: 0.22rem; min-width: 0">
                       <strong style="color: #172033">{{ item.productName }}</strong>
                       <span style="color: #64748b">{{ item.category || 'Uncategorized' }}</span>
@@ -3187,11 +2465,8 @@
               </ng-container>
 
               <ng-template #customerOrderDetailFallback>
-                <div
-                  *ngIf="selectedCustomerUserOrderId && detailLoading; else customerOrderDetailIdle"
-                  class="feedback-card"
-                  style="min-height: auto"
-                >
+                <div *ngIf="selectedCustomerUserOrderId && detailLoading; else customerOrderDetailIdle"
+                  class="feedback-card" style="min-height: auto">
                   <div class="spinner-border text-warning" role="status"></div>
                   <p class="mb-0">Loading selected order detail...</p>
                 </div>
@@ -3200,35 +2475,32 @@
               <ng-template #customerOrderDetailIdle>
                 <p style="margin: 0; color: #64748b">
                   {{
-                    selectedCustomerUserOrderId
-                      ? 'The order detail is not ready yet. Try another order or refresh the data.'
-                      : 'Choose any order from the history list to inspect items, totals, and shipping details here.'
+                  selectedCustomerUserOrderId
+                  ? 'The order detail is not ready yet. Try another order or refresh the data.'
+                  : 'Choose any order from the history list to inspect items, totals, and shipping details here.'
                   }}
                 </p>
               </ng-template>
             </div>
           </div>
 
-          <div style="display: grid; gap: 1rem">
+          <div style="display: grid; gap: 1rem; min-width: 0">
             <div class="admin-detail-note" style="border: 1px solid rgba(148, 163, 184, 0.16)">
-              <div
-                style="
+              <div style="
                   display: flex;
                   flex-wrap: wrap;
                   align-items: center;
                   justify-content: space-between;
                   gap: 0.75rem;
                   margin-bottom: 0.85rem;
-                "
-              >
+                ">
                 <div style="display: grid; gap: 0.2rem">
                   <h3 style="margin: 0">Order history</h3>
                   <p style="margin: 0; color: #64748b">
                     Open any order to review the items without leaving the users tab.
                   </p>
                 </div>
-                <strong
-                  style="
+                <strong style="
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
@@ -3238,44 +2510,29 @@
                     border-radius: 999px;
                     background: #172033;
                     color: #fff;
-                  "
-                >
+                  ">
                   {{ customerUserOrders.length }}
                 </strong>
               </div>
 
-              <div
-                *ngIf="customerUserOrdersLoading"
-                class="feedback-card"
-                style="min-height: 12rem"
-              >
+              <div *ngIf="customerUserOrdersLoading" class="feedback-card" style="min-height: 12rem">
                 <div class="spinner-border text-warning" role="status"></div>
                 <p class="mb-0">Loading customer order history...</p>
               </div>
 
-              <div
-                *ngIf="!customerUserOrdersLoading && customerUserOrdersError"
-                class="checkout-error"
-                style="margin-top: 0"
-              >
+              <div *ngIf="!customerUserOrdersLoading && customerUserOrdersError" class="checkout-error"
+                style="margin-top: 0">
                 <i class="bi bi-exclamation-circle"></i>
                 {{ customerUserOrdersError }}
               </div>
 
-              <div
-                *ngIf="
+              <div *ngIf="
                   !customerUserOrdersLoading &&
                   !customerUserOrdersError &&
                   customerUserOrders.length
-                "
-                style="display: grid; gap: 0.85rem"
-              >
-                <article
-                  *ngFor="let order of customerUserOrders"
-                  class="admin-list-card admin-click-card"
-                  role="button"
-                  tabindex="0"
-                  style="
+                " style="display: grid; gap: 0.85rem">
+                <article *ngFor="let order of customerUserOrders" class="admin-list-card admin-click-card" role="button"
+                  tabindex="0" style="
                     display: grid;
                     gap: 0.85rem;
                     padding: 0.95rem 1rem;
@@ -3287,32 +2544,24 @@
                       rgba(248, 250, 252, 0.94)
                     );
                     box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
-                  "
-                  [style.borderColor]="
+                  " [style.borderColor]="
                     isCustomerUserOrderSelected(order.orderId)
                       ? 'rgba(37, 99, 235, 0.28)'
                       : 'rgba(148, 163, 184, 0.16)'
-                  "
-                  [style.boxShadow]="
+                  " [style.boxShadow]="
                     isCustomerUserOrderSelected(order.orderId)
                       ? '0 18px 34px rgba(37, 99, 235, 0.12)'
                       : '0 12px 24px rgba(15, 23, 42, 0.06)'
-                  "
-                  (click)="openCustomerUserOrderDetail($event, order.orderId)"
-                  (keyup.enter)="openCustomerUserOrderDetail($event, order.orderId)"
-                >
-                  <div
-                    style="
+                  " (click)="openCustomerUserOrderDetail($event, order.orderId)"
+                  (keyup.enter)="openCustomerUserOrderDetail($event, order.orderId)">
+                  <div style="
                       display: grid;
                       grid-template-columns: minmax(0, 1fr) auto;
                       gap: 0.85rem;
                       align-items: start;
-                    "
-                  >
+                    ">
                     <div style="display: grid; gap: 0.28rem; min-width: 0">
-                      <div
-                        style="display: flex; flex-wrap: wrap; gap: 0.55rem; align-items: center"
-                      >
+                      <div style="display: flex; flex-wrap: wrap; gap: 0.55rem; align-items: center">
                         <strong style="color: #172033">
                           {{ order.orderReference || '#' + order.orderId }}
                         </strong>
@@ -3328,28 +2577,21 @@
                     </strong>
                   </div>
 
-                  <div
-                    style="
+                  <div style="
                       display: grid;
                       grid-template-columns: 4.25rem minmax(0, 1fr) auto;
                       gap: 0.85rem;
                       align-items: center;
-                    "
-                  >
-                    <img
-                      *ngIf="order.leadImageUrl; else noLeadImage"
-                      [src]="order.leadImageUrl"
-                      [alt]="order.leadProductName"
-                      style="
+                    ">
+                    <img *ngIf="order.leadImageUrl; else noLeadImage" [src]="order.leadImageUrl"
+                      [alt]="order.leadProductName" style="
                         width: 100%;
                         aspect-ratio: 1;
                         object-fit: cover;
                         border-radius: 0.95rem;
-                      "
-                    />
+                      " />
                     <ng-template #noLeadImage>
-                      <div
-                        style="
+                      <div style="
                           width: 100%;
                           aspect-ratio: 1;
                           display: flex;
@@ -3358,8 +2600,7 @@
                           border-radius: 0.95rem;
                           background: rgba(226, 232, 240, 0.8);
                           color: #64748b;
-                        "
-                      >
+                        ">
                         <i class="bi bi-box-seam"></i>
                       </div>
                     </ng-template>
@@ -3367,39 +2608,29 @@
                     <div style="display: grid; gap: 0.22rem; min-width: 0">
                       <strong style="color: #172033">{{
                         order.leadProductName || 'Order items'
-                      }}</strong>
+                        }}</strong>
                       <span style="color: #64748b">{{
                         order.leadCategory || 'Category not available'
-                      }}</span>
+                        }}</span>
                     </div>
 
-                    <button
-                      class="btn dark-outline admin-inline-detail-btn"
-                      type="button"
-                      style="white-space: nowrap"
-                      (click)="openCustomerUserOrderDetail($event, order.orderId)"
-                    >
+                    <button class="btn dark-outline admin-inline-detail-btn" type="button" style="white-space: nowrap"
+                      (click)="openCustomerUserOrderDetail($event, order.orderId)">
                       Open detail
                     </button>
                   </div>
                 </article>
               </div>
 
-              <div
-                *ngIf="
+              <div *ngIf="
                   !customerUserOrdersLoading &&
                   !customerUserOrdersError &&
                   !customerUserOrders.length
-                "
-                class="empty-state"
-                style="min-height: 12rem"
-              >
+                " class="empty-state" style="min-height: 12rem">
                 <i class="bi bi-receipt"></i>
                 <p>No orders found for this customer.</p>
-                <span
-                  >Account details are still available even when no purchases have been placed
-                  yet.</span
-                >
+                <span>Account details are still available even when no purchases have been placed
+                  yet.</span>
               </div>
             </div>
           </div>
@@ -3409,11 +2640,7 @@
   </ng-container>
 
   <ng-container *ngIf="selectedSupportTicket as ticket">
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="supportTicketModalTitle"
-      style="
+    <div role="dialog" aria-modal="true" aria-labelledby="supportTicketModalTitle" style="
         position: fixed;
         inset: 0;
         z-index: 120;
@@ -3423,12 +2650,8 @@
         padding: 1.25rem;
         background: rgba(15, 23, 42, 0.56);
         backdrop-filter: blur(8px);
-      "
-      (click)="closeSupportTicketModal()"
-    >
-      <article
-        class="section-shell admin-panel-card"
-        style="
+      " (click)="closeSupportTicketModal()">
+      <article class="section-shell admin-panel-card" style="
           width: min(100%, 60rem);
           max-height: calc(100vh - 2.5rem);
           margin: 0;
@@ -3437,19 +2660,15 @@
           border-radius: 1.75rem;
           box-shadow: 0 28px 60px rgba(15, 23, 42, 0.28);
           background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96));
-        "
-        (click)="$event.stopPropagation()"
-      >
-        <div
-          style="
+        " (click)="$event.stopPropagation()">
+        <div style="
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             gap: 1rem;
             align-items: flex-start;
             margin-bottom: 1rem;
-          "
-        >
+          ">
           <div style="display: grid; gap: 0.55rem">
             <span class="section-kicker">Support ticket</span>
             <div>
@@ -3468,54 +2687,41 @@
 
         <div class="admin-list-meta" style="margin-bottom: 1rem">
           <span>{{ ticket.issueType }}</span>
-          <strong
-            class="admin-status-pill"
-            [class.admin-status-pill-success]="ticket.status === 'resolved'"
+          <strong class="admin-status-pill" [class.admin-status-pill-success]="ticket.status === 'resolved'"
             [style.background]="
               ticket.status === 'in_progress'
                 ? 'rgba(245, 158, 11, 0.16)'
                 : ticket.status === 'closed'
                   ? 'rgba(148, 163, 184, 0.18)'
                   : null
-            "
-            [style.color]="
+            " [style.color]="
               ticket.status === 'in_progress'
                 ? '#b45309'
                 : ticket.status === 'closed'
                   ? '#475569'
                   : null
-            "
-          >
+            ">
             {{ getSupportStatusLabel(ticket.status) }}
           </strong>
           <small>{{ ticket.createdAt | date: 'medium' }}</small>
         </div>
 
         <div style="display: grid; gap: 1rem">
-          <div
-            class="admin-detail-note"
-            style="
+          <div class="admin-detail-note" style="
               border: 1px solid rgba(148, 163, 184, 0.16);
               background: rgba(255, 255, 255, 0.98);
-            "
-          >
+            ">
             <h3>Customer message</h3>
             <p>{{ ticket.message }}</p>
-            <div
-              *ngIf="ticket.orderReference"
-              style="
+            <div *ngIf="ticket.orderReference" style="
                 display: flex;
                 flex-wrap: wrap;
                 align-items: center;
                 justify-content: space-between;
                 gap: 0.75rem;
-              "
-            >
+              ">
               <small>Order reference: {{ ticket.orderReference }}</small>
-              <button
-                type="button"
-                class="section-kicker"
-                style="
+              <button type="button" class="section-kicker" style="
                   border: 0;
                   cursor: pointer;
                   padding: 0.65rem 1rem;
@@ -3525,94 +2731,63 @@
                     rgba(249, 115, 22, 0.14)
                   );
                   color: #9a3412;
-                "
-                (click)="openSupportOrderDetail($event, ticket.orderReference)"
-              >
+                " (click)="openSupportOrderDetail($event, ticket.orderReference)">
                 Open order details
               </button>
             </div>
           </div>
 
-          <div
-            *ngIf="ticket.adminResponse"
-            class="admin-detail-note"
-            style="
+          <div *ngIf="ticket.adminResponse" class="admin-detail-note" style="
               border: 1px solid rgba(251, 191, 36, 0.2);
               background: linear-gradient(
                 135deg,
                 rgba(255, 247, 237, 0.96),
                 rgba(255, 251, 235, 0.98)
               );
-            "
-          >
+            ">
             <h3>Latest customer-visible reply</h3>
             <p>{{ ticket.adminResponse }}</p>
             <small>Updated {{ ticket.updatedAt | date: 'medium' }}</small>
           </div>
 
-          <div
-            class="admin-detail-note"
-            style="
+          <div class="admin-detail-note" style="
               border: 1px solid rgba(148, 163, 184, 0.16);
               background: rgba(255, 255, 255, 0.98);
-            "
-          >
+            ">
             <label class="form-field">
               <span>Reply to customer</span>
-              <textarea
-                rows="5"
-                [value]="getSupportReply(ticket)"
+              <textarea rows="5" [value]="getSupportReply(ticket)"
                 (input)="updateSupportReply(ticket.id, $any($event.target).value)"
                 [disabled]="isSupportTicketUpdating(ticket.id)"
-                placeholder="Write the reply that the signed-in customer will see on the support page."
-              ></textarea>
+                placeholder="Write the reply that the signed-in customer will see on the support page."></textarea>
             </label>
           </div>
         </div>
 
         <div class="admin-list-meta" style="margin-top: 1rem">
-          <button
-            class="btn dark-outline admin-inline-detail-btn"
-            type="button"
+          <button class="btn dark-outline admin-inline-detail-btn" type="button"
             [disabled]="isSupportTicketUpdating(ticket.id)"
-            (click)="handleSupportTicketAction(ticket.id, ticket.status, 'save_reply')"
-          >
+            (click)="handleSupportTicketAction(ticket.id, ticket.status, 'save_reply')">
             {{ isSupportTicketUpdating(ticket.id) ? 'Saving...' : 'Save reply' }}
           </button>
-          <button
-            *ngIf="canMarkSupportInProgress(ticket.status)"
-            class="btn dark-outline admin-inline-detail-btn"
-            type="button"
-            [disabled]="isSupportTicketUpdating(ticket.id)"
-            (click)="handleSupportTicketAction(ticket.id, 'in_progress', 'mark_in_progress')"
-          >
+          <button *ngIf="canMarkSupportInProgress(ticket.status)" class="btn dark-outline admin-inline-detail-btn"
+            type="button" [disabled]="isSupportTicketUpdating(ticket.id)"
+            (click)="handleSupportTicketAction(ticket.id, 'in_progress', 'mark_in_progress')">
             Mark in progress
           </button>
-          <button
-            *ngIf="canResolveSupportTicket(ticket.status)"
-            class="btn auth-primary-btn admin-inline-detail-btn"
-            type="button"
-            [disabled]="isSupportTicketUpdating(ticket.id)"
-            (click)="handleSupportTicketAction(ticket.id, 'resolved', 'resolve_ticket')"
-          >
+          <button *ngIf="canResolveSupportTicket(ticket.status)" class="btn auth-primary-btn admin-inline-detail-btn"
+            type="button" [disabled]="isSupportTicketUpdating(ticket.id)"
+            (click)="handleSupportTicketAction(ticket.id, 'resolved', 'resolve_ticket')">
             Resolve ticket
           </button>
-          <button
-            *ngIf="canCloseSupportTicket(ticket.status)"
-            class="btn dark-outline admin-inline-detail-btn"
-            type="button"
-            [disabled]="isSupportTicketUpdating(ticket.id)"
-            (click)="handleSupportTicketAction(ticket.id, 'closed', 'close_ticket')"
-          >
+          <button *ngIf="canCloseSupportTicket(ticket.status)" class="btn dark-outline admin-inline-detail-btn"
+            type="button" [disabled]="isSupportTicketUpdating(ticket.id)"
+            (click)="handleSupportTicketAction(ticket.id, 'closed', 'close_ticket')">
             Close ticket
           </button>
-          <button
-            *ngIf="canReopenSupportTicket(ticket.status)"
-            class="btn dark-outline admin-inline-detail-btn"
-            type="button"
-            [disabled]="isSupportTicketUpdating(ticket.id)"
-            (click)="handleSupportTicketAction(ticket.id, 'open', 'reopen_ticket')"
-          >
+          <button *ngIf="canReopenSupportTicket(ticket.status)" class="btn dark-outline admin-inline-detail-btn"
+            type="button" [disabled]="isSupportTicketUpdating(ticket.id)"
+            (click)="handleSupportTicketAction(ticket.id, 'open', 'reopen_ticket')">
             Reopen ticket
           </button>
         </div>

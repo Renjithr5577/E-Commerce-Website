@@ -33,7 +33,11 @@
           </button>
         </div>
 
-        <div *ngIf="isCategoryMenuOpen" class="search-category-dropdown">
+        <div
+          *ngIf="isCategoryMenuOpen"
+          class="search-category-dropdown"
+          (wheel)="handleDropdownWheel($event)"
+        >
           <button
             type="button"
             class="search-category-option"
@@ -73,7 +77,11 @@
             <small>{{ currentTimeLabel }}</small>
           </button>
 
-          <div *ngIf="isLanguageMenuOpen" class="language-dropdown">
+          <div
+            *ngIf="isLanguageMenuOpen"
+            class="language-dropdown"
+            (wheel)="handleDropdownWheel($event)"
+          >
             <div class="language-dropdown-title">{{ text.chooseLanguage }}</div>
             <button
               *ngFor="let option of languageOptions"

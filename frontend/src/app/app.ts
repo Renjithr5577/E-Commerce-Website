@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
+  DoCheck,
   effect,
   HostListener,
   inject,
@@ -64,6 +65,7 @@ import {
   HeroSlide,
   RegisteredAccount,
   SavedDeliveryAddress,
+  SavedPaymentCard,
   StoreSection,
   ViewMode
 } from './models/storefront.model';
@@ -98,6 +100,23 @@ type SupportTicketUpdateAction =
   | 'close_ticket'
   | 'reopen_ticket';
 
+type CheckoutDraft = {
+  accountEmail: string;
+  customerName: string;
+  email: string;
+  phone: string;
+  addressLine: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  paymentMethod: string;
+  cardHolderName: string;
+  cardExpiry: string;
+  notes: string;
+  selectedDeliveryAddressId: string | null;
+  selectedPaymentCardId: string | null;
+};
+
 @Component({
   selector: 'app-root',
   imports: [
@@ -120,7 +139,7 @@ type SupportTicketUpdateAction =
   styleUrl: './app.css',
   encapsulation: ViewEncapsulation.None
 })
-export class App implements OnInit, OnDestroy {
+export class App implements OnInit, OnDestroy, DoCheck {
   private readonly storeService = inject(StoreService);
   private readonly storageKey = 'luxe-cart-items';
   private readonly savedItemsStorageKey = 'luxe-saved-items';
@@ -133,6 +152,8 @@ export class App implements OnInit, OnDestroy {
   private readonly customerCartStorageKey = 'luxe-customer-carts';
   private readonly customerSavedItemsStorageKey = 'luxe-customer-saved-items';
   private readonly deliveryAddressesStorageKey = 'luxe-delivery-addresses';
+  private readonly savedPaymentCardsStorageKey = 'luxe-saved-payment-cards';
+  private readonly checkoutDraftStorageKey = 'luxe-checkout-draft';
   private readonly initialCatalogVisibleCount = 10;
   private readonly initialBestSellerVisibleCount = 8;
   private readonly productLoadStep = 10;
@@ -146,6 +167,7 @@ export class App implements OnInit, OnDestroy {
   private toastAudioContext: AudioContext | null = null;
   private protectedViewAfterAuth: ViewMode | null = null;
   private productShuffleSeed = 0;
+  private lastPersistedCheckoutDraftSnapshot = '';
 
   readonly products = signal<Product[]>([]);
   readonly storeSections = signal<StoreSection[]>(
@@ -170,6 +192,8 @@ export class App implements OnInit, OnDestroy {
   readonly registeredAccount = signal<RegisteredAccount | null>(null);
   readonly savedDeliveryAddresses = signal<SavedDeliveryAddress[]>([]);
   readonly selectedDeliveryAddressId = signal<string | null>(null);
+  readonly savedPaymentCards = signal<SavedPaymentCard[]>([]);
+  readonly selectedPaymentCardId = signal<string | null>(null);
   readonly isAdminAuthenticated = signal(false);
   readonly adminSessionToken = signal<string | null>(null);
   readonly currentAdmin = signal<AdminUser | null>(null);
@@ -195,6 +219,7 @@ export class App implements OnInit, OnDestroy {
   readonly showBackToTop = signal(false);
   readonly toastMessage = signal('');
   readonly toastTone = signal<'success' | 'error'>('success');
+  private customerSavedPaymentCardsRequestId = 0;
   private readonly customerCollectionSyncPaused = signal(false);
 
   readonly navLinks = NAV_LINKS;
@@ -367,6 +392,7 @@ export class App implements OnInit, OnDestroy {
     const savedRegisteredAccount = localStorage.getItem(this.registeredAccountStorageKey);
     const savedAdminSession = localStorage.getItem(this.adminSessionStorageKey);
     const savedDeliveryAddresses = localStorage.getItem(this.deliveryAddressesStorageKey);
+    const savedPaymentCards = localStorage.getItem(this.savedPaymentCardsStorageKey);
 
     if (savedCart) {
       this.cart.set(JSON.parse(savedCart) as CartItem[]);
@@ -426,6 +452,35 @@ export class App implements OnInit, OnDestroy {
       }
     }
 
+    if (savedPaymentCards) {
+      try {
+        const parsedCards = JSON.parse(savedPaymentCards) as SavedPaymentCard[];
+
+        this.savedPaymentCards.set(
+          parsedCards
+            .filter((card) => !!card?.id && !!card?.accountEmail)
+            .map((card) => ({
+              ...card,
+              accountEmail: String(card.accountEmail || '').trim().toLowerCase(),
+              cardHolderName: String(card.cardHolderName || '').trim(),
+              cardNumber: String(card.cardNumber || '')
+                .replace(/\D/g, '')
+                .slice(0, 16),
+              last4: String(card.cardNumber || card.last4 || '')
+                .replace(/\D/g, '')
+                .slice(-4),
+              expiry: String(card.expiry || '').trim(),
+              brand: String(card.brand || '').trim() || 'Card',
+              createdAt: String(card.createdAt || ''),
+              updatedAt: String(card.updatedAt || '')
+            }))
+            .filter((card) => /^\d{4}$/.test(card.last4))
+        );
+      } catch {
+        localStorage.removeItem(this.savedPaymentCardsStorageKey);
+      }
+    }
+
     if (savedAdminSession) {
       try {
         const parsedAdminSession = JSON.parse(savedAdminSession) as Partial<AdminSession>;
@@ -446,6 +501,7 @@ export class App implements OnInit, OnDestroy {
 
     this.restorePersistedAdminRoute();
     this.restoreCustomerCollectionsForCurrentSession();
+    this.restoreCheckoutDraft();
 
     this.populateSupportIdentity();
     this.populateAccountForms();
@@ -511,6 +567,10 @@ export class App implements OnInit, OnDestroy {
     });
 
     effect(() => {
+      localStorage.setItem(this.savedPaymentCardsStorageKey, JSON.stringify(this.savedPaymentCards()));
+    });
+
+    effect(() => {
       const adminToken = this.adminSessionToken();
       const admin = this.currentAdmin();
 
@@ -531,10 +591,15 @@ export class App implements OnInit, OnDestroy {
     });
   }
 
+  ngDoCheck(): void {
+    this.persistCheckoutDraftIfNeeded();
+  }
+
   ngOnInit(): void {
     this.applyRouteFromLocation();
     this.loadStoreSections();
     this.loadProducts();
+    this.syncCurrentCustomerSavedPaymentCards();
     if (this.isAdminAuthenticated()) {
       this.loadAdminOverview(false);
       this.loadAdminAccounts(false);
@@ -738,6 +803,19 @@ export class App implements OnInit, OnDestroy {
 
     return this.savedDeliveryAddresses()
       .filter((address) => address.accountEmail === accountEmail)
+      .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
+  }
+
+  get savedPaymentCardsForCurrentAccount(): SavedPaymentCard[] {
+    const account = this.registeredAccount();
+    const accountEmail = account?.email?.trim().toLowerCase();
+
+    if (!this.accountName() || !accountEmail) {
+      return [];
+    }
+
+    return this.savedPaymentCards()
+      .filter((card) => card.accountEmail === accountEmail)
       .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
   }
 
@@ -1189,6 +1267,81 @@ export class App implements OnInit, OnDestroy {
     this.showToast('Add a new delivery address below and place the order to save it.');
   }
 
+  startNewCheckoutPaymentCard(): void {
+    this.selectedPaymentCardId.set(null);
+    this.checkoutForm = {
+      ...this.checkoutForm,
+      paymentMethod: 'Card payment',
+      cardHolderName: '',
+      cardNumber: '',
+      cardExpiry: '',
+      cardCvv: ''
+    };
+    this.showToast('Enter a new card below and place the order to save it.', 'success');
+  }
+
+  chooseCheckoutSavedPaymentCard(cardId: string): void {
+    const card = this.findSavedPaymentCardForCurrentAccount(cardId);
+
+    if (!card) {
+      return;
+    }
+
+    this.selectedPaymentCardId.set(card.id);
+    this.patchCheckoutFormWithSavedPaymentCard(card);
+  }
+
+  confirmCheckoutSavedPaymentCard(cardId: string): void {
+    this.chooseCheckoutSavedPaymentCard(cardId);
+    const selectedCard = this.findSavedPaymentCardForCurrentAccount(cardId);
+
+    if (
+      selectedCard &&
+      /^\d{16}$/.test(String(selectedCard.cardNumber || '').replace(/\D/g, '').slice(0, 16))
+    ) {
+      this.showToast('Saved card selected. You can place the order now, or switch to a new card.');
+      return;
+    }
+
+    this.showToast(
+      'This saved card only has old last-4 data. Enter the full 16-digit card number once below to save it again.',
+      'error'
+    );
+  }
+
+  removeSavedPaymentCard(cardId: string): void {
+    const card = this.findSavedPaymentCardForCurrentAccount(cardId);
+
+    if (!card) {
+      return;
+    }
+
+    if (!this.confirmDeleteAction(`Delete the saved ${card.brand} card ending ${card.last4}?`)) {
+      return;
+    }
+
+    const accountEmail = (this.registeredAccount()?.email || this.checkoutForm.email)
+      .trim()
+      .toLowerCase();
+    const backendCardId = this.parseBackendSavedPaymentCardId(card.id);
+
+    if (backendCardId === null) {
+      this.finalizeSavedPaymentCardRemoval(cardId, accountEmail);
+      this.showToast('Saved payment card deleted successfully.', 'success');
+      return;
+    }
+
+    this.storeService.deleteCustomerSavedPaymentCard(backendCardId, accountEmail).subscribe({
+      next: () => {
+        this.finalizeSavedPaymentCardRemoval(cardId, accountEmail);
+        this.showToast('Saved payment card deleted successfully.', 'success');
+      },
+      error: (error: Error) => {
+        this.setCheckoutError(error.message);
+      }
+    });
+  }
+
   requestRemoveFromCart(productId: number): void {
     const item = this.cart().find((entry) => entry.id === productId);
 
@@ -1418,12 +1571,16 @@ export class App implements OnInit, OnDestroy {
       next: (receipt) => {
         this.orderReceipt.set(receipt);
         this.saveCheckoutDeliveryAddress();
+        this.saveCheckoutPaymentCard(checkoutPaymentCard);
         if (this.checkoutSource === 'cart') {
           this.cart.set([]);
         }
 
         this.useCartCheckout();
         this.checkoutForm = this.createCheckoutForm();
+        this.selectedDeliveryAddressId.set(null);
+        this.selectedPaymentCardId.set(null);
+        this.clearPersistedCheckoutDraft();
         this.checkoutStage = 'cart';
         this.orderSubmitting.set(false);
         this.currentView = 'confirmation';
@@ -1443,6 +1600,17 @@ export class App implements OnInit, OnDestroy {
         this.orderSubmitting.set(false);
       }
     });
+  }
+
+  handleInvalidCheckoutSubmit(): void {
+    if (!this.ensureSignedInForCheckout()) {
+      return;
+    }
+
+    const checkoutValidationError =
+      this.validateCheckoutForm() || 'Please correct the highlighted checkout fields and try again.';
+
+    this.setCheckoutError(checkoutValidationError);
   }
 
   continueShopping(): void {
@@ -1894,6 +2062,12 @@ export class App implements OnInit, OnDestroy {
 
     if (!this.looksLikeEmail(rawIdentifier) && !this.isValidPhone(identifier)) {
       this.adminError = 'Enter a valid 10-digit mobile number or the admin email address.';
+      this.adminSuccess = '';
+      return;
+    }
+
+    if (password.length < 6) {
+      this.adminError = 'Password must be at least 6 characters long.';
       this.adminSuccess = '';
       return;
     }
@@ -2352,6 +2526,8 @@ export class App implements OnInit, OnDestroy {
     });
 
     this.selectedDeliveryAddressId.set(null);
+    this.selectedPaymentCardId.set(null);
+    this.clearPersistedCheckoutDraft();
     this.checkoutForm = this.createCheckoutForm();
     this.signInForm = this.createAuthForm();
     this.accountProfileForm = this.createAccountProfileForm();
@@ -2410,6 +2586,181 @@ export class App implements OnInit, OnDestroy {
       cardCvv: '',
       notes: ''
     };
+  }
+
+  private readStoredCheckoutDraft(): CheckoutDraft | null {
+    if (typeof localStorage === 'undefined') {
+      return null;
+    }
+
+    const savedCheckoutDraft = localStorage.getItem(this.checkoutDraftStorageKey);
+
+    if (!savedCheckoutDraft) {
+      return null;
+    }
+
+    try {
+      const parsedDraft = JSON.parse(savedCheckoutDraft) as Partial<CheckoutDraft>;
+      const accountEmail = String(parsedDraft.accountEmail || '').trim().toLowerCase();
+      const email = String(parsedDraft.email || '').trim().toLowerCase();
+      const paymentMethod = String(parsedDraft.paymentMethod || '').trim();
+
+      if (!this.isValidEmail(accountEmail || email)) {
+        this.clearPersistedCheckoutDraft();
+        return null;
+      }
+
+      return {
+        accountEmail: accountEmail || email,
+        customerName: String(parsedDraft.customerName || '').trim(),
+        email,
+        phone: this.normalizePhone(parsedDraft.phone || ''),
+        addressLine: String(parsedDraft.addressLine || '').trim(),
+        city: String(parsedDraft.city || '').trim(),
+        state: String(parsedDraft.state || '').trim(),
+        postalCode: String(parsedDraft.postalCode || '').trim(),
+        paymentMethod: this.paymentOptions.includes(paymentMethod)
+          ? paymentMethod
+          : this.paymentOptions[0],
+        cardHolderName: String(parsedDraft.cardHolderName || '').trim(),
+        cardExpiry: String(parsedDraft.cardExpiry || '')
+          .replace(/\s+/g, '')
+          .replace(/[^0-9/]/g, '')
+          .slice(0, 5),
+        notes: String(parsedDraft.notes || ''),
+        selectedDeliveryAddressId: this.normalizeStoredCheckoutSelectionId(
+          parsedDraft.selectedDeliveryAddressId
+        ),
+        selectedPaymentCardId: this.normalizeStoredCheckoutSelectionId(
+          parsedDraft.selectedPaymentCardId
+        )
+      };
+    } catch {
+      this.clearPersistedCheckoutDraft();
+      return null;
+    }
+  }
+
+  private restoreCheckoutDraft(): void {
+    const checkoutDraft = this.readStoredCheckoutDraft();
+
+    if (!checkoutDraft) {
+      return;
+    }
+
+    const activeAccountEmail = this.registeredAccount()?.email?.trim().toLowerCase() || '';
+
+    if (activeAccountEmail && checkoutDraft.accountEmail !== activeAccountEmail) {
+      this.clearPersistedCheckoutDraft();
+      return;
+    }
+
+    this.checkoutForm = {
+      ...this.checkoutForm,
+      customerName: checkoutDraft.customerName,
+      email: checkoutDraft.email,
+      phone: checkoutDraft.phone,
+      addressLine: checkoutDraft.addressLine,
+      city: checkoutDraft.city,
+      state: checkoutDraft.state,
+      postalCode: checkoutDraft.postalCode,
+      paymentMethod: checkoutDraft.paymentMethod,
+      cardHolderName: checkoutDraft.cardHolderName,
+      cardExpiry: checkoutDraft.cardExpiry,
+      notes: checkoutDraft.notes
+    };
+    this.selectedDeliveryAddressId.set(checkoutDraft.selectedDeliveryAddressId);
+    this.selectedPaymentCardId.set(checkoutDraft.selectedPaymentCardId);
+    this.lastPersistedCheckoutDraftSnapshot = JSON.stringify(checkoutDraft);
+  }
+
+  private buildCheckoutDraft(): CheckoutDraft | null {
+    const accountEmail = (this.registeredAccount()?.email || this.checkoutForm.email)
+      .trim()
+      .toLowerCase();
+    const paymentMethod = String(this.checkoutForm.paymentMethod || '').trim();
+    const normalizedPaymentMethod = this.paymentOptions.includes(paymentMethod)
+      ? paymentMethod
+      : this.paymentOptions[0];
+
+    if (!this.accountName() || !this.isValidEmail(accountEmail)) {
+      return null;
+    }
+
+    const checkoutDraft: CheckoutDraft = {
+      accountEmail,
+      customerName: this.checkoutForm.customerName.trim(),
+      email: this.checkoutForm.email.trim().toLowerCase(),
+      phone: this.normalizePhone(this.checkoutForm.phone),
+      addressLine: this.checkoutForm.addressLine.trim(),
+      city: this.checkoutForm.city.trim(),
+      state: this.checkoutForm.state.trim(),
+      postalCode: this.checkoutForm.postalCode.trim(),
+      paymentMethod: normalizedPaymentMethod,
+      cardHolderName:
+        normalizedPaymentMethod === 'Card payment' ? this.checkoutForm.cardHolderName.trim() : '',
+      cardExpiry:
+        normalizedPaymentMethod === 'Card payment'
+          ? this.checkoutForm.cardExpiry.replace(/\s+/g, '').replace(/[^0-9/]/g, '').slice(0, 5)
+          : '',
+      notes: this.checkoutForm.notes,
+      selectedDeliveryAddressId: this.selectedDeliveryAddressId(),
+      selectedPaymentCardId:
+        normalizedPaymentMethod === 'Card payment' ? this.selectedPaymentCardId() : null
+    };
+    const hasDraftData =
+      [
+        checkoutDraft.customerName,
+        checkoutDraft.email,
+        checkoutDraft.phone,
+        checkoutDraft.addressLine,
+        checkoutDraft.city,
+        checkoutDraft.state,
+        checkoutDraft.postalCode,
+        checkoutDraft.cardHolderName,
+        checkoutDraft.cardExpiry,
+        checkoutDraft.notes
+      ].some((value) => Boolean(String(value || '').trim())) ||
+      checkoutDraft.paymentMethod !== this.paymentOptions[0] ||
+      Boolean(checkoutDraft.selectedDeliveryAddressId) ||
+      Boolean(checkoutDraft.selectedPaymentCardId);
+
+    return hasDraftData ? checkoutDraft : null;
+  }
+
+  private persistCheckoutDraftIfNeeded(): void {
+    if (typeof localStorage === 'undefined') {
+      return;
+    }
+
+    const checkoutDraft = this.buildCheckoutDraft();
+    const nextSnapshot = checkoutDraft ? JSON.stringify(checkoutDraft) : '';
+
+    if (nextSnapshot === this.lastPersistedCheckoutDraftSnapshot) {
+      return;
+    }
+
+    if (!nextSnapshot) {
+      localStorage.removeItem(this.checkoutDraftStorageKey);
+      this.lastPersistedCheckoutDraftSnapshot = '';
+      return;
+    }
+
+    localStorage.setItem(this.checkoutDraftStorageKey, nextSnapshot);
+    this.lastPersistedCheckoutDraftSnapshot = nextSnapshot;
+  }
+
+  private clearPersistedCheckoutDraft(): void {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem(this.checkoutDraftStorageKey);
+    }
+
+    this.lastPersistedCheckoutDraftSnapshot = '';
+  }
+
+  private normalizeStoredCheckoutSelectionId(value: unknown): string | null {
+    const normalizedValue = String(value || '').trim();
+    return normalizedValue || null;
   }
 
   private createSupportForm(): SupportForm {
@@ -2560,6 +2911,7 @@ export class App implements OnInit, OnDestroy {
     });
 
     this.populateCheckoutIdentity();
+    this.loadCustomerSavedPaymentCards(account.email);
     this.populateSupportIdentity();
     this.populateAccountForms();
     this.closeSignInPasswordReset();
@@ -3326,9 +3678,126 @@ export class App implements OnInit, OnDestroy {
 
   private openCheckoutView(): void {
     this.clearCheckoutError();
+    this.populateCheckoutIdentity();
+    this.syncCurrentCustomerSavedPaymentCards();
     this.currentView = 'checkout';
     this.syncCurrentRoute();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  private syncCurrentCustomerSavedPaymentCards(): void {
+    const accountEmail = this.registeredAccount()?.email?.trim().toLowerCase() || '';
+
+    if (!this.accountName() || !this.isValidEmail(accountEmail)) {
+      this.selectedPaymentCardId.set(null);
+      return;
+    }
+
+    this.loadCustomerSavedPaymentCards(accountEmail);
+  }
+
+  private loadCustomerSavedPaymentCards(email: string): void {
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+
+    if (!this.accountName() || !this.isValidEmail(normalizedEmail)) {
+      return;
+    }
+
+    const requestId = ++this.customerSavedPaymentCardsRequestId;
+
+    this.storeService.getCustomerSavedPaymentCards(normalizedEmail).subscribe({
+      next: (cards) => {
+        const activeEmail = this.registeredAccount()?.email?.trim().toLowerCase() || '';
+
+        if (
+          requestId !== this.customerSavedPaymentCardsRequestId ||
+          activeEmail !== normalizedEmail
+        ) {
+          return;
+        }
+
+        this.mergeSavedPaymentCardsFromBackend(normalizedEmail, cards);
+      },
+      error: () => {
+        // Keep the local saved cards if the backend sync is unavailable.
+      }
+    });
+  }
+
+  private mergeSavedPaymentCardsFromBackend(
+    accountEmail: string,
+    backendCards: SavedPaymentCard[]
+  ): void {
+    const syncedCards = [...backendCards].sort((left, right) =>
+      right.updatedAt.localeCompare(left.updatedAt)
+    );
+    const currentSelectedCardId = this.selectedPaymentCardId();
+
+    this.savedPaymentCards.update((cards) => {
+      const otherAccounts = cards.filter((card) => card.accountEmail !== accountEmail);
+      return [...otherAccounts, ...syncedCards];
+    });
+
+    if (currentSelectedCardId && !syncedCards.some((card) => card.id === currentSelectedCardId)) {
+      const nextSelectedCard = syncedCards[0] ?? null;
+
+      this.selectedPaymentCardId.set(nextSelectedCard?.id ?? null);
+
+      if (nextSelectedCard) {
+        this.patchCheckoutFormWithSavedPaymentCard(nextSelectedCard);
+      } else {
+        this.checkoutForm = {
+          ...this.checkoutForm,
+          cardHolderName: '',
+          cardNumber: '',
+          cardExpiry: '',
+          cardCvv: ''
+        };
+      }
+
+      return;
+    }
+
+    this.populateCheckoutIdentity();
+  }
+
+  private parseBackendSavedPaymentCardId(cardId: string): number | null {
+    const backendCardMatch = String(cardId || '').trim().match(/^db-card-(\d+)$/);
+
+    if (!backendCardMatch) {
+      return null;
+    }
+
+    const parsedId = Number(backendCardMatch[1]);
+    return Number.isInteger(parsedId) && parsedId > 0 ? parsedId : null;
+  }
+
+  private finalizeSavedPaymentCardRemoval(cardId: string, accountEmail: string): void {
+    let remainingCardsForAccount: SavedPaymentCard[] = [];
+
+    this.savedPaymentCards.update((cards) => {
+      const filteredCards = cards.filter((entry) => entry.id !== cardId);
+      remainingCardsForAccount = filteredCards.filter((entry) => entry.accountEmail === accountEmail);
+      return filteredCards;
+    });
+
+    if (this.selectedPaymentCardId() === cardId) {
+      const nextSelectedCard = remainingCardsForAccount[0] ?? null;
+
+      this.selectedPaymentCardId.set(nextSelectedCard?.id ?? null);
+
+      if (nextSelectedCard) {
+        this.patchCheckoutFormWithSavedPaymentCard(nextSelectedCard);
+      } else {
+        this.checkoutForm = {
+          ...this.checkoutForm,
+          cardHolderName: '',
+          cardNumber: '',
+          cardExpiry: '',
+          cardCvv: ''
+        };
+      }
+    }
   }
 
   private ensureSignedInForCheckout(): boolean {
@@ -3909,6 +4378,7 @@ export class App implements OnInit, OnDestroy {
 
     if (!this.accountName() || !registeredAccount) {
       this.selectedDeliveryAddressId.set(null);
+      this.selectedPaymentCardId.set(null);
       return;
     }
 
@@ -3923,17 +4393,36 @@ export class App implements OnInit, OnDestroy {
 
     if (!availableAddresses.length) {
       this.selectedDeliveryAddressId.set(null);
+    } else {
+      const selectedAddress =
+        availableAddresses.find((address) => address.id === this.selectedDeliveryAddressId()) ||
+        availableAddresses[0];
+
+      this.selectedDeliveryAddressId.set(selectedAddress.id);
+
+      if (!this.checkoutForm.addressLine.trim()) {
+        this.patchCheckoutFormWithSavedAddress(selectedAddress);
+      }
+    }
+
+    const availableCards = this.savedPaymentCardsForCurrentAccount;
+
+    if (!availableCards.length) {
+      this.selectedPaymentCardId.set(null);
       return;
     }
 
-    const selectedAddress =
-      availableAddresses.find((address) => address.id === this.selectedDeliveryAddressId()) ||
-      availableAddresses[0];
+    const selectedCard =
+      availableCards.find((card) => card.id === this.selectedPaymentCardId()) || availableCards[0];
 
-    this.selectedDeliveryAddressId.set(selectedAddress.id);
+    this.selectedPaymentCardId.set(selectedCard.id);
 
-    if (!this.checkoutForm.addressLine.trim()) {
-      this.patchCheckoutFormWithSavedAddress(selectedAddress);
+    if (
+      this.checkoutForm.paymentMethod === 'Card payment' &&
+      !this.checkoutForm.cardHolderName.trim() &&
+      !this.checkoutForm.cardExpiry.trim()
+    ) {
+      this.patchCheckoutFormWithSavedPaymentCard(selectedCard);
     }
   }
 
@@ -3954,6 +4443,62 @@ export class App implements OnInit, OnDestroy {
       city: address.city,
       state: address.state,
       postalCode: address.postalCode
+    };
+  }
+
+  private findSavedPaymentCardForCurrentAccount(cardId: string): SavedPaymentCard | null {
+    return this.savedPaymentCardsForCurrentAccount.find((card) => card.id === cardId) || null;
+  }
+
+  private getCheckoutSelectedSavedPaymentCard(
+    cardHolderName = this.checkoutForm.cardHolderName,
+    cardExpiry = this.checkoutForm.cardExpiry,
+    cardNumber = this.checkoutForm.cardNumber
+  ): SavedPaymentCard | null {
+    const selectedPaymentCardId = this.selectedPaymentCardId();
+
+    if (!selectedPaymentCardId || this.checkoutForm.paymentMethod !== 'Card payment') {
+      return null;
+    }
+
+    const selectedCard = this.findSavedPaymentCardForCurrentAccount(selectedPaymentCardId);
+    const normalizedCardHolderName = String(cardHolderName || '').trim().toLowerCase();
+    const normalizedCardExpiry = String(cardExpiry || '')
+      .replace(/\s+/g, '')
+      .replace(/[^0-9/]/g, '')
+      .slice(0, 5);
+    const normalizedCardNumber = String(cardNumber || '')
+      .replace(/\D/g, '')
+      .slice(0, 16);
+    const normalizedSelectedCardNumber = String(selectedCard?.cardNumber || '')
+      .replace(/\D/g, '')
+      .slice(0, 16);
+
+    if (
+      !selectedCard ||
+      !/^\d{16}$/.test(normalizedSelectedCardNumber) ||
+      !normalizedCardHolderName ||
+      !normalizedCardExpiry ||
+      normalizedCardNumber !== normalizedSelectedCardNumber ||
+      selectedCard.cardHolderName.trim().toLowerCase() !== normalizedCardHolderName ||
+      selectedCard.expiry.trim() !== normalizedCardExpiry
+    ) {
+      return null;
+    }
+
+    return selectedCard;
+  }
+
+  private patchCheckoutFormWithSavedPaymentCard(card: SavedPaymentCard): void {
+    this.checkoutForm = {
+      ...this.checkoutForm,
+      paymentMethod: 'Card payment',
+      cardHolderName: card.cardHolderName,
+      cardNumber: String(card.cardNumber || '')
+        .replace(/\D/g, '')
+        .slice(0, 16),
+      cardExpiry: card.expiry,
+      cardCvv: ''
     };
   }
 
@@ -4017,6 +4562,63 @@ export class App implements OnInit, OnDestroy {
     this.selectedDeliveryAddressId.set(addressId);
   }
 
+  private saveCheckoutPaymentCard(paymentCard: PaymentCardSnapshot | null): void {
+    const registeredAccount = this.registeredAccount();
+    const accountEmail = (registeredAccount?.email || this.checkoutForm.email).trim().toLowerCase();
+
+    if (!this.accountName() || !accountEmail || !paymentCard) {
+      return;
+    }
+
+    const snapshot = {
+      cardHolderName: paymentCard.cardHolderName.trim(),
+      cardNumber: String(paymentCard.cardNumber || '')
+        .replace(/\D/g, '')
+        .slice(0, 16),
+      last4: String(paymentCard.last4 || '').replace(/\D/g, '').slice(-4),
+      expiry: paymentCard.expiry.trim(),
+      brand: paymentCard.brand.trim() || 'Card'
+    };
+
+    if (
+      snapshot.cardHolderName.length < 2 ||
+      !/^\d{16}$/.test(snapshot.cardNumber) ||
+      !/^\d{4}$/.test(snapshot.last4) ||
+      !/^(0[1-9]|1[0-2])\/\d{2}$/.test(snapshot.expiry)
+    ) {
+      return;
+    }
+
+    const cardSignature = this.getPaymentCardSignature(snapshot);
+    const selectedCard = this.savedPaymentCards().find(
+      (card) => card.id === this.selectedPaymentCardId() && card.accountEmail === accountEmail
+    );
+    const matchingCard = this.savedPaymentCards().find(
+      (card) =>
+        card.accountEmail === accountEmail &&
+        this.getPaymentCardSignature(card) === cardSignature
+    );
+    const now = new Date().toISOString();
+    const cardId =
+      selectedCard?.id ||
+      matchingCard?.id ||
+      `card-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const nextCard: SavedPaymentCard = {
+      id: cardId,
+      accountEmail,
+      ...snapshot,
+      createdAt: selectedCard?.createdAt || matchingCard?.createdAt || now,
+      updatedAt: now
+    };
+    const replacedCardIds = new Set([cardId, matchingCard?.id].filter(Boolean) as string[]);
+
+    this.savedPaymentCards.update((cards) => {
+      const filteredCards = cards.filter((card) => !replacedCardIds.has(card.id));
+      return [nextCard, ...filteredCards];
+    });
+    this.selectedPaymentCardId.set(cardId);
+  }
+
   private getDeliveryAddressSignature(
     address: Pick<
       SavedDeliveryAddress,
@@ -4031,6 +4633,14 @@ export class App implements OnInit, OnDestroy {
       address.state,
       address.postalCode
     ]
+      .map((value) => this.normalizeStoreSectionName(value).toLowerCase())
+      .join('|');
+  }
+
+  private getPaymentCardSignature(
+    card: Pick<SavedPaymentCard, 'cardHolderName' | 'cardNumber' | 'expiry' | 'brand'>
+  ): string {
+    return [card.cardHolderName, card.cardNumber, card.expiry, card.brand]
       .map((value) => this.normalizeStoreSectionName(value).toLowerCase())
       .join('|');
   }
@@ -4355,13 +4965,17 @@ export class App implements OnInit, OnDestroy {
     const postalCode = this.checkoutForm.postalCode.trim();
     const paymentMethod = this.checkoutForm.paymentMethod.trim();
     const cardHolderName = this.checkoutForm.cardHolderName.trim();
-    const cardNumber = this.checkoutForm.cardNumber.replace(/\D/g, '');
+    const cardNumber = this.checkoutForm.cardNumber.replace(/\D/g, '').slice(0, 16);
     const cardExpiry = this.checkoutForm.cardExpiry
       .replace(/\s+/g, '')
       .replace(/[^0-9/]/g, '')
       .slice(0, 5);
     const cardCvv = this.checkoutForm.cardCvv.replace(/\D/g, '').slice(0, 4);
     const requiresCardDetails = paymentMethod === 'Card payment';
+    const selectedSavedPaymentCard = this.getCheckoutSelectedSavedPaymentCard(
+      cardHolderName,
+      cardExpiry
+    );
 
     if (!/^[A-Za-z][A-Za-z\s'.-]{2,}$/.test(customerName)) {
       return 'Full name must be at least 3 letters.';
@@ -4399,7 +5013,7 @@ export class App implements OnInit, OnDestroy {
       return 'Card holder name must be at least 2 letters.';
     }
 
-    if (requiresCardDetails && !/^\d{16}$/.test(cardNumber)) {
+    if (requiresCardDetails && !selectedSavedPaymentCard && !/^\d{16}$/.test(cardNumber)) {
       return 'Card number must be exactly 16 digits.';
     }
 
@@ -4407,7 +5021,11 @@ export class App implements OnInit, OnDestroy {
       return 'Expiry must use MM/YY format.';
     }
 
-    if (requiresCardDetails && !/^\d{3,4}$/.test(cardCvv)) {
+    if (requiresCardDetails && !this.isFutureCardExpiry(cardExpiry)) {
+      return 'Card expiry date has already passed.';
+    }
+
+    if (requiresCardDetails && !selectedSavedPaymentCard && !/^\d{3,4}$/.test(cardCvv)) {
       return 'CVV must be 3 or 4 digits.';
     }
 
@@ -4424,7 +5042,7 @@ export class App implements OnInit, OnDestroy {
       cardHolderName: requiresCardDetails ? cardHolderName : '',
       cardNumber: requiresCardDetails ? cardNumber : '',
       cardExpiry: requiresCardDetails ? cardExpiry : '',
-      cardCvv: requiresCardDetails ? cardCvv : ''
+      cardCvv: requiresCardDetails && !selectedSavedPaymentCard ? cardCvv : ''
     };
 
     return null;
@@ -4435,15 +5053,32 @@ export class App implements OnInit, OnDestroy {
       return null;
     }
 
-    const cardNumber = this.checkoutForm.cardNumber.replace(/\D/g, '');
+    const cardNumber = this.checkoutForm.cardNumber.replace(/\D/g, '').slice(0, 16);
+    const cardExpiry = this.checkoutForm.cardExpiry
+      .replace(/\s+/g, '')
+      .replace(/[^0-9/]/g, '')
+      .slice(0, 5);
+    const selectedSavedPaymentCard = this.getCheckoutSelectedSavedPaymentCard(
+      this.checkoutForm.cardHolderName,
+      cardExpiry,
+      cardNumber
+    );
+
+    if (selectedSavedPaymentCard) {
+      return {
+        cardHolderName: selectedSavedPaymentCard.cardHolderName,
+        cardNumber: selectedSavedPaymentCard.cardNumber,
+        last4: selectedSavedPaymentCard.last4,
+        expiry: selectedSavedPaymentCard.expiry,
+        brand: selectedSavedPaymentCard.brand
+      };
+    }
 
     return {
       cardHolderName: this.checkoutForm.cardHolderName.trim(),
+      cardNumber,
       last4: cardNumber.slice(-4),
-      expiry: this.checkoutForm.cardExpiry
-        .replace(/\s+/g, '')
-        .replace(/[^0-9/]/g, '')
-        .slice(0, 5),
+      expiry: cardExpiry,
       brand: this.detectCardBrand(cardNumber)
     };
   }
@@ -4478,6 +5113,46 @@ export class App implements OnInit, OnDestroy {
     }
 
     return 'Card';
+  }
+
+  private isValidCardNumber(cardNumber: string): boolean {
+    if (!/^\d{16}$/.test(cardNumber)) {
+      return false;
+    }
+
+    let checksum = 0;
+    let shouldDouble = false;
+
+    for (let index = cardNumber.length - 1; index >= 0; index -= 1) {
+      let digit = Number(cardNumber[index]);
+
+      if (shouldDouble) {
+        digit *= 2;
+
+        if (digit > 9) {
+          digit -= 9;
+        }
+      }
+
+      checksum += digit;
+      shouldDouble = !shouldDouble;
+    }
+
+    return checksum % 10 === 0;
+  }
+
+  private isFutureCardExpiry(cardExpiry: string): boolean {
+    const expiryMatch = cardExpiry.match(/^(0[1-9]|1[0-2])\/(\d{2})$/);
+
+    if (!expiryMatch) {
+      return false;
+    }
+
+    const month = Number(expiryMatch[1]);
+    const year = 2000 + Number(expiryMatch[2]);
+    const expiryDate = new Date(year, month, 0, 23, 59, 59, 999);
+
+    return expiryDate.getTime() >= Date.now();
   }
 
   loadAdminOverview(showSessionError = true): void {

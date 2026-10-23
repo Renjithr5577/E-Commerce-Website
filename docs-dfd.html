@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DFD Diagram</title>
+  <style>
+    body {
+      margin: 0;
+      background: #f8fafc;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+    .wrap {
+      width: 1360px;
+      height: 860px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    svg text {
+      fill: #172033;
+      font-size: 24px;
+      font-family: Arial, sans-serif;
+    }
+    .small {
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <svg width="1280" height="780" viewBox="0 0 1320 820" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+          <path d="M0,0 L12,6 L0,12 Z" fill="#475569" />
+        </marker>
+      </defs>
+
+      <rect x="70" y="210" rx="28" ry="28" width="220" height="120" fill="#ffffff" stroke="#334155" stroke-width="3"/>
+      <text x="180" y="270" text-anchor="middle">Customer</text>
+
+      <rect x="1030" y="210" rx="28" ry="28" width="220" height="120" fill="#ffffff" stroke="#334155" stroke-width="3"/>
+      <text x="1140" y="270" text-anchor="middle">Admin</text>
+
+      <ellipse cx="660" cy="170" rx="190" ry="70" fill="#fde68a" stroke="#b45309" stroke-width="3"/>
+      <text x="660" y="160" text-anchor="middle">Authentication</text>
+      <text x="660" y="192" class="small" text-anchor="middle">Login / Register / Admin Login</text>
+
+      <ellipse cx="660" cy="390" rx="210" ry="78" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="3"/>
+      <text x="660" y="382" text-anchor="middle">LuxeCart Web System</text>
+      <text x="660" y="414" class="small" text-anchor="middle">Catalog, Cart, Orders, Support, Admin Control</text>
+
+      <ellipse cx="660" cy="620" rx="210" ry="78" fill="#bbf7d0" stroke="#15803d" stroke-width="3"/>
+      <text x="660" y="610" text-anchor="middle">Order &amp; Support Processing</text>
+      <text x="660" y="642" class="small" text-anchor="middle">Checkout, Tickets, Dashboard Reports</text>
+
+      <rect x="510" y="720" rx="24" ry="24" width="300" height="80" fill="#ffffff" stroke="#334155" stroke-width="3"/>
+      <text x="660" y="768" text-anchor="middle">MySQL Database</text>
+
+      <line x1="290" y1="270" x2="470" y2="190" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <line x1="470" y1="235" x2="290" y2="290" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <text x="345" y="205" class="small">Credentials</text>
+      <text x="355" y="325" class="small">Access status</text>
+
+      <line x1="1030" y1="270" x2="850" y2="190" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <line x1="850" y1="235" x2="1030" y2="290" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <text x="950" y="205" class="small">Admin credentials</text>
+      <text x="930" y="325" class="small">Admin session</text>
+
+      <line x1="180" y1="330" x2="450" y2="390" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <line x1="450" y1="450" x2="180" y2="330" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <text x="255" y="382" class="small">Search, cart, orders</text>
+      <text x="220" y="445" class="small">Products, totals, status</text>
+
+      <line x1="1140" y1="330" x2="870" y2="390" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <line x1="870" y1="450" x2="1140" y2="330" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <text x="975" y="382" class="small">Manage products/users</text>
+      <text x="1005" y="445" class="small">Overview, tickets, reports</text>
+
+      <line x1="660" y1="248" x2="660" y2="308" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <line x1="660" y1="468" x2="660" y2="542" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <line x1="660" y1="698" x2="660" y2="720" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+
+      <line x1="590" y1="720" x2="590" y2="695" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <line x1="730" y1="720" x2="730" y2="695" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/>
+      <text x="820" y="755" class="small">Read / Write data</text>
+    </svg>
+  </div>
+</body>
+</html>

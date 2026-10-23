@@ -21,12 +21,14 @@ import {
   CustomerOrderDetail,
   CustomerOrderSummary,
   CustomerRecentOrderedProduct,
-  OrderResponse
+  OrderResponse,
+  PaymentCardSnapshot
 } from '../models/order.model';
 import { Product, ProductCreatePayload } from '../models/product.model';
 import {
   AccountRecoveryProfile,
   CustomerAccountRecord,
+  SavedPaymentCard,
   StoreSection
 } from '../models/storefront.model';
 import {
@@ -619,6 +621,41 @@ export class StoreService {
       );
   }
 
+  getCustomerSavedPaymentCards(email: string): Observable<SavedPaymentCard[]> {
+    return this.http
+      .get<SavedPaymentCard[]>(`${this.apiUrl}/payment-cards`, {
+        params: { email }
+      })
+      .pipe(
+        map((cards) => cards.map((card) => this.hydrateSavedPaymentCard(card))),
+        catchError((error) => {
+          const message =
+            error.status === 0
+              ? 'The backend API is not reachable right now. Start the server to load your saved payment cards.'
+              : error.error?.message || 'We could not load your saved payment cards right now.';
+
+          return throwError(() => new Error(message));
+        })
+      );
+  }
+
+  deleteCustomerSavedPaymentCard(cardId: number, email: string): Observable<{ deleted: boolean }> {
+    return this.http
+      .delete<{ deleted: boolean }>(`${this.apiUrl}/payment-cards/${cardId}`, {
+        params: { email }
+      })
+      .pipe(
+        catchError((error) => {
+          const message =
+            error.status === 0
+              ? 'The backend API is not reachable right now. Start the server to delete your saved payment card.'
+              : error.error?.message || 'We could not delete that saved payment card right now.';
+
+          return throwError(() => new Error(message));
+        })
+      );
+  }
+
   getCustomerLatestOrder(email: string): Observable<CustomerOrderDetail | null> {
     return this.http
       .get<CustomerOrderDetail | null>(`${this.apiUrl}/orders/latest`, {
@@ -941,6 +978,7 @@ export class StoreService {
       customerName: String(order.customerName || '').trim(),
       email: String(order.email || '').trim().toLowerCase(),
       phone: String(order.phone || '').replace(/\D/g, ''),
+      paymentCard: this.hydratePaymentCardSnapshot(order.paymentCard),
       itemCount: Number(order.itemCount || 0),
       subtotal: Number(order.subtotal || 0),
       deliveryFee: Number(order.deliveryFee || 0),
@@ -986,6 +1024,7 @@ export class StoreService {
       customerName: String(order.customerName || '').trim(),
       email: String(order.email || '').trim().toLowerCase(),
       phone: String(order.phone || '').replace(/\D/g, ''),
+      paymentCard: this.hydratePaymentCardSnapshot(order.paymentCard),
       items: (order.items || []).map((item) => ({
         ...item,
         productId: Number(item.productId || 0),
@@ -996,6 +1035,55 @@ export class StoreService {
         unitPrice: Number(item.unitPrice || 0),
         lineTotal: Number(item.lineTotal || 0)
       }))
+    };
+  }
+
+  private hydratePaymentCardSnapshot(
+    paymentCard: PaymentCardSnapshot | null | undefined
+  ): PaymentCardSnapshot | null {
+    if (!paymentCard) {
+      return null;
+    }
+
+    const cardNumber = String(paymentCard.cardNumber || '')
+      .replace(/\D/g, '')
+      .slice(0, 16);
+    const last4 = (cardNumber || String(paymentCard.last4 || ''))
+      .replace(/\D/g, '')
+      .slice(-4);
+    const expiry = String(paymentCard.expiry || '').trim();
+
+    if (!last4 || !expiry) {
+      return null;
+    }
+
+    return {
+      cardHolderName: String(paymentCard.cardHolderName || '').trim(),
+      cardNumber,
+      last4,
+      expiry,
+      brand: String(paymentCard.brand || '').trim() || 'Card'
+    };
+  }
+
+  private hydrateSavedPaymentCard(card: SavedPaymentCard): SavedPaymentCard {
+    const cardNumber = String(card.cardNumber || '')
+      .replace(/\D/g, '')
+      .slice(0, 16);
+
+    return {
+      ...card,
+      id: String(card.id || '').trim(),
+      accountEmail: String(card.accountEmail || '').trim().toLowerCase(),
+      cardHolderName: String(card.cardHolderName || '').trim(),
+      cardNumber,
+      last4: (cardNumber || String(card.last4 || ''))
+        .replace(/\D/g, '')
+        .slice(-4),
+      expiry: String(card.expiry || '').trim(),
+      brand: String(card.brand || '').trim() || 'Card',
+      createdAt: String(card.createdAt || ''),
+      updatedAt: String(card.updatedAt || '')
     };
   }
 

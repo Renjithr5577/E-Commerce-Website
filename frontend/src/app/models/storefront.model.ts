@@ -123,6 +123,18 @@ export interface SavedDeliveryAddress {
   updatedAt: string;
 }
 
+export interface SavedPaymentCard {
+  id: string;
+  accountEmail: string;
+  cardHolderName: string;
+  cardNumber: string;
+  last4: string;
+  expiry: string;
+  brand: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface AuthForm {
   name: string;
   phone: string;

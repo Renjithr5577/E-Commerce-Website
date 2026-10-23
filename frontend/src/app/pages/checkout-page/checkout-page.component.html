@@ -388,6 +388,102 @@
           </div>
         </div>
 
+        <section *ngIf="requiresCardDetails" class="saved-addresses-shell">
+          <div class="saved-addresses-head">
+            <div>
+              <span class="section-kicker">Saved cards</span>
+              <h3>Select a saved payment card</h3>
+              <p>
+                Use a saved card just like saved addresses. Select one to pay instantly, or switch
+                to a new card below and it will be saved after a successful order.
+              </p>
+            </div>
+            <strong>{{ savedPaymentCards.length }} saved</strong>
+          </div>
+
+          <div *ngIf="savedPaymentCards.length; else noSavedPaymentCards" class="saved-addresses-list">
+            <article
+              *ngFor="let card of savedPaymentCards"
+              class="saved-address-card"
+              [class.saved-address-card-active]="selectedPaymentCardId === card.id"
+            >
+              <label class="saved-address-radio-row">
+                <input
+                  type="radio"
+                  name="savedPaymentCard"
+                  [checked]="selectedPaymentCardId === card.id"
+                  (change)="chooseSavedPaymentCard.emit(card.id)"
+                />
+                <div class="saved-address-copy">
+                  <strong>{{ card.brand }} ending {{ card.last4 }}</strong>
+                  <p>{{ card.cardHolderName }}</p>
+                  <small>Expiry: {{ card.expiry }}</small>
+                </div>
+              </label>
+
+              <div style="display: flex; flex-wrap: wrap; gap: 1rem">
+                <button
+                  class="saved-address-edit-btn"
+                  type="button"
+                  (click)="confirmSavedPaymentCard.emit(card.id)"
+                >
+                  Use this card
+                </button>
+                <button
+                  class="saved-address-edit-btn"
+                  style="color: #dc2626"
+                  type="button"
+                  (click)="deleteSavedPaymentCard.emit(card.id)"
+                >
+                  Delete card
+                </button>
+              </div>
+            </article>
+          </div>
+
+          <div class="saved-address-actions">
+            <button class="btn dark-outline" type="button" (click)="startNewPaymentCard.emit()">
+              Use a new card
+            </button>
+            <button
+              class="btn hero-primary"
+              type="button"
+              [disabled]="!selectedPaymentCardId"
+              (click)="selectedPaymentCardId && confirmSavedPaymentCard.emit(selectedPaymentCardId)"
+            >
+              Pay with this card
+            </button>
+          </div>
+
+          <ng-template #noSavedPaymentCards>
+            <div class="empty-state" style="min-height: 10rem; margin-top: 0">
+              <i class="bi bi-credit-card-2-front"></i>
+              <p>No saved payment cards yet.</p>
+              <span>
+                Fill the card details below and place one card-payment order to save this card for
+                next time.
+              </span>
+            </div>
+          </ng-template>
+        </section>
+
+        <div
+          *ngIf="requiresCardDetails && selectedPaymentCardId && !usingSavedPaymentCard"
+          class="checkout-error"
+          style="background: #fff7ed; color: #c2410c"
+        >
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>
+            This saved card needs the full 16-digit card number to continue. Enter it once below
+            with the CVV, or choose Use a new card.
+          </span>
+        </div>
+
+        <div *ngIf="usingSavedPaymentCard" class="checkout-error" style="background: #eff6ff; color: #1d4ed8">
+          <i class="bi bi-credit-card-2-front-fill"></i>
+          <span>Saved card loaded into the form. Click Buy these items to use it, or choose Use a new card.</span>
+        </div>
+
         <div *ngIf="requiresCardDetails" class="checkout-field-grid mb-4">
           <label
             class="form-field floating-form-field"
@@ -400,6 +496,7 @@
               minlength="2"
               autocomplete="cc-name"
               [(ngModel)]="checkoutForm.cardHolderName"
+              [disabled]="usingSavedPaymentCard"
               #cardHolderNameModel="ngModel"
               placeholder=" "
             />
@@ -419,13 +516,15 @@
             <input
               type="text"
               name="cardNumber"
-              required
-              pattern="[0-9 ]{16,19}"
+              [required]="requiresCardDetails && !usingSavedPaymentCard"
+              pattern="[0-9]{16}"
               minlength="16"
-              maxlength="19"
+              maxlength="16"
               inputmode="numeric"
               autocomplete="cc-number"
               [(ngModel)]="checkoutForm.cardNumber"
+              (input)="sanitizeCardNumber()"
+              [disabled]="usingSavedPaymentCard"
               #cardNumberModel="ngModel"
               placeholder=" "
             />
@@ -434,7 +533,7 @@
               *ngIf="checkoutDetailsForm.submitted && cardNumberModel.invalid"
               class="field-error"
             >
-              Enter a valid 16-digit card number.
+              Enter a valid 16-digit card number, or use a saved card above.
             </small>
           </label>
 
@@ -450,6 +549,8 @@
               maxlength="5"
               autocomplete="cc-exp"
               [(ngModel)]="checkoutForm.cardExpiry"
+              (input)="sanitizeCardExpiry()"
+              [disabled]="usingSavedPaymentCard"
               #cardExpiryModel="ngModel"
               placeholder=" "
             />
@@ -469,13 +570,15 @@
             <input
               type="password"
               name="cardCvv"
-              required
+              [required]="requiresCardDetails && !usingSavedPaymentCard"
               pattern="[0-9]{3,4}"
               minlength="3"
               maxlength="4"
               inputmode="numeric"
               autocomplete="cc-csc"
               [(ngModel)]="checkoutForm.cardCvv"
+              (input)="sanitizeCardCvv()"
+              [disabled]="usingSavedPaymentCard"
               #cardCvvModel="ngModel"
               placeholder=" "
             />
@@ -484,7 +587,7 @@
               *ngIf="checkoutDetailsForm.submitted && cardCvvModel.invalid"
               class="field-error"
             >
-              Enter a valid 3 or 4 digit CVV.
+              Enter a valid 3 or 4 digit CVV, or use a saved card above.
             </small>
           </label>
         </div>
@@ -498,6 +601,11 @@
           ></textarea>
           <span>Order notes</span>
         </label>
+
+        <div *ngIf="checkoutError" class="checkout-error" role="alert" aria-live="polite">
+          <i class="bi bi-exclamation-circle-fill"></i>
+          <span>{{ checkoutError }}</span>
+        </div>
 
         <button
           class="btn buy-now-btn place-order-btn"

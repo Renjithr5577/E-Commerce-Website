@@ -180,6 +180,7 @@ button {
   width: min(15.5rem, 100%);
   max-height: 36rem;
   overflow: auto;
+  overscroll-behavior: contain;
   padding: 0.28rem;
   z-index: 12;
 }
@@ -289,6 +290,7 @@ button {
   width: 10.75rem;
   padding: 0.45rem;
   z-index: 12;
+  overscroll-behavior: contain;
 }
 
 .language-dropdown-title {
@@ -3718,6 +3720,10 @@ button {
   gap: 0.85rem;
 }
 
+.aum-grid {
+  grid-template-columns: 22rem 1fr;
+}
+
 .admin-detail-card,
 .admin-detail-note:not(.admin-sidebar-detail-note) {
   padding: 1rem;
@@ -4500,7 +4506,8 @@ button {
   .admin-studio-shell,
   .admin-snapshot-grid,
   .admin-product-detail,
-  .admin-detail-grid {
+  .admin-detail-grid,
+  .aum-grid {
     grid-template-columns: 1fr;
   }
 

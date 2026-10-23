@@ -3,6 +3,7 @@ USE ecommerce_store;
 
 DROP TABLE IF EXISTS support_tickets;
 DROP TABLE IF EXISTS admin_accounts;
+DROP TABLE IF EXISTS card_details;
 DROP TABLE IF EXISTS order_items;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS store_sections;
@@ -89,6 +90,23 @@ CREATE TABLE admin_accounts (
   created_by_admin_id INT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE card_details (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  account_email VARCHAR(140) NOT NULL,
+  cardholder_name VARCHAR(120) NOT NULL,
+  card_number VARCHAR(16) NOT NULL,
+  expiry VARCHAR(5) NOT NULL,
+  card_brand VARCHAR(40) NOT NULL DEFAULT 'Card',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY ux_card_details_account_card (
+    account_email,
+    card_number,
+    expiry,
+    cardholder_name
+  )
 );
 
 INSERT INTO products (name, category, description, image_url, price, rating, stock, featured, badge) VALUES

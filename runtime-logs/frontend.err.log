@@ -1,0 +1,106 @@
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module './app/app' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/main.ts:3:20:
+[37m      3 │ import { App } from [32m'./app/app'[37m;
+        ╵                     [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./app/app"[0m
+
+    src/main.ts:3:20:
+[37m      3 │ import { App } from [32m'./app/app'[37m;
+        ╵                     [32m~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module './app/app' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/main.ts:3:20:
+[37m      3 │ import { App } from [32m'./app/app'[37m;
+        ╵                     [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./app/app"[0m
+
+    src/main.ts:3:20:
+[37m      3 │ import { App } from [32m'./app/app'[37m;
+        ╵                     [32m~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2008: Could not find stylesheet file './app.css'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:55:12:
+[37m      55 │   styleUrl: [32m'./app.css'[37m
+         ╵             [32m~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2008: Could not find stylesheet file './app.css'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.ts:55:12:
+[37m      55 │   styleUrl: [32m'./app.css'[37m
+         ╵             [32m~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./app/app"[0m
+
+    src/main.ts:3:20:
+[37m      3 │ import { App } from [32m'./app/app'[37m;
+        ╵                     [32m~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module './app/app' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/main.ts:3:20:
+[37m      3 │ import { App } from [32m'./app/app'[37m;
+        ╵                     [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./app/app"[0m
+
+    src/main.ts:3:20:
+[37m      3 │ import { App } from [32m'./app/app'[37m;
+        ╵                     [32m~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module './app/app' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/main.ts:3:20:
+[37m      3 │ import { App } from [32m'./app/app'[37m;
+        ╵                     [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./app/app"[0m
+
+    src/main.ts:3:20:
+[37m      3 │ import { App } from [32m'./app/app'[37m;
+        ╵                     [32m~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module './app/app' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/main.ts:3:20:
+[37m      3 │ import { App } from [32m'./app/app'[37m;
+        ╵                     [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./app/app"[0m
+
+    src/main.ts:3:20:
+[37m      3 │ import { App } from [32m'./app/app'[37m;
+        ╵                     [32m~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module './app/app' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/main.ts:3:20:
+[37m      3 │ import { App } from [32m'./app/app'[37m;
+        ╵                     [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./app/app"[0m
+
+    src/main.ts:3:20:
+[37m      3 │ import { App } from [32m'./app/app'[37m;
+        ╵                     [32m~~~~~~~~~~~[0m
+
+[39m[22m
+^C^C

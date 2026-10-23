@@ -757,7 +757,11 @@ export class AdminPageComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   handleLoginSubmit(form: NgForm): void {
-    if (form.invalid) {
+    if (
+      form.invalid ||
+      !this.isAdminIdentifierValid(this.loginForm.identifier) ||
+      !this.isAdminPasswordValid(this.loginForm.password)
+    ) {
       form.control.markAllAsTouched();
       return;
     }
@@ -1251,6 +1255,46 @@ export class AdminPageComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     this.showSubAdminPassword = !this.showSubAdminPassword;
+  }
+
+  isAdminIdentifierValid(value: string): boolean {
+    const trimmedValue = String(value || '').trim();
+
+    if (!trimmedValue) {
+      return false;
+    }
+
+    if (trimmedValue.includes('@')) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedValue.toLowerCase());
+    }
+
+    return /^\d{10}$/.test(this.normalizePhone(trimmedValue));
+  }
+
+  getAdminIdentifierError(value: string): string {
+    const trimmedValue = String(value || '').trim();
+
+    if (!trimmedValue) {
+      return 'Enter the admin email address or 10-digit mobile number.';
+    }
+
+    if (trimmedValue.includes('@')) {
+      return 'Enter a valid admin email address.';
+    }
+
+    return 'Enter a valid 10-digit mobile number or admin email address.';
+  }
+
+  isAdminPasswordValid(value: string): boolean {
+    return String(value || '').trim().length >= 6;
+  }
+
+  getAdminPasswordError(value: string): string {
+    if (!String(value || '').trim()) {
+      return 'Enter the admin password.';
+    }
+
+    return 'Password must be at least 6 characters long.';
   }
 
   openCustomerUserOrderDetail(event: Event, orderId: number): void {

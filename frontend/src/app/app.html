@@ -178,11 +178,14 @@
       [savedItems]="savedItems()"
       [savedAddresses]="savedDeliveryAddressesForCurrentAccount"
       [selectedAddressId]="selectedDeliveryAddressId()"
+      [savedPaymentCards]="savedPaymentCardsForCurrentAccount"
+      [selectedPaymentCardId]="selectedPaymentCardId()"
       [checkoutItemCount]="checkoutItemCount"
       [cartSubtotal]="checkoutSubtotal"
       [deliveryFee]="checkoutDeliveryFee"
       [cartTotal]="checkoutTotal"
       (submitOrder)="submitOrder()"
+      (invalidSubmitOrder)="handleInvalidCheckoutSubmit()"
       (proceedCheckout)="proceedToCheckout()"
       (backHome)="goHomeLanding()"
       (backToCart)="backToCartStage()"
@@ -198,6 +201,10 @@
       (editSavedAddress)="editCheckoutSavedAddress($event)"
       (deleteSavedAddress)="removeSavedDeliveryAddress($event)"
       (startNewAddress)="startNewCheckoutAddress()"
+      (chooseSavedPaymentCard)="chooseCheckoutSavedPaymentCard($event)"
+      (confirmSavedPaymentCard)="confirmCheckoutSavedPaymentCard($event)"
+      (deleteSavedPaymentCard)="removeSavedPaymentCard($event)"
+      (startNewPaymentCard)="startNewCheckoutPaymentCard()"
     ></app-checkout-page>
 
     <app-confirmation-page
