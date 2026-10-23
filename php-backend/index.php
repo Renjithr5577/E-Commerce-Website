@@ -335,7 +335,6 @@ function fetchLatestCustomerOrder(PDO $pdo, string $email): ?array
     if ($row === false) {
         return null;
     }
-
     return fetchOrderDetail($pdo, (int) $row['orderId']);
 }
 
